@@ -20,6 +20,7 @@
             height: 100vh;
             width: 100vw;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
@@ -41,44 +42,37 @@
             display: none !important;
         }
 
-        /* Горизонтальный контейнер меню */
+        /* Вертикальный контейнер меню */
         .container {
             text-align: center;
             background: rgba(15, 0, 0, 0.95);
-            padding: 20px 30px;
+            padding: 25px 20px;
             border: 2px solid #800000;
             box-shadow: 0 0 35px #ff0000;
             border-radius: 12px;
             animation: pulse 2.5s infinite alternate;
-            width: 520px;
-            max-width: 95vw;
+            width: 320px;
+            max-width: 90vw;
         }
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             color: #ff0000;
             text-shadow: 0 0 10px #ff0000, 0 0 20px #800000;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             letter-spacing: 2px;
-        }
-
-        /* Сетка кнопок для горизонтального режима (2х2) */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 10px;
         }
 
         /* Кнопки меню */
         .menu-btn {
             display: block;
             width: 100%;
+            margin: 10px 0;
             padding: 12px;
             background: #1a0000;
             color: #ff3333;
             border: 2px solid #ff0000;
             border-radius: 8px;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-family: 'Creepster', cursive;
             cursor: pointer;
             text-transform: uppercase;
@@ -92,7 +86,7 @@
             box-shadow: 0 0 20px #ff0000;
         }
 
-        /* Модальные окна (Настройки / Авторы) */
+        /* Модальные окна */
         .modal {
             display: none;
             position: fixed;
@@ -105,11 +99,11 @@
         .modal-content {
             background: #110000;
             border: 2px solid #ff0000;
-            padding: 20px 30px;
+            padding: 20px;
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 0 25px #ff0000;
-            width: 400px;
+            width: 300px;
             max-width: 90vw;
         }
         .modal-content h2 {
@@ -118,8 +112,8 @@
             font-size: 2rem;
         }
         .modal-content p {
-            font-size: 1.2rem;
-            margin: 8px 0;
+            font-size: 1.3rem;
+            margin: 10px 0;
             color: #ffcccc;
         }
         .setting-row {
@@ -132,7 +126,7 @@
         }
         .setting-row input[type="range"] {
             accent-color: #ff0000;
-            width: 150px;
+            width: 120px;
         }
         .setting-row input[type="checkbox"] {
             accent-color: #ff0000;
@@ -142,7 +136,7 @@
 
         .close-btn {
             margin-top: 15px;
-            padding: 8px 25px;
+            padding: 8px 20px;
             background: #ff0000;
             color: #000;
             border: none;
@@ -152,7 +146,7 @@
             border-radius: 5px;
         }
 
-        /* Чёрный экран перехода */
+        /* Экран перехода */
         #fadeOverlay {
             position: fixed;
             top: 0; left: 0;
@@ -168,84 +162,72 @@
             pointer-events: auto;
         }
 
-        /* Горизонтальное Казино */
+        /* Вертикальное казино */
         .casino-container {
             background: #110000;
             border: 3px solid #d4af37;
             box-shadow: 0 0 30px #d4af37, inset 0 0 15px #ff0000;
             border-radius: 15px;
-            padding: 15px 25px;
+            padding: 20px;
             text-align: center;
-            width: 500px;
-            max-width: 95vw;
+            width: 320px;
+            max-width: 90vw;
         }
         .casino-title {
             color: #d4af37;
-            font-size: 2rem;
+            font-size: 2.2rem;
             text-shadow: 0 0 10px #ff0000;
+            margin-bottom: 5px;
         }
         
         .win-status {
-            font-size: 1.2rem;
-            height: 28px;
-            line-height: 28px;
+            font-size: 1.3rem;
+            height: 35px;
+            line-height: 35px;
             color: #ffd700;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             font-weight: bold;
             text-shadow: 0 0 10px #ff0000;
         }
 
         .reels-frame {
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            justify-content: space-around;
             background: #000;
             border: 2px solid #ff0000;
             border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
+            padding: 15px 5px;
+            margin-bottom: 15px;
             box-shadow: inset 0 0 10px #ff0000;
         }
         .reel {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             background: #1a1a1a;
             border: 2px solid #d4af37;
-            border-radius: 8px;
+            border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
-        }
-
-        .casino-buttons {
-            display: flex;
-            gap: 15px;
         }
 
         .spin-btn {
             background: linear-gradient(180deg, #ff0000, #800000);
             color: #fff;
             border: 2px solid #ffd700;
-            padding: 10px;
-            font-size: 1.3rem;
+            padding: 12px 30px;
+            font-size: 1.5rem;
             font-family: 'Creepster', cursive;
             border-radius: 8px;
             cursor: pointer;
             box-shadow: 0 0 15px #ff0000;
-            flex: 2;
+            width: 100%;
+            margin-bottom: 10px;
         }
         .spin-btn:active {
             transform: scale(0.96);
-        }
-
-        /* Экран Завершения Игры */
-        #exitScreen {
-            background: #000;
-            color: #ff0000;
-            text-align: center;
-            z-index: 1000;
         }
 
         @keyframes pulse {
@@ -256,19 +238,16 @@
 </head>
 <body>
 
-    <!-- Чёрный экран затемнения -->
     <div id="fadeOverlay"></div>
 
     <!-- Главное Меню -->
     <div id="menuScreen" class="screen">
         <div class="container">
             <h1>ОБИТАТЕЛЬ 5_0_5</h1>
-            <div class="menu-grid">
-                <button class="menu-btn" onclick="startGame()">ИГРАТЬ</button>
-                <button class="menu-btn" onclick="openModal('settingsModal')">НАСТРОЙКИ</button>
-                <button class="menu-btn" onclick="openModal('authorsModal')">АВТОРЫ</button>
-                <button class="menu-btn" onclick="exitGame()">ВЫХОД</button>
-            </div>
+            <button class="menu-btn" onclick="startGame()">ИГРАТЬ</button>
+            <button class="menu-btn" onclick="openModal('settingsModal')">НАСТРОЙКИ</button>
+            <button class="menu-btn" onclick="openModal('authorsModal')">АВТОРЫ</button>
+            <button class="menu-btn" onclick="exitGame()">ВЫХОД</button>
         </div>
     </div>
 
@@ -284,18 +263,18 @@
                 <div class="reel" id="reel3">🩸</div>
             </div>
 
-            <div class="casino-buttons">
-                <button class="spin-btn" onclick="spinReels()">КРУТИТЬ</button>
-                <button class="menu-btn" style="flex: 1; padding: 10px;" onclick="backToMenu()">В МЕНЮ</button>
-            </div>
+            <button class="spin-btn" onclick="spinReels()">КРУТИТЬ</button>
+            <button class="menu-btn" style="font-size: 1.1rem; padding: 8px;" onclick="backToMenu()">В МЕНЮ</button>
         </div>
     </div>
 
-    <!-- Экран Завершения (Выход) -->
-    <div id="exitScreen" class="screen hidden">
-        <h1>ИГРА ЗАВЕРШЕНА</h1>
-        <p style="color: #666; margin-top: 10px; font-size: 1.2rem;">Вы вышли из игры.</p>
-        <button class="close-btn" style="margin-top: 25px;" onclick="location.reload()">ВОЙТИ СНОВА</button>
+    <!-- Окно Выхода -->
+    <div class="modal" id="exitModal">
+        <div class="modal-content">
+            <h2>ВЫХОД</h2>
+            <p style="color: #ff0000; font-size: 1.5rem; font-weight: bold;">выйди сам олух</p>
+            <button class="close-btn" onclick="closeModal('exitModal')">ОК</button>
+        </div>
     </div>
 
     <!-- Окно Настройки -->
@@ -333,21 +312,16 @@
     </div>
 
     <script>
-        // Функция включения альбомного (горизонтального) режима
-        function forceLandscape() {
+        // Фиксация вертикальной ориентации
+        function forcePortrait() {
             if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('landscape').catch(() => {});
-            }
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().catch(() => {});
+                screen.orientation.lock('portrait').catch(() => {});
             }
         }
 
-        // Попытка принудительно перевернуть экран при любом касании
-        window.addEventListener('click', forceLandscape, { once: true });
-        window.addEventListener('touchstart', forceLandscape, { once: true });
+        window.addEventListener('click', forcePortrait, { once: true });
+        window.addEventListener('touchstart', forcePortrait, { once: true });
 
-        // Открытие / Закрытие окон
         function openModal(id) {
             document.getElementById(id).style.display = 'flex';
         }
@@ -355,24 +329,11 @@
             document.getElementById(id).style.display = 'none';
         }
 
-        // Полный Выход из игры
+        // Вызов сообщения при нажатии "ВЫХОД"
         function exitGame() {
-            // Попытки закрытия через стандартные методы
-            try {
-                if (navigator.app && navigator.app.exitApp) {
-                    navigator.app.exitApp();
-                }
-                window.close();
-                self.close();
-            } catch (e) {}
-
-            // Гарантированный перевод в чёрный экран выхода
-            document.getElementById('menuScreen').classList.add('hidden');
-            document.getElementById('gameScreen').classList.add('hidden');
-            document.getElementById('exitScreen').classList.remove('hidden');
+            openModal('exitModal');
         }
 
-        // Переход в игру
         function startGame() {
             let fade = document.getElementById('fadeOverlay');
             fade.classList.add('active');
@@ -384,7 +345,6 @@
             }, 800);
         }
 
-        // Возврат в меню
         function backToMenu() {
             let fade = document.getElementById('fadeOverlay');
             fade.classList.add('active');
@@ -396,7 +356,6 @@
             }, 800);
         }
 
-        // Логика вращения
         const symbols = ['💀', '🩸', '7️⃣', '🍒', '🎃', '💎'];
 
         function spinReels() {
@@ -417,10 +376,10 @@
                 document.getElementById('reel3').innerText = r3; 
 
                 if (r1 === r2 && r2 === r3) {
-                    status.innerText = "ДЖЕКПОТ! 🥳";
+                    status.innerText = "ДЖЕКПОТ! :)";
                     status.style.color = "#ffd700";
                 } else if (r1 === r2 || r2 === r3 || r1 === r3) {
-                    status.innerText = "ВЫИГРЫШ! 🎉";
+                    status.innerText = "ВЫИГРЫШ!";
                     status.style.color = "#ff4444";
                 } else {
                     status.innerText = "ПОПРОБУЙ ЕЩЁ!";
