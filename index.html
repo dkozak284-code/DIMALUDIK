@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главное меню игры</title>
+    <!-- Подключение игрового шрифта с Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Fredoka', cursive, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(180deg, #1b263b 0%, #415a77 40%, #e0a96d 80%, #f4a261 100%);
+            position: relative;
+        }
+
+        /* Анимированный задний фон: Облака */
+        .sky-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 100px;
+            backdrop-filter: blur(4px);
+            animation: moveClouds linear infinite;
+        }
+
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 50%;
+        }
+
+        .cloud1 { width: 180px; height: 60px; top: 15%; animation-duration: 35s; }
+        .cloud1::before { width: 80px; height: 80px; top: -35px; left: 30px; }
+        .cloud1::after { width: 60px; height: 60px; top: -20px; left: 90px; }
+
+        .cloud2 { width: 240px; height: 75px; top: 40%; animation-duration: 50s; animation-delay: -15s; }
+        .cloud2::before { width: 100px; height: 100px; top: -45px; left: 40px; }
+        .cloud2::after { width: 80px; height: 80px; top: -30px; left: 120px; }
+
+        .cloud3 { width: 150px; height: 50px; top: 70%; animation-duration: 28s; animation-delay: -5s; }
+        .cloud3::before { width: 70px; height: 70px; top: -30px; left: 20px; }
+        .cloud3::after { width: 50px; height: 50px; top: -15px; left: 75px; }
+
+        @keyframes moveClouds {
+            from { transform: translateX(-300px); }
+            to { transform: translateX(100vw); }
+        }
+
+        /* Контейнер всего меню с эффектом покачивания */
+        .menu-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: sway 6s ease-in-out infinite alternate;
+            z-index: 10;
+        }
+
+        @keyframes sway {
+            0% { transform: translateY(0px) rotate(-1deg); }
+            100% { transform: translateY(-15px) rotate(1deg); }
+        }
+
+        /* Воздушные шарики над табличкой */
+        .balloons {
+            position: absolute;
+            top: -90px;
+            display: flex;
+            justify-content: space-between;
+            width: 320px;
+            pointer-events: none;
+        }
+
+        .balloon-group {
+            display: flex;
+            gap: 12px;
+            position: relative;
+        }
+
+        .balloon {
+            width: 45px;
+            height: 55px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            position: relative;
+            box-shadow: inset -8px -8px 12px rgba(0,0,0,0.2), 0 8px 15px rgba(0,0,0,0.15);
+            animation: floatBalloon 3s ease-in-out infinite alternate;
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 8px solid inherit;
+        }
+
+        .balloon.yellow { background: #ffd166; }
+        .balloon.orange { background: #f77f00; animation-delay: -1s; }
+        .balloon.blue { background: #4cc9f0; animation-delay: -0.5s; }
+        .balloon.pink { background: #f72585; animation-delay: -1.8s; }
+
+        @keyframes floatBalloon {
+            from { transform: translateY(0); }
+            to { transform: translateY(-8px); }
+        }
+
+        /* Верёвки, держащие таблички */
+        .rope-container {
+            position: absolute;
+            top: -60px;
+            width: 240px;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .rope {
+            width: 8px;
+            height: calc(100% + 40px);
+            background: repeating-linear-gradient(
+                45deg,
+                #d4a373,
+                #d4a373 6px,
+                #bc8a5f 6px,
+                #bc8a5f 12px
+            );
+            border-radius: 4px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+
+        /* Основная конструкция из дощечек */
+        .menu-board {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            background: linear-gradient(135deg, rgba(88, 47, 14, 0.95), rgba(58, 29, 7, 0.95));
+            padding: 30px 25px;
+            border-radius: 24px;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.5),
+                inset 0 2px 3px rgba(255,255,255,0.2),
+                inset 0 -4px 6px rgba(0,0,0,0.6);
+            border: 4px solid #8c5222;
+            position: relative;
+        }
+
+        /* Декоративные металлические кольца */
+        .ring {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border: 4px solid #b5b5b5;
+            background: #4a4a4a;
+            border-radius: 50%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+            top: -12px;
+        }
+        .ring.left { left: 35px; }
+        .ring.right { right: 35px; }
+
+        /* Игровые кнопки */
+        .btn {
+            position: relative;
+            width: 260px;
+            padding: 16px 0;
+            font-family: inherit;
+            font-size: 26px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffffff;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Индивидуальные стили и градиенты для каждой кнопки */
+        .btn-play {
+            background: linear-gradient(180deg, #2ec4b6 0%, #0f9f90 100%);
+            box-shadow: 0 8px 0 #086359, 0 12px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-settings {
+            background: linear-gradient(180deg, #ff9f1c 0%, #e07a00 100%);
+            box-shadow: 0 8px 0 #9e5600, 0 12px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-credits {
+            background: linear-gradient(180deg, #3a86ff 0%, #1d60cc 100%);
+            box-shadow: 0 8px 0 #103f8a, 0 12px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-quit {
+            background: linear-gradient(180deg, #e63946 0%, #b81d2a 100%);
+            box-shadow: 0 8px 0 #7a0e17, 0 12px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Эффекты при наведении */
+        .btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        .btn-play:hover { box-shadow: 0 12px 0 #086359, 0 16px 25px rgba(0,0,0,0.4); }
+        .btn-settings:hover { box-shadow: 0 12px 0 #9e5600, 0 16px 25px rgba(0,0,0,0.4); }
+        .btn-credits:hover { box-shadow: 0 12px 0 #103f8a, 0 16px 25px rgba(0,0,0,0.4); }
+        .btn-quit:hover { box-shadow: 0 12px 0 #7a0e17, 0 16px 25px rgba(0,0,0,0.4); }
+
+        /* Эффект нажатия */
+        .btn:active {
+            transform: translateY(6px) scale(0.98) !important;
+            box-shadow: 0 2px 0 rgba(0,0,0,0.5), 0 4px 10px rgba(0,0,0,0.3) !important;
+        }
+
+        /* Модальные окна (Настройки и Авторы) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-card {
+            background: #2b1d0c;
+            border: 4px solid #8c5222;
+            border-radius: 24px;
+            padding: 30px;
+            width: 340px;
+            color: #fff;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #ffd166;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            font-size: 18px;
+        }
+
+        .setting-item input[type="range"] {
+            accent-color: #ff9f1c;
+            cursor: pointer;
+        }
+
+        .btn-close {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            background: #e63946;
+            box-shadow: 0 5px 0 #7a0e17;
+        }
+
+        .btn-close:hover {
+            box-shadow: 0 7px 0 #7a0e17;
+        }
+
+        /* Эффект затемнения экрана при "Start Game" */
+        .fade-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 36px;
+        }
+
+        .fade-screen.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Фоновые анимированные облака -->
+    <div class="sky-bg">
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="cloud cloud3"></div>
+    </div>
+
+    <!-- Главная конструкция меню -->
+    <div class="menu-wrapper">
+
+        <!-- Воздушные шарики -->
+        <div class="balloons">
+            <div class="balloon-group">
+                <div class="balloon yellow"></div>
+                <div class="balloon orange"></div>
+            </div>
+            <div class="balloon-group">
+                <div class="balloon blue"></div>
+                <div class="balloon pink"></div>
+            </div>
+        </div>
+
+        <!-- Верёвки -->
+        <div class="rope-container">
+            <div class="rope"></div>
+            <div class="rope"></div>
+        </div>
+
+        <!-- Доска с кнопками -->
+        <div class="menu-board">
+            <div class="ring left"></div>
+            <div class="ring right"></div>
+
+            <button class="btn btn-play" id="btnPlay">
+                <span>▶ Играть</span>
+            </button>
+            <button class="btn btn-settings" id="btnSettings">
+                <span>⚙ Настройки</span>
+            </button>
+            <button class="btn btn-credits" id="btnCredits">
+                <span>🏆 Авторы</span>
+            </button>
+            <button class="btn btn-quit" id="btnQuit">
+                <span>🚪 Выход</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Настройки -->
+    <div class="modal-overlay" id="modalSettings">
+        <div class="modal-card">
+            <h2 class="modal-title">Настройки</h2>
+            <div class="setting-item">
+                <label for="sound">Звук:</label>
+                <input type="range" id="sound" min="0" max="100" value="80">
+            </div>
+            <div class="setting-item">
+                <label for="music">Музыка:</label>
+                <input type="range" id="music" min="0" max="100" value="60">
+            </div>
+            <button class="btn btn-close" id="btnCloseSettings">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Об авторах -->
+    <div class="modal-overlay" id="modalCredits">
+        <div class="modal-card">
+            <h2 class="modal-title">Об Авторах</h2>
+            <p style="line-height: 1.6; margin-bottom: 15px; color: #ddc2a5;">
+                Разработано с любовью ❤️<br>
+                Специально для вашей игры!<br>
+                Версия 1.0.0
+            </p>
+            <button class="btn btn-close" id="btnCloseCredits">Отлично</button>
+        </div>
+    </div>
+
+    <!-- Загрузочный экран перехода -->
+    <div class="fade-screen" id="fadeScreen">Загрузка игры...</div>
+
+    <script>
+        // Синтез звуковых эффектов (Web Audio API - не требует файлов mp3)
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioCtx();
+            }
+        }
+
+        // Звук наведения мыши
+        function playHoverSound() {
+            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.08);
+
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
+        }
+
+        // Звук клика
+        function playClickSound() {
+            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.15);
+
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.15);
+        }
+
+        // Навешивание звуков на кнопки
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('mouseenter', playHoverSound);
+            btn.addEventListener('click', playClickSound);
+        });
+
+        // Элементы
+        const btnPlay = document.getElementById('btnPlay');
+        const btnSettings = document.getElementById('btnSettings');
+        const btnCredits = document.getElementById('btnCredits');
+        const btnQuit = document.getElementById('btnQuit');
+
+        const modalSettings = document.getElementById('modalSettings');
+        const modalCredits = document.getElementById('modalCredits');
+        const btnCloseSettings = document.getElementById('btnCloseSettings');
+        const btnCloseCredits = document.getElementById('btnCloseCredits');
+        const fadeScreen = document.getElementById('fadeScreen');
+
+        // Логика кнопок
+        btnPlay.addEventListener('click', () => {
+            fadeScreen.classList.add('active');
+            setTimeout(() => {
+                alert('Старт игры! Здесь загружается ваш первый уровень.');
+                fadeScreen.classList.remove('active');
+            }, 1200);
+        });
+
+        btnSettings.addEventListener('click', () => {
+            modalSettings.classList.add('active');
+        });
+
+        btnCloseSettings.addEventListener('click', () => {
+            modalSettings.classList.remove('active');
+        });
+
+        btnCredits.addEventListener('click', () => {
+            modalCredits.classList.add('active');
+        });
+
+        btnCloseCredits.addEventListener('click', () => {
+            modalCredits.classList.remove('active');
+        });
+
+        btnQuit.addEventListener('click', () => {
+            if (confirm('Вы действительно хотите выйти из игры?')) {
+                alert('Выход из игры...');
+            }
+        });
+    </script>
+</body>
+  </html>
+  
