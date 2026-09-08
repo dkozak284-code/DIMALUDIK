@@ -14,16 +14,39 @@
         }
         body {
             background-color: #050505;
-            background-image: radial-gradient(circle, #3a0000 0%, #050505 85%);
+            background-image: radial-gradient(circle, #3a0000 0%, #050505 90%);
             color: #fff;
             font-family: 'Creepster', cursive, sans-serif;
             height: 100vh;
             width: 100vw;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+        }
+
+        /* Кнопка Шестерёнки в верхнем углу */
+        .gear-btn {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            font-size: 2.2rem;
+            color: #ff0000;
+            background: rgba(20, 0, 0, 0.8);
+            border: 2px solid #ff0000;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 500;
+            box-shadow: 0 0 15px #ff0000;
+            transition: transform 0.3s ease;
+        }
+        .gear-btn:active {
+            transform: rotate(90deg) scale(0.9);
         }
 
         /* Экраны */
@@ -36,117 +59,226 @@
             height: 100%;
             position: absolute;
             top: 0; left: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.4s ease;
         }
         .hidden {
             display: none !important;
         }
 
-        /* Вертикальный контейнер меню */
-        .container {
+        /* Главное Меню (Горизонтальное) */
+        .menu-container {
             text-align: center;
             background: rgba(15, 0, 0, 0.95);
-            padding: 25px 20px;
-            border: 2px solid #800000;
-            box-shadow: 0 0 35px #ff0000;
-            border-radius: 12px;
-            animation: pulse 2.5s infinite alternate;
-            width: 320px;
+            padding: 30px 60px;
+            border: 3px solid #800000;
+            box-shadow: 0 0 40px #ff0000;
+            border-radius: 15px;
+            width: 650px;
             max-width: 90vw;
         }
         h1 {
-            font-size: 2.2rem;
+            font-size: 3.2rem;
             color: #ff0000;
-            text-shadow: 0 0 10px #ff0000, 0 0 20px #800000;
-            margin-bottom: 15px;
-            letter-spacing: 2px;
+            text-shadow: 0 0 15px #ff0000, 0 0 25px #800000;
+            margin-bottom: 25px;
+            letter-spacing: 3px;
+        }
+        .main-btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
         }
 
-        /* Кнопки меню */
         .menu-btn {
-            display: block;
-            width: 100%;
-            margin: 10px 0;
-            padding: 12px;
-            background: #1a0000;
+            flex: 1;
+            padding: 15px 25px;
+            background: linear-gradient(180deg, #2a0000, #100000);
             color: #ff3333;
             border: 2px solid #ff0000;
-            border-radius: 8px;
-            font-size: 1.4rem;
+            border-radius: 10px;
+            font-size: 1.8rem;
             font-family: 'Creepster', cursive;
             cursor: pointer;
             text-transform: uppercase;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+            box-shadow: 0 0 12px rgba(255, 0, 0, 0.5);
             transition: all 0.2s ease;
         }
         .menu-btn:active {
-            transform: scale(0.96);
+            transform: scale(0.95);
             background: #ff0000;
             color: #000;
-            box-shadow: 0 0 20px #ff0000;
+            box-shadow: 0 0 25px #ff0000;
         }
 
-        /* Модальные окна */
+        /* 2D Кабинет Казино */
+        .casino-cabinet {
+            background: linear-gradient(180deg, #250000 0%, #0a0000 100%);
+            border: 4px solid #d4af37;
+            box-shadow: 0 0 40px #d4af37, inset 0 0 20px #ff0000;
+            border-radius: 20px;
+            padding: 20px 40px;
+            text-align: center;
+            width: 700px;
+            max-width: 92vw;
+            position: relative;
+        }
+        
+        /* Декоративные лампочки по бокам 2D-автомата */
+        .cabinet-lights {
+            position: absolute;
+            top: 15px; bottom: 15px;
+            width: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .cabinet-lights.left { left: 12px; }
+        .cabinet-lights.right { right: 12px; }
+        .light-bulb {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: #ffd700;
+            box-shadow: 0 0 8px #ffd700;
+            animation: blink 1s infinite alternate;
+        }
+        .light-bulb:nth-child(even) { animation-delay: 0.5s; }
+
+        @keyframes blink {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; box-shadow: 0 0 12px #ff0000; background: #ff0000; }
+        }
+
+        .casino-title {
+            color: #d4af37;
+            font-size: 2.5rem;
+            text-shadow: 0 0 12px #ff0000;
+            margin-bottom: 5px;
+        }
+        .win-status {
+            font-size: 1.6rem;
+            height: 40px;
+            line-height: 40px;
+            color: #ffd700;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        /* 2D Барабаны */
+        .reels-frame {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            background: #000;
+            border: 3px solid #ff0000;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0 20px 0;
+            box-shadow: inset 0 0 15px #ff0000, 0 0 10px rgba(0,0,0,0.8);
+        }
+        .reel {
+            width: 110px;
+            height: 100px;
+            background: linear-gradient(180deg, #111 0%, #222 50%, #111 100%);
+            border: 2px solid #d4af37;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3.5rem;
+            box-shadow: inset 0 0 10px #000, 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .spin-btn {
+            background: linear-gradient(180deg, #ff0000, #600000);
+            color: #fff;
+            border: 3px solid #ffd700;
+            padding: 12px 40px;
+            font-size: 2rem;
+            font-family: 'Creepster', cursive;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 20px #ff0000;
+            width: 100%;
+        }
+        .spin-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Общее окно Настроек (Шестерёнка) */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.92);
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            z-index: 1000;
         }
         .modal-content {
             background: #110000;
-            border: 2px solid #ff0000;
-            padding: 20px;
-            border-radius: 10px;
+            border: 3px solid #ff0000;
+            padding: 25px 35px;
+            border-radius: 15px;
             text-align: center;
-            box-shadow: 0 0 25px #ff0000;
-            width: 300px;
+            box-shadow: 0 0 35px #ff0000;
+            width: 520px;
             max-width: 90vw;
         }
         .modal-content h2 {
             color: #ff0000;
             margin-bottom: 15px;
-            font-size: 2rem;
+            font-size: 2.2rem;
+            border-bottom: 1px solid #500000;
+            padding-bottom: 8px;
         }
-        .modal-content p {
-            font-size: 1.3rem;
-            margin: 10px 0;
-            color: #ffcccc;
+        .section-title {
+            color: #d4af37;
+            font-size: 1.4rem;
+            margin-top: 10px;
+            text-align: left;
         }
         .setting-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 10px 0;
-            font-size: 1.1rem;
-            color: #ffaaaa;
+            margin: 8px 0;
+            font-size: 1.2rem;
+            color: #ffcccc;
         }
         .setting-row input[type="range"] {
             accent-color: #ff0000;
-            width: 120px;
+            width: 160px;
         }
         .setting-row input[type="checkbox"] {
             accent-color: #ff0000;
-            width: 20px;
-            height: 20px;
+            width: 22px; height: 22px;
+        }
+        .authors-info {
+            text-align: left;
+            font-size: 1.1rem;
+            color: #ffaaaa;
+            margin: 8px 0;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
         }
 
         .close-btn {
-            margin-top: 15px;
-            padding: 8px 20px;
+            flex: 1;
+            padding: 10px;
             background: #ff0000;
             color: #000;
             border: none;
             font-family: 'Creepster', cursive;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 6px;
         }
 
-        /* Экран перехода */
+        /* Чёрный экран перехода */
         #fadeOverlay {
             position: fixed;
             top: 0; left: 0;
@@ -155,105 +287,43 @@
             opacity: 0;
             pointer-events: none;
             z-index: 999;
-            transition: opacity 0.8s ease;
+            transition: opacity 0.6s ease;
         }
         #fadeOverlay.active {
             opacity: 1;
             pointer-events: auto;
         }
-
-        /* Вертикальное казино */
-        .casino-container {
-            background: #110000;
-            border: 3px solid #d4af37;
-            box-shadow: 0 0 30px #d4af37, inset 0 0 15px #ff0000;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            width: 320px;
-            max-width: 90vw;
-        }
-        .casino-title {
-            color: #d4af37;
-            font-size: 2.2rem;
-            text-shadow: 0 0 10px #ff0000;
-            margin-bottom: 5px;
-        }
-        
-        .win-status {
-            font-size: 1.3rem;
-            height: 35px;
-            line-height: 35px;
-            color: #ffd700;
-            margin-bottom: 10px;
-            font-weight: bold;
-            text-shadow: 0 0 10px #ff0000;
-        }
-
-        .reels-frame {
-            display: flex;
-            justify-content: space-around;
-            background: #000;
-            border: 2px solid #ff0000;
-            border-radius: 8px;
-            padding: 15px 5px;
-            margin-bottom: 15px;
-            box-shadow: inset 0 0 10px #ff0000;
-        }
-        .reel {
-            width: 70px;
-            height: 70px;
-            background: #1a1a1a;
-            border: 2px solid #d4af37;
-            border-radius: 6px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2.5rem;
-            box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
-        }
-
-        .spin-btn {
-            background: linear-gradient(180deg, #ff0000, #800000);
-            color: #fff;
-            border: 2px solid #ffd700;
-            padding: 12px 30px;
-            font-size: 1.5rem;
-            font-family: 'Creepster', cursive;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 0 15px #ff0000;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        .spin-btn:active {
-            transform: scale(0.96);
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 15px #800000; }
-            100% { box-shadow: 0 0 40px #ff0000; }
-        }
     </style>
 </head>
 <body>
+
+    <!-- Иконка Шестерёнки в углу экрана -->
+    <div class="gear-btn" onclick="openSettings()">⚙</div>
 
     <div id="fadeOverlay"></div>
 
     <!-- Главное Меню -->
     <div id="menuScreen" class="screen">
-        <div class="container">
+        <div class="menu-container">
             <h1>ОБИТАТЕЛЬ 5_0_5</h1>
-            <button class="menu-btn" onclick="startGame()">ИГРАТЬ</button>
-            <button class="menu-btn" onclick="openModal('settingsModal')">НАСТРОЙКИ</button>
-            <button class="menu-btn" onclick="openModal('authorsModal')">АВТОРЫ</button>
-            <button class="menu-btn" onclick="exitGame()">ВЫХОД</button>
+            <div class="main-btn-group">
+                <button class="menu-btn" onclick="startGame()">ИГРАТЬ</button>
+                <button class="menu-btn" onclick="exitGame()">ВЫХОД</button>
+            </div>
         </div>
     </div>
 
-    <!-- Экран Казино -->
+    <!-- Экран 2D Казино -->
     <div id="gameScreen" class="screen hidden">
-        <div class="casino-container">
+        <div class="casino-cabinet">
+            <!-- Боковые лампочки -->
+            <div class="cabinet-lights left">
+                <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
+            </div>
+            <div class="cabinet-lights right">
+                <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
+            </div>
+
             <h1 class="casino-title">КРАВАВОЕ КАЗИНО</h1>
             <div id="winStatus" class="win-status"></div>
             
@@ -264,23 +334,15 @@
             </div>
 
             <button class="spin-btn" onclick="spinReels()">КРУТИТЬ</button>
-            <button class="menu-btn" style="font-size: 1.1rem; padding: 8px;" onclick="backToMenu()">В МЕНЮ</button>
         </div>
     </div>
 
-    <!-- Окно Выхода -->
-    <div class="modal" id="exitModal">
+    <!-- Общее Окно Шестерёнки (Настройки, Авторы, Вход в меню) -->
+    <div class="modal" id="gearModal">
         <div class="modal-content">
-            <h2>ВЫХОД</h2>
-            <p style="color: #ff0000; font-size: 1.5rem; font-weight: bold;">выйди сам олух</p>
-            <button class="close-btn" onclick="closeModal('exitModal')">ОК</button>
-        </div>
-    </div>
+            <h2>МЕНЮ И НАСТРОЙКИ</h2>
 
-    <!-- Окно Настройки -->
-    <div class="modal" id="settingsModal">
-        <div class="modal-content">
-            <h2>НАСТРОЙКИ</h2>
+            <div class="section-title">НАСТРОЙКИ ИГРЫ</div>
             <div class="setting-row">
                 <label>Звуки:</label>
                 <input type="range" min="0" max="100" value="80">
@@ -290,48 +352,69 @@
                 <input type="range" min="0" max="100" value="60">
             </div>
             <div class="setting-row">
-                <label>Вибрация:</label>
-                <input type="checkbox" checked>
-            </div>
-            <div class="setting-row">
                 <label>Свечение:</label>
                 <input type="checkbox" checked>
             </div>
-            <button class="close-btn" onclick="closeModal('settingsModal')">ЗАКРЫТЬ</button>
+
+            <div class="section-title">АВТОРЫ</div>
+            <div class="authors-info">
+                <p>• Разработчик: Noel_Izumi</p>
+                <p>• Тестировщик: Коля</p>
+            </div>
+
+            <div class="modal-actions">
+                <button class="close-btn" style="background: #333; color: #fff;" onclick="goToMainMenu()">ГЛАВНОЕ МЕНЮ</button>
+                <button class="close-btn" onclick="closeSettings()">ЗАКРЫТЬ</button>
+            </div>
         </div>
     </div>
 
-    <!-- Окно Авторы -->
-    <div class="modal" id="authorsModal">
+    <!-- Окно Выхода -->
+    <div class="modal" id="exitModal">
         <div class="modal-content">
-            <h2>АВТОРЫ</h2>
-            <p>Разработчик: Noel_Izumi</p>
-            <p>Тестировщик: Коля</p>
-            <button class="close-btn" onclick="closeModal('authorsModal')">ЗАКРЫТЬ</button>
+            <h2>ВЫХОД</h2>
+            <p style="color: #ff0000; font-size: 1.6rem; margin: 15px 0;">выйди самостоятельно</p>
+            <button class="close-btn" onclick="closeModal('exitModal')">ОК</button>
         </div>
     </div>
 
     <script>
-        // Фиксация вертикальной ориентации
-        function forcePortrait() {
+        // Автоматический запрос горизонтального режима
+        function forceLandscape() {
             if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('portrait').catch(() => {});
+                screen.orientation.lock('landscape').catch(() => {});
             }
         }
+        window.addEventListener('click', forceLandscape, { once: true });
+        window.addEventListener('touchstart', forceLandscape, { once: true });
 
-        window.addEventListener('click', forcePortrait, { once: true });
-        window.addEventListener('touchstart', forcePortrait, { once: true });
-
-        function openModal(id) {
-            document.getElementById(id).style.display = 'flex';
+        // Открытие / Закрытие Шестерёнки
+        function openSettings() {
+            document.getElementById('gearModal').style.display = 'flex';
         }
+        function closeSettings() {
+            document.getElementById('gearModal').style.display = 'none';
+        }
+
         function closeModal(id) {
             document.getElementById(id).style.display = 'none';
         }
 
-        // Вызов сообщения при нажатии "ВЫХОД"
+        // Переход в Главное Меню из Шестерёнки
+        function goToMainMenu() {
+            closeSettings();
+            let fade = document.getElementById('fadeOverlay');
+            fade.classList.add('active');
+            
+            setTimeout(() => {
+                document.getElementById('gameScreen').classList.add('hidden');
+                document.getElementById('menuScreen').classList.remove('hidden');
+                fade.classList.remove('active');
+            }, 500);
+        }
+
         function exitGame() {
-            openModal('exitModal');
+            document.getElementById('exitModal').style.display = 'flex';
         }
 
         function startGame() {
@@ -342,20 +425,10 @@
                 document.getElementById('menuScreen').classList.add('hidden');
                 document.getElementById('gameScreen').classList.remove('hidden');
                 fade.classList.remove('active');
-            }, 800);
+            }, 500);
         }
 
-        function backToMenu() {
-            let fade = document.getElementById('fadeOverlay');
-            fade.classList.add('active');
-            
-            setTimeout(() => {
-                document.getElementById('gameScreen').classList.add('hidden');
-                document.getElementById('menuScreen').classList.remove('hidden');
-                fade.classList.remove('active');
-            }, 800);
-        }
-
+        // Логика вращения
         const symbols = ['💀', '🩸', '7️⃣', '🍒', '🎃', '💎'];
 
         function spinReels() {
@@ -379,10 +452,10 @@
                     status.innerText = "ДЖЕКПОТ! :)";
                     status.style.color = "#ffd700";
                 } else if (r1 === r2 || r2 === r3 || r1 === r3) {
-                    status.innerText = "ВЫИГРЫШ!";
+                    status.innerText = "ВЫИГРЫШ! :)";
                     status.style.color = "#ff4444";
                 } else {
-                    status.innerText = "ПОПРОБУЙ ЕЩЁ!";
+                    status.innerText = "ПОПРОБУЙ ЕЩЁ! :(";
                     status.style.color = "#888888";
                 }
             }, 600);
