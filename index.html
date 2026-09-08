@@ -13,8 +13,8 @@
             user-select: none;
         }
         body {
-            background-color: #050505;
-            background-image: radial-gradient(circle, #3a0000 0%, #050505 90%);
+            background-color: #020000;
+            background-image: radial-gradient(circle, #250000 0%, #020000 85%);
             color: #fff;
             font-family: 'Creepster', cursive, sans-serif;
             height: 100vh;
@@ -25,18 +25,18 @@
             overflow: hidden;
         }
 
-        /* Кнопка Шестерёнки в углу (скрыта по умолчанию) */
+        /* Кнопка Шестерёнки в игре */
         .gear-btn {
             position: fixed;
             top: 12px;
             right: 15px;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: #ff0000;
-            background: rgba(20, 0, 0, 0.85);
-            border: 2px solid #ff0000;
+            background: rgba(15, 0, 0, 0.9);
+            border: 2px solid #800000;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -49,7 +49,6 @@
             transform: rotate(90deg) scale(0.9);
         }
 
-        /* Экраны */
         .screen {
             display: flex;
             flex-direction: column;
@@ -65,41 +64,41 @@
             display: none !important;
         }
 
-        /* Главное Меню (Компактное) */
+        /* Компактное Главное Меню */
         .menu-container {
             text-align: center;
-            background: rgba(15, 0, 0, 0.95);
-            padding: 18px 30px;
-            border: 2px solid #800000;
-            box-shadow: 0 0 25px #ff0000;
+            background: rgba(10, 0, 0, 0.95);
+            padding: 16px 25px;
+            border: 2px solid #600000;
+            box-shadow: 0 0 30px #ff0000, inset 0 0 15px #300000;
             border-radius: 12px;
-            width: 480px;
-            max-width: 85vw;
+            width: 420px;
+            max-width: 80vw;
         }
         h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             color: #ff0000;
-            text-shadow: 0 0 10px #ff0000, 0 0 18px #800000;
-            margin-bottom: 15px;
+            text-shadow: 0 0 8px #ff0000, 0 0 18px #800000;
+            margin-bottom: 12px;
             letter-spacing: 2px;
         }
         .main-btn-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 8px;
         }
 
         .menu-btn {
-            padding: 10px 15px;
-            background: linear-gradient(180deg, #2a0000, #100000);
+            padding: 8px 12px;
+            background: linear-gradient(180deg, #200000, #0a0000);
             color: #ff3333;
-            border: 2px solid #ff0000;
-            border-radius: 8px;
-            font-size: 1.2rem;
+            border: 1px solid #ff0000;
+            border-radius: 6px;
+            font-size: 1.1rem;
             font-family: 'Creepster', cursive;
             cursor: pointer;
             text-transform: uppercase;
-            box-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+            box-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
             transition: all 0.2s ease;
         }
         .menu-btn:active {
@@ -109,166 +108,170 @@
             box-shadow: 0 0 15px #ff0000;
         }
 
-        /* 2D Кабинет Казино (Компактный) */
+        /* Детализированный 2D Хоррор Кабинет (Сетка 3х3) */
         .casino-cabinet {
-            background: linear-gradient(180deg, #250000 0%, #0a0000 100%);
-            border: 3px solid #d4af37;
-            box-shadow: 0 0 25px #d4af37, inset 0 0 15px #ff0000;
-            border-radius: 15px;
-            padding: 12px 25px;
+            background: linear-gradient(180deg, #1f0000 0%, #050000 100%);
+            border: 3px solid #800000;
+            box-shadow: 0 0 35px #ff0000, inset 0 0 25px #000;
+            border-radius: 14px;
+            padding: 12px 20px;
             text-align: center;
-            width: 460px;
-            max-width: 85vw;
+            width: 380px;
+            max-width: 82vw;
             position: relative;
         }
         
-        /* Лампочки */
         .cabinet-lights {
             position: absolute;
-            top: 12px; bottom: 12px;
-            width: 10px;
+            top: 10px; bottom: 10px;
+            width: 8px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-around;
         }
-        .cabinet-lights.left { left: 8px; }
-        .cabinet-lights.right { right: 8px; }
+        .cabinet-lights.left { left: 6px; }
+        .cabinet-lights.right { right: 6px; }
         .light-bulb {
-            width: 8px; height: 8px;
+            width: 6px; height: 6px;
             border-radius: 50%;
-            background: #ffd700;
-            box-shadow: 0 0 6px #ffd700;
-            animation: blink 1s infinite alternate;
+            background: #ff0000;
+            box-shadow: 0 0 6px #ff0000;
+            animation: horrorFlicker 1.2s infinite alternate;
         }
-        .light-bulb:nth-child(even) { animation-delay: 0.5s; }
+        .light-bulb:nth-child(even) { animation-delay: 0.6s; }
 
-        @keyframes blink {
-            0% { opacity: 0.3; }
-            100% { opacity: 1; box-shadow: 0 0 10px #ff0000; background: #ff0000; }
+        @keyframes horrorFlicker {
+            0% { opacity: 0.2; background: #400000; box-shadow: none; }
+            50% { opacity: 1; background: #ff0000; box-shadow: 0 0 8px #ff0000; }
+            100% { opacity: 0.8; background: #ffd700; box-shadow: 0 0 6px #ffd700; }
         }
 
         .casino-title {
             color: #d4af37;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             text-shadow: 0 0 10px #ff0000;
             margin-bottom: 2px;
+            letter-spacing: 1px;
         }
         .win-status {
-            font-size: 1.1rem;
-            height: 25px;
-            line-height: 25px;
+            font-size: 1rem;
+            height: 22px;
+            line-height: 22px;
             color: #ffd700;
             font-weight: bold;
             text-shadow: 0 0 8px #ff0000;
+            margin-bottom: 4px;
         }
 
-        /* 2D Барабаны */
+        /* Игровая Сетка 3х3 */
         .reels-frame {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 6px;
             background: #000;
-            border: 2px solid #ff0000;
-            border-radius: 10px;
-            padding: 10px;
-            margin: 8px 0 12px 0;
-            box-shadow: inset 0 0 10px #ff0000;
+            border: 2px solid #800000;
+            border-radius: 8px;
+            padding: 8px;
+            margin: 6px 0 10px 0;
+            box-shadow: inset 0 0 15px #ff0000, 0 0 10px #000;
         }
         .reel {
-            width: 75px;
-            height: 75px;
-            background: linear-gradient(180deg, #111 0%, #222 50%, #111 100%);
-            border: 2px solid #d4af37;
-            border-radius: 6px;
+            height: 52px;
+            background: linear-gradient(180deg, #0a0000 0%, #1a0000 50%, #0a0000 100%);
+            border: 1px solid #600000;
+            border-radius: 5px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2.5rem;
-            box-shadow: inset 0 0 8px #000, 0 0 8px rgba(212, 175, 55, 0.4);
+            font-size: 1.8rem;
+            box-shadow: inset 0 0 6px #000, 0 0 5px rgba(255, 0, 0, 0.3);
+            transition: all 0.1s ease;
         }
 
         .spin-btn {
-            background: linear-gradient(180deg, #ff0000, #600000);
+            background: linear-gradient(180deg, #aa0000, #400000);
             color: #fff;
-            border: 2px solid #ffd700;
-            padding: 8px 25px;
-            font-size: 1.4rem;
+            border: 2px solid #ff3333;
+            padding: 8px 20px;
+            font-size: 1.3rem;
             font-family: 'Creepster', cursive;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            box-shadow: 0 0 15px #ff0000;
+            box-shadow: 0 0 12px #ff0000;
             width: 100%;
         }
         .spin-btn:active {
             transform: scale(0.97);
+            background: #ff0000;
         }
 
-        /* Окна Настроек */
+        /* Модальные Окна */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.92);
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
         .modal-content {
-            background: #110000;
-            border: 2px solid #ff0000;
-            padding: 20px 25px;
-            border-radius: 12px;
+            background: #0a0000;
+            border: 2px solid #800000;
+            padding: 16px 20px;
+            border-radius: 10px;
             text-align: center;
-            box-shadow: 0 0 25px #ff0000;
-            width: 400px;
-            max-width: 85vw;
+            box-shadow: 0 0 20px #ff0000;
+            width: 360px;
+            max-width: 80vw;
         }
         .modal-content h2 {
             color: #ff0000;
-            margin-bottom: 12px;
-            font-size: 1.8rem;
-            border-bottom: 1px solid #500000;
-            padding-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 1.6rem;
+            border-bottom: 1px solid #400000;
+            padding-bottom: 4px;
         }
         .setting-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 8px 0;
-            font-size: 1.1rem;
+            margin: 6px 0;
+            font-size: 1rem;
             color: #ffcccc;
         }
         .setting-row input[type="range"] {
             accent-color: #ff0000;
-            width: 130px;
+            width: 110px;
         }
         .setting-row input[type="checkbox"] {
             accent-color: #ff0000;
-            width: 18px; height: 18px;
+            width: 16px; height: 16px;
         }
         .authors-info {
             text-align: left;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #ffaaaa;
-            margin: 10px 0;
+            margin: 8px 0;
         }
 
         .modal-actions {
             display: flex;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 8px;
+            margin-top: 12px;
         }
 
         .close-btn {
             flex: 1;
-            padding: 8px;
-            background: #ff0000;
-            color: #000;
-            border: none;
+            padding: 6px;
+            background: #800000;
+            color: #fff;
+            border: 1px solid #ff0000;
             font-family: 'Creepster', cursive;
-            font-size: 1.1rem;
+            font-size: 1rem;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 4px;
         }
 
         #fadeOverlay {
@@ -289,7 +292,6 @@
 </head>
 <body>
 
-    <!-- Кнопка Шестерёнки (видна только внутри игры) -->
     <div id="gearBtn" class="gear-btn hidden" onclick="openGameSettings()">⚙</div>
 
     <div id="fadeOverlay"></div>
@@ -307,34 +309,39 @@
         </div>
     </div>
 
-    <!-- Экран 2D Казино -->
+    <!-- 2D Хоррор Казино 3х3 -->
     <div id="gameScreen" class="screen hidden">
         <div class="casino-cabinet">
             <div class="cabinet-lights left">
-                <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
+                <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
             </div>
             <div class="cabinet-lights right">
-                <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
+                <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
             </div>
 
-            <h1 class="casino-title">КРАВАВОЕ КАЗИНО</h1>
+            <h1 class="casino-title">КРОВАВОЕ КАЗИНО</h1>
             <div id="winStatus" class="win-status"></div>
             
             <div class="reels-frame">
-                <div class="reel" id="reel1">💀</div>
-                <div class="reel" id="reel2">7️⃣</div>
-                <div class="reel" id="reel3">🩸</div>
+                <div class="reel" id="r0">💀</div>
+                <div class="reel" id="r1">🩸</div>
+                <div class="reel" id="r2">👁️</div>
+                <div class="reel" id="r3">7️⃣</div>
+                <div class="reel" id="r4">🔪</div>
+                <div class="reel" id="r5">🕷️</div>
+                <div class="reel" id="r6">🕯️</div>
+                <div class="reel" id="r7">👻</div>
+                <div class="reel" id="r8">💀</div>
             </div>
 
             <button class="spin-btn" onclick="spinReels()">КРУТИТЬ</button>
         </div>
     </div>
 
-    <!-- Внутриигровые Настройки (через Шестерёнку) -->
+    <!-- Внутриигровые Настройки -->
     <div class="modal" id="gameGearModal">
         <div class="modal-content">
             <h2>ПАУЗА И НАСТРОЙКИ</h2>
-
             <div class="setting-row">
                 <label>Звуки:</label>
                 <input type="range" min="0" max="100" value="80">
@@ -347,15 +354,14 @@
                 <label>Свечение:</label>
                 <input type="checkbox" checked>
             </div>
-
             <div class="modal-actions">
-                <button class="close-btn" style="background: #333; color: #fff;" onclick="goToMainMenu()">В МЕНЮ</button>
+                <button class="close-btn" style="background: #200000;" onclick="goToMainMenu()">В МЕНЮ</button>
                 <button class="close-btn" onclick="closeModal('gameGearModal')">ПРОДОЛЖИТЬ</button>
             </div>
         </div>
     </div>
 
-    <!-- Настройки (из Главного Меню) -->
+    <!-- Настройки Главного Меню -->
     <div class="modal" id="settingsModal">
         <div class="modal-content">
             <h2>НАСТРОЙКИ</h2>
@@ -371,11 +377,11 @@
                 <label>Свечение:</label>
                 <input type="checkbox" checked>
             </div>
-            <button class="close-btn" style="margin-top: 15px; width: 100%;" onclick="closeModal('settingsModal')">ЗАКРЫТЬ</button>
+            <button class="close-btn" style="margin-top: 12px; width: 100%;" onclick="closeModal('settingsModal')">ЗАКРЫТЬ</button>
         </div>
     </div>
 
-    <!-- Авторы (из Главного Меню) -->
+    <!-- Авторы -->
     <div class="modal" id="authorsModal">
         <div class="modal-content">
             <h2>АВТОРЫ</h2>
@@ -383,7 +389,7 @@
                 <p>• Разработчик: Noel_Izumi</p>
                 <p>• Тестировщик: Коля</p>
             </div>
-            <button class="close-btn" style="margin-top: 15px; width: 100%;" onclick="closeModal('authorsModal')">ЗАКРЫТЬ</button>
+            <button class="close-btn" style="margin-top: 12px; width: 100%;" onclick="closeModal('authorsModal')">ЗАКРЫТЬ</button>
         </div>
     </div>
 
@@ -391,7 +397,7 @@
     <div class="modal" id="exitModal">
         <div class="modal-content">
             <h2>ВЫХОД</h2>
-            <p style="color: #ff0000; font-size: 1.4rem; margin: 15px 0;">выйди самостоятельно</p>
+            <p style="color: #ff0000; font-size: 1.3rem; margin: 12px 0;">выйди самостоятельно</p>
             <button class="close-btn" style="width: 100%;" onclick="closeModal('exitModal')">ОК</button>
         </div>
     </div>
@@ -416,7 +422,6 @@
             openModal('gameGearModal');
         }
 
-        // Старт игры
         function startGame() {
             let fade = document.getElementById('fadeOverlay');
             fade.classList.add('active');
@@ -424,12 +429,11 @@
             setTimeout(() => {
                 document.getElementById('menuScreen').classList.add('hidden');
                 document.getElementById('gameScreen').classList.remove('hidden');
-                document.getElementById('gearBtn').classList.remove('hidden'); // Показываем шестерёнку
+                document.getElementById('gearBtn').classList.remove('hidden');
                 fade.classList.remove('active');
             }, 500);
         }
 
-        // Возврат в Главное Меню
         function goToMainMenu() {
             closeModal('gameGearModal');
             let fade = document.getElementById('fadeOverlay');
@@ -437,7 +441,7 @@
             
             setTimeout(() => {
                 document.getElementById('gameScreen').classList.add('hidden');
-                document.getElementById('gearBtn').classList.add('hidden'); // Скрываем шестерёнку
+                document.getElementById('gearBtn').classList.add('hidden');
                 document.getElementById('menuScreen').classList.remove('hidden');
                 fade.classList.remove('active');
             }, 500);
@@ -447,36 +451,73 @@
             openModal('exitModal');
         }
 
-        const symbols = ['💀', '🩸', '7️⃣', '🍒', '🎃', '💎'];
+        // Хоррор Символы
+        const symbols = ['💀', '🩸', '👁️', '🕷️', '🔪', '🕯️', '7️⃣', '👻'];
+
+        // 8 Линий комбинаций (3 строки, 3 столбца, 2 диагонали)
+        const winningLines = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Строки
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Столбцы
+            [0, 4, 8], [2, 4, 6]             // Диагонали
+        ];
 
         function spinReels() {
             let status = document.getElementById('winStatus');
             status.innerText = '';
 
-            document.getElementById('reel1').innerText = '❓';
-            document.getElementById('reel2').innerText = '❓';
-            document.getElementById('reel3').innerText = '❓';
+            // Установка временных знаков вращения
+            for (let i = 0; i < 9; i++) {
+                document.getElementById('r' + i).innerText = '❓';
+            }
 
-            let r1 = symbols[Math.floor(Math.random() * symbols.length)];
-            let r2 = symbols[Math.floor(Math.random() * symbols.length)];
-            let r3 = symbols[Math.floor(Math.random() * symbols.length)];
+            let grid = [];
+            for (let i = 0; i < 9; i++) {
+                grid.push(symbols[Math.floor(Math.random() * symbols.length)]);
+            }
 
-            setTimeout(() => { document.getElementById('reel1').innerText = r1; }, 200);
-            setTimeout(() => { document.getElementById('reel2').innerText = r2; }, 400);
-            setTimeout(() => { 
-                document.getElementById('reel3').innerText = r3; 
+            // Поочерёдное открытие слотов
+            grid.forEach((sym, index) => {
+                setTimeout(() => {
+                    document.getElementById('r' + index).innerText = sym;
+                }, 100 + index * 60);
+            });
 
-                if (r1 === r2 && r2 === r3) {
-                    status.innerText = "ДЖЕКПОТ! :)";
+            // Проверка комбинаций после завершения вращения
+            setTimeout(() => {
+                let matchedLinesCount = 0;
+                let specialCombo = '';
+
+                // Проверка полного совпадения поле (9 из 9)
+                const isFullGridMatch = grid.every(val => val === grid[0]);
+
+                if (isFullGridMatch) {
+                    status.innerText = "МЕГА ДЖЕКПОТ 9/9! :)";
                     status.style.color = "#ffd700";
-                } else if (r1 === r2 || r2 === r3 || r1 === r3) {
-                    status.innerText = "ВЫИГРЫШ! :)";
-                    status.style.color = "#ff4444";
-                } else {
-                    status.innerText = "ПОПРОБУЙ ЕЩЁ! :(";
-                    status.style.color = "#888888";
+                    return;
                 }
-            }, 600);
+
+                // Проверка линий
+                winningLines.forEach(line => {
+                    const [a, b, c] = line;
+                    if (grid[a] === grid[b] && grid[b] === grid[c]) {
+                        matchedLinesCount++;
+                        if (grid[a] === '💀') specialCombo = 'ПРОКЛЯТИЕ ЧЕРЕПОВ!';
+                        else if (grid[a] === '🩸') specialCombo = 'КРОВАТЕЛЬНЫЙ ВЫИГРЫШ!';
+                        else if (grid[a] === '7️⃣') specialCombo = 'ДЬЯВОЛЬСКИЕ 777!';
+                    }
+                });
+
+                if (specialCombo !== '') {
+                    status.innerText = specialCombo + " :)";
+                    status.style.color = "#ff4444";
+                } else if (matchedLinesCount > 0) {
+                    status.innerText = `ЛИНИЙ: ${matchedLinesCount} | ВЫИГРЫШ! :)`;
+                    status.style.color = "#ffd700";
+                } else {
+                    status.innerText = "ЖЕРТВА ПРИНЯТА... ПОПРОБУЙ ЕЩЁ :(";
+                    status.style.color = "#777777";
+                }
+            }, 700);
         }
     </script>
 </body>
