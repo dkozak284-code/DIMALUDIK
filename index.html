@@ -24,31 +24,49 @@
             align-items: center;
             overflow: hidden;
         }
+
+        /* Экраны */
+        .screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0; left: 0;
+            transition: opacity 0.5s ease;
+        }
+        .hidden {
+            display: none !important;
+        }
+
+        /* Главный контейнер меню */
         .container {
             text-align: center;
-            background: rgba(15, 0, 0, 0.85);
+            background: rgba(15, 0, 0, 0.9);
             padding: 25px 35px;
             border: 2px solid #800000;
             box-shadow: 0 0 35px #ff0000;
             border-radius: 12px;
             animation: pulse 2.5s infinite alternate;
-            position: relative;
+            width: 320px;
             max-width: 90vw;
-            width: 340px;
         }
         h1 {
-            font-size: 2.3rem;
+            font-size: 2.2rem;
             color: #ff0000;
             text-shadow: 0 0 10px #ff0000, 0 0 20px #800000;
             margin-bottom: 20px;
             letter-spacing: 2px;
         }
+
+        /* Кнопки меню */
         .menu-btn {
-            position: relative;
             display: block;
             width: 100%;
-            margin: 12px 0;
-            padding: 12px 20px;
+            margin: 10px 0;
+            padding: 12px 15px;
             background: #1a0000;
             color: #ff3333;
             border: 2px solid #ff0000;
@@ -57,43 +75,17 @@
             font-family: 'Creepster', cursive;
             cursor: pointer;
             text-transform: uppercase;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-            transition: transform 0.05s;
-            overflow: hidden;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+            transition: all 0.2s ease;
         }
-        /* Эффект трещин и тряски при нажатии */
         .menu-btn:active {
             transform: scale(0.96);
-            background-color: #2b0000;
-            animation: crackShake 0.12s ease-in-out;
-        }
-        .menu-btn::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M10 20 L40 50 L25 80 M40 50 L80 30 M40 50 L65 75' stroke='%23ff0000' stroke-width='2.5' fill='none' opacity='0.9'/%3E%3Cpath d='M70 10 L50 40 L85 60' stroke='%23ffffff' stroke-width='1.5' fill='none' opacity='0.8'/%3E%3C/svg%3E");
-            background-size: cover;
-            opacity: 0;
-            pointer-events: none;
-        }
-        .menu-btn:active::after {
-            opacity: 1;
+            background: #ff0000;
+            color: #000;
+            box-shadow: 0 0 20px #ff0000;
         }
 
-        @keyframes crackShake {
-            0% { transform: translate(0, 0) scale(0.96); }
-            25% { transform: translate(-3px, 2px) scale(0.96); }
-            50% { transform: translate(3px, -2px) scale(0.96); }
-            75% { transform: translate(-2px, -1px) scale(0.96); }
-            100% { transform: translate(0, 0) scale(0.96); }
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 15px #800000; }
-            100% { box-shadow: 0 0 40px #ff0000; }
-        }
-
-        /* Окно "Авторы" */
+        /* Модальные окна (Настройки / Авторы) */
         .modal {
             display: none;
             position: fixed;
@@ -110,7 +102,8 @@
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 0 25px #ff0000;
-            width: 280px;
+            width: 300px;
+            max-width: 90vw;
         }
         .modal-content h2 {
             color: #ff0000;
@@ -122,51 +115,276 @@
             margin: 8px 0;
             color: #ffcccc;
         }
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 12px 0;
+            font-size: 1.1rem;
+            color: #ffaaaa;
+        }
+        .setting-row input[type="range"] {
+            accent-color: #ff0000;
+            width: 120px;
+        }
+        .setting-row input[type="checkbox"] {
+            accent-color: #ff0000;
+            width: 20px;
+            height: 20px;
+        }
+
         .close-btn {
             margin-top: 15px;
-            padding: 8px 15px;
+            padding: 8px 20px;
             background: #ff0000;
             color: #000;
             border: none;
             font-family: 'Creepster', cursive;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             cursor: pointer;
             border-radius: 5px;
+        }
+
+        /* Чёрный экран перехода */
+        #fadeOverlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+            transition: opacity 0.8s ease;
+        }
+        #fadeOverlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Казино (Слот-Машина) */
+        .casino-container {
+            background: #110000;
+            border: 3px solid #d4af37;
+            box-shadow: 0 0 30px #d4af37, inset 0 0 15px #ff0000;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            width: 320px;
+            max-width: 90vw;
+        }
+        .casino-title {
+            color: #d4af37;
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px #ff0000;
+            margin-bottom: 10px;
+        }
+        .balance-box {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+        .balance-box span {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        /* Барабаны */
+        .reels-frame {
+            display: flex;
+            justify-content: space-around;
+            background: #000;
+            border: 2px solid #ff0000;
+            border-radius: 8px;
+            padding: 15px 5px;
+            margin-bottom: 15px;
+            box-shadow: inset 0 0 10px #ff0000;
+        }
+        .reel {
+            width: 70px;
+            height: 70px;
+            background: #1a1a1a;
+            border: 2px solid #d4af37;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+        }
+
+        .spin-btn {
+            background: linear-gradient(180deg, #ff0000, #800000);
+            color: #fff;
+            border: 2px solid #ffd700;
+            padding: 12px 30px;
+            font-size: 1.5rem;
+            font-family: 'Creepster', cursive;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #ff0000;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .spin-btn:active {
+            transform: scale(0.96);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px #800000; }
+            100% { box-shadow: 0 0 40px #ff0000; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>ОБИТАТЕЛЬ 5_0_5</h1>
-        <button class="menu-btn" onclick="btnEffect(); alert('Запуск игры...')">ИГРАТЬ</button>
-        <button class="menu-btn" onclick="btnEffect(); alert('Настройки')">НАСТРОЙКИ</button>
-        <button class="menu-btn" onclick="btnEffect(); openAuthors()">АВТОРЫ</button>
-        <button class="menu-btn" onclick="btnEffect(); alert('Выход')">ВЫХОД</button>
+    <!-- Чёрный экран затемнения -->
+    <div id="fadeOverlay"></div>
+
+    <!-- Главное Меню -->
+    <div id="menuScreen" class="screen">
+        <div class="container">
+            <h1>ОБИТАТЕЛЬ 5_0_5</h1>
+            <button class="menu-btn" onclick="startGame()">ИГРАТЬ</button>
+            <button class="menu-btn" onclick="openModal('settingsModal')">НАСТРОЙКИ</button>
+            <button class="menu-btn" onclick="openModal('authorsModal')">АВТОРЫ</button>
+            <button class="menu-btn" onclick="exitGame()">ВЫХОД</button>
+        </div>
     </div>
 
+    <!-- Экран Казино -->
+    <div id="gameScreen" class="screen hidden">
+        <div class="casino-container">
+            <h1 class="casino-title">КРАВАВОЕ КАЗИНО</h1>
+            <div class="balance-box">Баланс: <span id="coins">1000</span> 🪙</div>
+            
+            <div class="reels-frame">
+                <div class="reel" id="reel1">💀</div>
+                <div class="reel" id="reel2">7️⃣</div>
+                <div class="reel" id="reel3">🩸</div>
+            </div>
+
+            <button class="spin-btn" onclick="spinReels()">КРУТИТЬ</button>
+            <button class="menu-btn" style="font-size: 1.1rem; padding: 8px;" onclick="backToMenu()">В МЕНЮ</button>
+        </div>
+    </div>
+
+    <!-- Окно Настройки -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <h2>НАСТРОЙКИ</h2>
+            <div class="setting-row">
+                <label>Звуки:</label>
+                <input type="range" min="0" max="100" value="80">
+            </div>
+            <div class="setting-row">
+                <label>Музыка:</label>
+                <input type="range" min="0" max="100" value="60">
+            </div>
+            <div class="setting-row">
+                <label>Вибрация:</label>
+                <input type="checkbox" checked>
+            </div>
+            <div class="setting-row">
+                <label>Свечение:</label>
+                <input type="checkbox" checked>
+            </div>
+            <button class="close-btn" onclick="closeModal('settingsModal')">ЗАКРЫТЬ</button>
+        </div>
+    </div>
+
+    <!-- Окно Авторы -->
     <div class="modal" id="authorsModal">
         <div class="modal-content">
             <h2>АВТОРЫ</h2>
             <p>Разработчик: Noel_Izumi</p>
             <p>Тестировщик: Коля</p>
-            <button class="close-btn" onclick="closeAuthors()">ЗАКРЫТЬ</button>
+            <button class="close-btn" onclick="closeModal('authorsModal')">ЗАКРЫТЬ</button>
         </div>
     </div>
 
     <script>
-        function openAuthors() {
-            document.getElementById('authorsModal').style.display = 'flex';
+        // Открытие / Закрытие модалок
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
         }
-        function closeAuthors() {
-            document.getElementById('authorsModal').style.display = 'none';
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
         }
-        function btnEffect() {
-            if (navigator.vibrate) {
-                navigator.vibrate(40);
+
+        // Выход из игры
+        function exitGame() {
+            if (confirm("Выйти из игры?")) {
+                if (navigator.app && navigator.app.exitApp) {
+                    navigator.app.exitApp();
+                } else {
+                    window.close();
+                }
             }
         }
-    </script>
 
+        // Переход в игру через Чёрный экран
+        function startGame() {
+            let fade = document.getElementById('fadeOverlay');
+            fade.classList.add('active');
+            
+            setTimeout(() => {
+                document.getElementById('menuScreen').classList.add('hidden');
+                document.getElementById('gameScreen').classList.remove('hidden');
+                fade.classList.remove('active');
+            }, 800);
+        }
+
+        // Возврат в меню через Чёрный экран
+        function backToMenu() {
+            let fade = document.getElementById('fadeOverlay');
+            fade.classList.add('active');
+            
+            setTimeout(() => {
+                document.getElementById('gameScreen').classList.add('hidden');
+                document.getElementById('menuScreen').classList.remove('hidden');
+                fade.classList.remove('active');
+            }, 800);
+        }
+
+        // Логика Казино (Слот-Машины)
+        const symbols = ['💀', '🩸', '7️⃣', '🍒', '🎃', '💎'];
+        let coins = 1000;
+
+        function spinReels() {
+            if (coins < 50) {
+                alert("Недостаточно монет! Баланс пополнен.");
+                coins = 500;
+                document.getElementById('coins').innerText = coins;
+                return;
+            }
+
+            coins -= 50;
+            document.getElementById('coins').innerText = coins;
+
+            let r1 = symbols[Math.floor(Math.random() * symbols.length)];
+            let r2 = symbols[Math.floor(Math.random() * symbols.length)];
+            let r3 = symbols[Math.floor(Math.random() * symbols.length)];
+
+            document.getElementById('reel1').innerText = '❓';
+            document.getElementById('reel2').innerText = '❓';
+            document.getElementById('reel3').innerText = '❓';
+
+            setTimeout(() => { document.getElementById('reel1').innerText = r1; }, 200);
+            setTimeout(() => { document.getElementById('reel2').innerText = r2; }, 400);
+            setTimeout(() => { 
+                document.getElementById('reel3').innerText = r3; 
+
+                // Проверка выигрыша
+                if (r1 === r2 && r2 === r3) {
+                    coins += 500;
+                    alert("ДЖЕКПОТ! +500 монет! 🥳");
+                } else if (r1 === r2 || r2 === r3 || r1 === r3) {
+                    coins += 100;
+                    alert("ВЫИГРЫШ! +100 монет! 🎉");
+                }
+                document.getElementById('coins').innerText = coins;
+            }, 600);
+        }
+    </script>
 </body>
 </html>
