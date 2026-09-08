@@ -176,16 +176,18 @@
             color: #d4af37;
             font-size: 2.2rem;
             text-shadow: 0 0 10px #ff0000;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
-        .balance-box {
+        
+        /* Надпись результата внутри игры */
+        .win-status {
             font-size: 1.3rem;
-            color: #fff;
-            margin-bottom: 15px;
-        }
-        .balance-box span {
+            height: 35px;
+            line-height: 35px;
             color: #ffd700;
+            margin-bottom: 10px;
             font-weight: bold;
+            text-shadow: 0 0 10px #ff0000;
         }
 
         /* Барабаны */
@@ -255,7 +257,7 @@
     <div id="gameScreen" class="screen hidden">
         <div class="casino-container">
             <h1 class="casino-title">КРАВАВОЕ КАЗИНО</h1>
-            <div class="balance-box">Баланс: <span id="coins">1000</span> 🪙</div>
+            <div id="winStatus" class="win-status"></div>
             
             <div class="reels-frame">
                 <div class="reel" id="reel1">💀</div>
@@ -303,7 +305,6 @@
     </div>
 
     <script>
-        // Открытие / Закрытие модалок
         function openModal(id) {
             document.getElementById(id).style.display = 'flex';
         }
@@ -311,18 +312,19 @@
             document.getElementById(id).style.display = 'none';
         }
 
-        // Выход из игры
+        // Выход из игры мгновенно без системных диалогов
         function exitGame() {
-            if (confirm("Выйти из игры?")) {
-                if (navigator.app && navigator.app.exitApp) {
-                    navigator.app.exitApp();
-                } else {
-                    window.close();
-                }
+            if (navigator.app && navigator.app.exitApp) {
+                navigator.app.exitApp();
+            } else {
+                window.opener = null;
+                window.open('', '_self');
+                window.close();
+                history.back();
             }
         }
 
-        // Переход в игру через Чёрный экран
+        // Переход в игру
         function startGame() {
             let fade = document.getElementById('fadeOverlay');
             fade.classList.add('active');
@@ -334,7 +336,7 @@
             }, 800);
         }
 
-        // Возврат в меню через Чёрный экран
+        // Возврат в меню
         function backToMenu() {
             let fade = document.getElementById('fadeOverlay');
             fade.classList.add('active');
@@ -346,43 +348,37 @@
             }, 800);
         }
 
-        // Логика Казино (Слот-Машины)
+        // Бесплатная вращалка
         const symbols = ['💀', '🩸', '7️⃣', '🍒', '🎃', '💎'];
-        let coins = 1000;
 
         function spinReels() {
-            if (coins < 50) {
-                alert("Недостаточно монет! Баланс пополнен.");
-                coins = 500;
-                document.getElementById('coins').innerText = coins;
-                return;
-            }
-
-            coins -= 50;
-            document.getElementById('coins').innerText = coins;
-
-            let r1 = symbols[Math.floor(Math.random() * symbols.length)];
-            let r2 = symbols[Math.floor(Math.random() * symbols.length)];
-            let r3 = symbols[Math.floor(Math.random() * symbols.length)];
+            let status = document.getElementById('winStatus');
+            status.innerText = '';
 
             document.getElementById('reel1').innerText = '❓';
             document.getElementById('reel2').innerText = '❓';
             document.getElementById('reel3').innerText = '❓';
+
+            let r1 = symbols[Math.floor(Math.random() * symbols.length)];
+            let r2 = symbols[Math.floor(Math.random() * symbols.length)];
+            let r3 = symbols[Math.floor(Math.random() * symbols.length)];
 
             setTimeout(() => { document.getElementById('reel1').innerText = r1; }, 200);
             setTimeout(() => { document.getElementById('reel2').innerText = r2; }, 400);
             setTimeout(() => { 
                 document.getElementById('reel3').innerText = r3; 
 
-                // Проверка выигрыша
+                // Отображение выигрыша прямо над барабанами
                 if (r1 === r2 && r2 === r3) {
-                    coins += 500;
-                    alert("ДЖЕКПОТ! +500 монет! 🥳");
+                    status.innerText = "ДЖЕКПОТ! 🥳";
+                    status.style.color = "#ffd700";
                 } else if (r1 === r2 || r2 === r3 || r1 === r3) {
-                    coins += 100;
-                    alert("ВЫИГРЫШ! +100 монет! 🎉");
+                    status.innerText = "ВЫИГРЫШ! 🎉";
+                    status.style.color = "#ff4444";
+                } else {
+                    status.innerText = "ПОПРОБУЙ ЕЩЁ!";
+                    status.style.color = "#888888";
                 }
-                document.getElementById('coins').innerText = coins;
             }, 600);
         }
     </script>
