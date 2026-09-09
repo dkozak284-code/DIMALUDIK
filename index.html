@@ -32,7 +32,6 @@
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
-        /* Кнопки управления */
         .gear-btn {
             position: fixed;
             top: calc(35px + env(safe-area-inset-top));
@@ -116,7 +115,6 @@
             display: none !important;
         }
 
-        /* Главное Меню */
         .menu-container {
             text-align: center;
             background: #050000;
@@ -160,7 +158,6 @@
             box-shadow: 0 0 20px #ff0000;
         }
 
-        /* Контейнер автомата */
         .game-wrapper {
             display: flex;
             align-items: center;
@@ -189,7 +186,6 @@
             position: relative;
         }
 
-        /* Панель цели и HUD */
         .goal-banner {
             font-size: 1rem;
             color: #00ff66;
@@ -204,7 +200,7 @@
             align-items: center;
             padding: 4px 6px;
             margin-bottom: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
             gap: 6px;
         }
@@ -219,7 +215,6 @@
         .pity-box {
             color: #ff3333;
             text-shadow: 0 0 8px #ff0000;
-            letter-spacing: 1px;
         }
         .mult-box {
             color: #ffffff;
@@ -245,7 +240,6 @@
             opacity: 1;
         }
 
-        /* Динамическая Сетка Слотов */
         .reels-frame {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -277,7 +271,6 @@
             text-shadow: 0 0 6px #ff0000;
         }
 
-        /* Рычаг */
         .lever-container {
             position: absolute;
             right: -55px;
@@ -322,12 +315,10 @@
             border: 2px solid #330000;
             box-shadow: 0 0 12px #ff0000;
         }
-
         .lever-container.pulled .lever-arm {
             transform: rotate(135deg) scaleY(0.7);
         }
 
-        /* Магазин */
         .shop-modal {
             display: none;
             position: fixed;
@@ -347,10 +338,10 @@
         }
         .shop-container {
             position: relative;
-            width: 520px;
-            height: 340px;
-            max-width: 94vw;
-            max-height: 68vh;
+            width: 560px;
+            height: 360px;
+            max-width: 96vw;
+            max-height: 70vh;
         }
 
         .hex-svg {
@@ -382,7 +373,7 @@
             filter: drop-shadow(0 0 10px #00ff66);
         }
         .hex-text-title {
-            font-size: 10px;
+            font-size: 9px;
             fill: #ffffff;
             font-family: sans-serif;
             font-weight: bold;
@@ -390,7 +381,7 @@
             pointer-events: none;
         }
         .hex-text-status {
-            font-size: 9px;
+            font-size: 8px;
             fill: #ffd700;
             font-family: sans-serif;
             text-anchor: middle;
@@ -424,7 +415,6 @@
             transform: scale(0.95);
         }
 
-        /* Модальные Окна */
         .modal {
             display: none;
             position: fixed;
@@ -469,13 +459,11 @@
             color: #ffaaaa;
             margin: 10px 0;
         }
-
         .modal-actions {
             display: flex;
             gap: 10px;
             margin-top: 14px;
         }
-
         .close-btn {
             padding: 8px 16px;
             background: #800000;
@@ -505,14 +493,12 @@
 </head>
 <body>
 
-    <!-- Верхние кнопки -->
     <button id="shopBtnTop" class="shop-btn-top hidden" onclick="openShop()">МАГАЗИН</button>
     <div id="hintBtn" class="hint-btn hidden" onclick="openModal('hintModal')">?</div>
     <div id="gearBtn" class="gear-btn hidden" onclick="openGameSettings()">⚙</div>
 
     <div id="fadeOverlay"></div>
 
-    <!-- Главное Меню -->
     <div id="menuScreen" class="screen">
         <div class="menu-container">
             <h1>ОБИТАТЕЛЬ 5_0_5</h1>
@@ -525,10 +511,8 @@
         </div>
     </div>
 
-    <!-- Экран Игрового Автомата -->
     <div id="gameScreen" class="screen hidden">
         <div class="game-wrapper">
-            
             <div class="machine-wrapper">
                 <div class="casino-cabinet">
                     <div class="goal-banner">ЦЕЛЬ: 1 000 000 Φ</div>
@@ -540,13 +524,10 @@
                     </div>
 
                     <div id="winBanner" class="win-banner">+0 Φ</div>
-                    
                     <div class="reels-frame" id="reelsFrame"></div>
-
                     <div class="lever-hint">ПОТЯНИ РЫЧАГ (5 Φ)</div>
                 </div>
 
-                <!-- Механический Рычаг -->
                 <div class="lever-container" id="leverContainer" onclick="pullLeverAndSpin()">
                     <div class="lever-base"></div>
                     <div class="lever-arm">
@@ -554,20 +535,17 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- Магазин (Соты) -->
     <div class="shop-modal" id="shopModal">
         <h2 class="shop-title">ДРЕВО УЛУЧШЕНИЙ</h2>
         <div class="shop-container">
-            <svg class="hex-svg" viewBox="0 0 520 340" id="hexSvg"></svg>
+            <svg class="hex-svg" viewBox="0 0 560 360" id="hexSvg"></svg>
         </div>
         <button class="shop-close-btn" onclick="closeShop()">ЗАКРЫТЬ</button>
     </div>
 
-    <!-- Модальное окно Подсказки -->
     <div class="modal" id="hintModal">
         <div class="modal-content">
             <h2>ПОДСКАЗКА</h2>
@@ -576,7 +554,6 @@
         </div>
     </div>
 
-    <!-- Внутриигровые Настройки -->
     <div class="modal" id="gameGearModal">
         <div class="modal-content">
             <h2>ПАУЗА И НАСТРОЙКИ</h2>
@@ -602,7 +579,6 @@
         </div>
     </div>
 
-    <!-- Настройки Главного Меню -->
     <div class="modal" id="settingsModal">
         <div class="modal-content">
             <h2>НАСТРОЙКИ</h2>
@@ -622,7 +598,6 @@
         </div>
     </div>
 
-    <!-- Авторы -->
     <div class="modal" id="authorsModal">
         <div class="modal-content">
             <h2>АВТОРЫ</h2>
@@ -634,7 +609,6 @@
         </div>
     </div>
 
-    <!-- Выход -->
     <div class="modal" id="exitModal">
         <div class="modal-content">
             <h2>ВЫХОД</h2>
@@ -643,7 +617,6 @@
         </div>
     </div>
 
-    <!-- Победа в Игре -->
     <div class="modal" id="winGameModal">
         <div class="modal-content" style="border-color: #00ff66; box-shadow: 0 0 30px #00ff66;">
             <h2 style="color: #00ff66; border-color: #00ff66;">ПОБЕДА!</h2>
@@ -656,15 +629,33 @@
         let balance = 50;
         let multiplier = 1;
         let multiplierLevel = 0;
-        let luckLevel = 0; // До 50 ур
+        let casinoLevel = 0; // До 50 ур (Прокачка казино / Шанс ДЖЕКПОТ)
         let infLuckLevel = 0;
-        let extraSlotsLevel = 0; // 0..3 (1 ур = 4 слота, 2 ур = 5, 3 ур = 6 в ширину)
+        let extraSlotsLevel = 0; // 0..3 (4, 5, 6 слотов в ширину)
+
+        // Купленные шаблоны слотов
+        let hasSquarePattern = false;
+        let hasDoorPattern = false;
+        let hasAllCombosPattern = false;
+
         let isSpinning = false;
         let pityCounter = 0;
         let slotSpeedSetting = 1;
         let gameCompleted = false;
 
-        // Шансы выпадения символов
+        // Цены выплат символов
+        const symbolValues = {
+            '🍒': 10,
+            '💀': 12,
+            '🩸': 18,
+            '👁️': 25,
+            '🔪': 45,
+            '🔔': 80,
+            '7️⃣': 200
+        };
+
+        const symbols = ['🍒', '💀', '🩸', '👁️', '🔪', '🔔', '7️⃣'];
+
         function getRandomSymbol() {
             const rand = Math.random() * 100;
             if (rand < 20) return '🍒'; // 20%
@@ -676,15 +667,16 @@
             return '7️⃣';               // 7%
         }
 
-        const symbols = ['🍒', '💀', '🩸', '👁️', '🔪', '🔔', '7️⃣'];
-
-        // Структура магазина
+        // Узлы магазина
         const shopNodes = [
-            { id: 0, x: 260, y: 170, title: "СТАРТ", type: "start", req: [], purchased: true },
-            { id: 1, x: 130, y: 100, title: "БЕСК. МНОЖИТЕЛЬ", baseCost: 100, type: "inf_mult", req: [0] },
-            { id: 2, x: 390, y: 100, title: "УДАЧА (макс 50)", baseCost: 60, type: "luck_50", req: [0] },
-            { id: 3, x: 130, y: 240, title: "БЕСК. УДАЧА (+1%)", baseCost: 120, type: "inf_luck", req: [0] },
-            { id: 4, x: 390, y: 240, title: "РАСШИРЕНИЕ СЛОТОВ", baseCost: 500, type: "extra_slots", req: [3] }
+            { id: 0, x: 280, y: 180, title: "СТАРТ", type: "start", req: [], purchased: true },
+            { id: 1, x: 150, y: 110, title: "БЕСК. МНОЖИТЕЛЬ", baseCost: 100, type: "inf_mult", req: [0] },
+            { id: 2, x: 410, y: 110, title: "ПРОКАЧКА КАЗИНО", baseCost: 75, type: "casino_50", req: [0] },
+            { id: 3, x: 150, y: 250, title: "БЕСК. УДАЧА (+1%)", baseCost: 120, type: "inf_luck", req: [0] },
+            { id: 4, x: 410, y: 250, title: "РАСШИРЕНИЕ СЛОТОВ", baseCost: 500, type: "extra_slots", req: [3] },
+            { id: 5, x: 280, y: 70, title: "КВАДРАТ (4)", baseCost: 250, type: "square_pat", req: [0] },
+            { id: 6, x: 280, y: 290, title: "ДВЕРЬ (6)", baseCost: 600, type: "door_pat", req: [5] },
+            { id: 7, x: 500, y: 180, title: "ВСЕ КОМБИНАЦИИ", baseCost: 1200, type: "all_combos", req: [6] }
         ];
 
         function getColsCount() {
@@ -696,26 +688,32 @@
                 balance,
                 multiplier,
                 multiplierLevel,
-                luckLevel,
+                casinoLevel,
                 infLuckLevel,
                 extraSlotsLevel,
+                hasSquarePattern,
+                hasDoorPattern,
+                hasAllCombosPattern,
                 pityCounter,
                 gameCompleted
             };
-            localStorage.setItem('slot_game_save_v3', JSON.stringify(data));
+            localStorage.setItem('slot_game_save_v4', JSON.stringify(data));
         }
 
         function loadGame() {
-            const saved = localStorage.getItem('slot_game_save_v3');
+            const saved = localStorage.getItem('slot_game_save_v4');
             if (saved) {
                 try {
                     const data = JSON.parse(saved);
                     balance = data.balance ?? 50;
                     multiplier = data.multiplier ?? 1;
                     multiplierLevel = data.multiplierLevel ?? 0;
-                    luckLevel = data.luckLevel ?? 0;
+                    casinoLevel = data.casinoLevel ?? 0;
                     infLuckLevel = data.infLuckLevel ?? 0;
                     extraSlotsLevel = data.extraSlotsLevel ?? 0;
+                    hasSquarePattern = data.hasSquarePattern ?? false;
+                    hasDoorPattern = data.hasDoorPattern ?? false;
+                    hasAllCombosPattern = data.hasAllCombosPattern ?? false;
                     pityCounter = data.pityCounter ?? 0;
                     gameCompleted = data.gameCompleted ?? false;
                 } catch(e){}
@@ -806,26 +804,6 @@
 
         function exitGame() { openModal('exitModal'); }
 
-        function generateWinningLines(cols) {
-            let lines = [];
-            // Горизонтали 3 в ряд
-            for (let r = 0; r < 3; r++) {
-                for (let c = 0; c <= cols - 3; c++) {
-                    lines.push([r * cols + c, r * cols + c + 1, r * cols + c + 2]);
-                }
-            }
-            // Вертикали
-            for (let c = 0; c < cols; c++) {
-                lines.push([0 * cols + c, 1 * cols + c, 2 * cols + c]);
-            }
-            // Диагонали 3 в ряд
-            for (let c = 0; c <= cols - 3; c++) {
-                lines.push([0 * cols + c, 1 * cols + c + 1, 2 * cols + c + 2]);
-                lines.push([2 * cols + c, 1 * cols + c + 1, 0 * cols + c + 2]);
-            }
-            return lines;
-        }
-
         function pullLeverAndSpin() {
             if (isSpinning) return;
             if (balance < 5) {
@@ -857,26 +835,20 @@
 
             const cols = getColsCount();
             const totalSlots = cols * 3;
-            const winningLines = generateWinningLines(cols);
 
             let grid = [];
-            let totalLuck = (luckLevel * 0.8) + (infLuckLevel * 1);
-            let forceWin = (Math.random() * 100) < totalLuck;
-
-            if (pityCounter >= 6) {
-                forceWin = true;
-            }
+            let forceWin = (pityCounter >= 6) || ((Math.random() * 100) < (infLuckLevel * 1));
+            let jackpotHit = (Math.random() * 100) < (casinoLevel * 1.5);
 
             for (let i = 0; i < totalSlots; i++) {
                 grid.push(getRandomSymbol());
             }
 
-            if (forceWin) {
+            if (jackpotHit) {
+                for (let i = 0; i < totalSlots; i++) grid[i] = '7️⃣';
+            } else if (forceWin) {
                 let sym = symbols[Math.floor(Math.random() * symbols.length)];
-                let line = winningLines[Math.floor(Math.random() * winningLines.length)];
-                grid[line[0]] = sym;
-                grid[line[1]] = sym;
-                grid[line[2]] = sym;
+                grid[0] = sym; grid[1] = sym; grid[2] = sym;
             }
 
             for (let i = 0; i < totalSlots; i++) {
@@ -897,20 +869,60 @@
             let totalSpinTime = (spinsCount * spinInterval) + (totalSlots * reelStagger) + 100;
 
             setTimeout(() => {
-                let winLinesCount = 0;
-                winningLines.forEach(line => {
-                    const [a, b, c] = line;
-                    if (grid[a] === grid[b] && grid[b] === grid[c]) {
-                        winLinesCount++;
-                    }
-                });
+                let roundWin = 0;
 
-                if (winLinesCount > 0) {
-                    let baseWin = winLinesCount * 30;
-                    let totalWin = baseWin * multiplier;
+                // 1. Линии по 3 в ряд
+                for (let r = 0; r < 3; r++) {
+                    for (let c = 0; c <= cols - 3; c++) {
+                        let idx = r * cols + c;
+                        if (grid[idx] === grid[idx+1] && grid[idx+1] === grid[idx+2]) {
+                            roundWin += (symbolValues[grid[idx]] || 10) * 2;
+                        }
+                    }
+                }
+
+                // 2. Шаблон Квадрат (4) 2x2
+                if (hasSquarePattern) {
+                    for (let r = 0; r < 2; r++) {
+                        for (let c = 0; c < cols - 1; c++) {
+                            let topL = r * cols + c;
+                            let topR = topL + 1;
+                            let botL = (r + 1) * cols + c;
+                            let botR = botL + 1;
+                            if (grid[topL] === grid[topR] && grid[topR] === grid[botL] && grid[botL] === grid[botR]) {
+                                roundWin += (symbolValues[grid[topL]] || 10) * 4;
+                            }
+                        }
+                    }
+                }
+
+                // 3. Шаблон Дверь (6) 2x3
+                if (hasDoorPattern) {
+                    for (let c = 0; c < cols - 1; c++) {
+                        let s1 = grid[c], s2 = grid[c+1], s3 = grid[cols+c], s4 = grid[cols+c+1], s5 = grid[cols*2+c], s6 = grid[cols*2+c+1];
+                        if (s1 === s2 && s2 === s3 && s3 === s4 && s4 === s5 && s5 === s6) {
+                            roundWin += (symbolValues[s1] || 10) * 8;
+                        }
+                    }
+                }
+
+                // 4. Все комбинации (4+ в ряд)
+                if (hasAllCombosPattern) {
+                    for (let r = 0; r < 3; r++) {
+                        for (let c = 0; c <= cols - 4; c++) {
+                            let idx = r * cols + c;
+                            if (grid[idx] === grid[idx+1] && grid[idx+1] === grid[idx+2] && grid[idx+2] === grid[idx+3]) {
+                                roundWin += (symbolValues[grid[idx]] || 10) * 6;
+                            }
+                        }
+                    }
+                }
+
+                if (roundWin > 0) {
+                    let totalWin = roundWin * multiplier;
                     balance += totalWin;
                     pityCounter = 0;
-                    banner.innerText = `+${totalWin} Φ  :)`;
+                    banner.innerText = jackpotHit ? `ДЖЕКПОТ! +${totalWin} Φ  :)` : `+${totalWin} Φ  :)`;
                     banner.classList.add('active');
                 } else {
                     banner.innerText = "ПУСТО... :(";
@@ -969,9 +981,7 @@
 
             shopNodes.forEach(node => {
                 let isUnlocked = true;
-                if (node.id === 4) {
-                    isUnlocked = (infLuckLevel >= 20);
-                }
+                if (node.id === 4) isUnlocked = (infLuckLevel >= 20);
 
                 let stateClass = "unlocked";
                 if (!isUnlocked) stateClass = "locked";
@@ -981,7 +991,7 @@
                 g.onclick = () => buyUpgrade(node.id);
 
                 let poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-                poly.setAttribute("points", createHexPolygonPoints(node.x, node.y, 42));
+                poly.setAttribute("points", createHexPolygonPoints(node.x, node.y, 40));
                 g.appendChild(poly);
 
                 let title = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -993,7 +1003,7 @@
 
                 let status = document.createElementNS("http://www.w3.org/2000/svg", "text");
                 status.setAttribute("x", node.x);
-                status.setAttribute("y", node.y + 14);
+                status.setAttribute("y", node.y + 12);
                 status.setAttribute("class", "hex-text-status");
 
                 if (node.type === "start") {
@@ -1001,25 +1011,31 @@
                 } else if (node.type === "inf_mult") {
                     let cost = node.baseCost + (multiplierLevel * 100);
                     status.textContent = `${cost} Φ (X${multiplier})`;
-                } else if (node.type === "luck_50") {
-                    if (luckLevel >= 50) {
+                } else if (node.type === "casino_50") {
+                    if (casinoLevel >= 50) {
                         status.textContent = "МАКС (50/50)";
                     } else {
-                        let cost = node.baseCost + (luckLevel * 40);
-                        status.textContent = `${cost} Φ (${luckLevel}/50 ур)`;
+                        let cost = node.baseCost + (casinoLevel * 50);
+                        status.textContent = `${cost} Φ (${casinoLevel}/50 ур)`;
                     }
                 } else if (node.type === "inf_luck") {
                     let cost = node.baseCost + (infLuckLevel * 100);
                     status.textContent = `${cost} Φ (${infLuckLevel} ур)`;
                 } else if (node.type === "extra_slots") {
                     if (!isUnlocked) {
-                        status.textContent = "НУЖНА БЕСК. УДАЧА 20 УР";
+                        status.textContent = "НУЖНА БЕСК. УДАЧА 20УР";
                     } else if (extraSlotsLevel >= 3) {
                         status.textContent = "МАКС (6 СЛОТОВ)";
                     } else {
                         let cost = node.baseCost * (extraSlotsLevel + 1) * 2;
                         status.textContent = `${cost} Φ (${3 + extraSlotsLevel + 1} слотов)`;
                     }
+                } else if (node.type === "square_pat") {
+                    status.textContent = hasSquarePattern ? "КУПЛЕНО" : `${node.baseCost} Φ`;
+                } else if (node.type === "door_pat") {
+                    status.textContent = hasDoorPattern ? "КУПЛЕНО" : `${node.baseCost} Φ`;
+                } else if (node.type === "all_combos") {
+                    status.textContent = hasAllCombosPattern ? "КУПЛЕНО" : `${node.baseCost} Φ`;
                 }
 
                 g.appendChild(status);
@@ -1041,15 +1057,15 @@
                     saveGame();
                     renderShop();
                 } else alert("НЕДОСТАТОЧНО МОНЕТ! :(");
-            } else if (node.type === "luck_50") {
-                if (luckLevel >= 50) {
+            } else if (node.type === "casino_50") {
+                if (casinoLevel >= 50) {
                     alert("ДОСТИГНУТ МАКСИМАЛЬНЫЙ УРОВЕНЬ! :)");
                     return;
                 }
-                let cost = node.baseCost + (luckLevel * 40);
+                let cost = node.baseCost + (casinoLevel * 50);
                 if (balance >= cost) {
                     balance -= cost;
-                    luckLevel++;
+                    casinoLevel++;
                     updateUI();
                     saveGame();
                     renderShop();
@@ -1078,6 +1094,65 @@
                     extraSlotsLevel++;
                     rebuildGrid();
                     updateUI();
+                    saveGame();
+                    renderShop();
+                } else alert("НЕДОСТАТОЧНО МОНЕТ! :(");
+            } else if (node.type === "inf_luck") {
+                let cost = node.baseCost + (infLuckLevel * 100);
+                if (balance >= cost) {
+                    balance -= cost;
+                    infLuckLevel++;
+                    updateUI();
+                    saveGame();
+                    renderShop();
+                } else alert("НЕДОСТАТОЧНО МОНЕТ! :(");
+            } else if (node.type === "extra_slots") {
+                if (infLuckLevel < 20) {
+                    alert("ТРЕБУЕТСЯ 20 УРОВЕНЬ БЕСКОНЕЧНОЙ УДАЧИ! :(");
+                    return;
+                }
+                if (extraSlotsLevel >= 3) {
+                    alert("МАКСИМАЛЬНАЯ ШИРИНА УЖЕ КУПЛЕНА! :)");
+                    return;
+                }
+                let cost = node.baseCost * (extraSlotsLevel + 1) * 2;
+                if (balance >= cost) {
+                    balance -= cost;
+                    extraSlotsLevel++;
+                    rebuildGrid();
+                    updateUI();
+                    saveGame();
+                    renderShop();
+                } else alert("НЕДОСТАТОЧНО МОНЕТ! :(");
+            } else if (node.type === "square_pat") {
+                if (hasSquarePattern) return;
+                if (balance >= node.baseCost) {
+                    balance -= node.baseCost;
+                    hasSquarePattern = true;
+                    saveGame();
+                    renderShop();
+                } else alert("НЕДОСТАТОЧНО МОНЕТ! :(");
+            } else if (node.type === "door_pat") {
+                if (!hasSquarePattern) {
+                    alert("СНАЧАЛА КУПИТЕ ШАБЛОН КВАДРАТ! :(");
+                    return;
+                }
+                if (hasDoorPattern) return;
+                if (balance >= node.baseCost) {
+                    balance -= node.baseCost;
+                    hasDoorPattern = true;
+                    saveGame();
+                    renderShop();
+                } else alert("НЕДОСТАТОЧНО МОНЕТ! :(");
+            } else if (node.type === "all_combos") {
+                if (!hasDoorPattern) {
+                    alert("СНАЧАЛА КУПИТЕ ШАБЛОН ДВЕРЬ! :(");
+                    return;
+                }
+                if (hasAllCombosPattern) return;
+                if (balance >= node.baseCost) {
+                    balance -= node.baseCost;
+                    hasAllCombosPattern = true;
                     saveGame();
                     renderShop();
                 } else alert("НЕДОСТАТОЧНО МОНЕТ! :(");
