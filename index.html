@@ -25,10 +25,10 @@
             overflow: hidden;
         }
 
-        /* Кнопка Шестерёнки */
+        /* Кнопка Шестерёнки (Справа вверху) */
         .gear-btn {
             position: fixed;
-            top: 12px;
+            top: 10px;
             right: 15px;
             font-size: 1.3rem;
             color: #ff0000;
@@ -47,6 +47,28 @@
         }
         .gear-btn:active {
             transform: rotate(90deg) scale(0.9);
+        }
+
+        /* Кнопка Магазина (Слева вверху, как на скриншоте) */
+        .shop-btn-top {
+            position: fixed;
+            top: 10px;
+            left: 15px;
+            background: linear-gradient(180deg, #d4af37, #5a480c);
+            color: #000;
+            border: 2px solid #ffd700;
+            padding: 6px 14px;
+            font-size: 1.1rem;
+            font-family: 'Creepster', cursive;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 0 10px #ffd700;
+            z-index: 500;
+            transition: transform 0.2s ease;
+        }
+        .shop-btn-top:active {
+            transform: scale(0.95);
         }
 
         .screen {
@@ -114,46 +136,47 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        /* HUD Панель Сверху */
-        .hud-panel {
-            position: absolute;
-            top: -45px;
-            left: 0;
             width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 10px;
-            font-size: 1.2rem;
-            color: #ffd700;
-            text-shadow: 0 0 6px #ff0000;
-        }
-        .balance-box {
-            background: rgba(0,0,0,0.8);
-            padding: 4px 10px;
-            border: 1px solid #ffd700;
-            border-radius: 4px;
+            height: 100%;
+            padding: 10px;
         }
 
-        /* Автомат в стиле скриншота 1 */
+        /* Автомат */
         .casino-cabinet {
             background: linear-gradient(180deg, #1f0000 0%, #050000 100%);
             border: 4px solid #b30000;
             box-shadow: 0 0 35px #ff0000, inset 0 0 25px #000;
             border-radius: 12px;
-            padding: 10px 18px;
+            padding: 10px 14px 12px 14px;
             text-align: center;
-            width: 360px;
-            max-width: 78vw;
+            width: 380px;
+            max-width: 75vw;
             position: relative;
         }
 
+        /* HUD Внутри Автомата (Не вылазит за экран) */
+        .hud-panel-inside {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2px 6px;
+            margin-bottom: 6px;
+            font-size: 1.1rem;
+            color: #ffd700;
+            text-shadow: 0 0 6px #ff0000;
+            border-bottom: 1px solid rgba(255, 0, 0, 0.3);
+        }
+        .balance-box {
+            background: rgba(0,0,0,0.8);
+            padding: 2px 8px;
+            border: 1px solid #ffd700;
+            border-radius: 4px;
+        }
+
         .win-banner {
-            font-size: 1.2rem;
-            height: 24px;
-            line-height: 24px;
+            font-size: 1.1rem;
+            height: 20px;
+            line-height: 20px;
             color: #00ff66;
             font-weight: bold;
             text-shadow: 0 0 10px #00ff66;
@@ -175,75 +198,42 @@
             border: 3px solid #ffaa00;
             border-radius: 8px;
             padding: 6px;
-            margin: 4px 0 10px 0;
+            margin: 2px 0 6px 0;
             box-shadow: 0 0 15px #ff5500, inset 0 0 15px #ff0000;
         }
         .reel {
-            height: 50px;
+            height: 48px;
             background: linear-gradient(180deg, #0a0000 0%, #1a0000 50%, #0a0000 100%);
             border: 2px solid #a800ff;
             border-radius: 5px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             box-shadow: inset 0 0 6px #000, 0 0 8px #a800ff;
         }
 
-        /* Кнопки управления в автомате */
-        .controls-row {
-            display: flex;
-            gap: 8px;
+        .lever-hint {
+            font-size: 0.85rem;
+            color: #ffaaaa;
+            letter-spacing: 1px;
         }
 
-        .spin-btn {
-            flex: 2;
-            background: linear-gradient(180deg, #cc0000, #400000);
-            color: #fff;
-            border: 2px solid #ff3333;
-            padding: 8px 12px;
-            font-size: 1.2rem;
-            font-family: 'Creepster', cursive;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow: 0 0 12px #ff0000;
-        }
-        .spin-btn:active {
-            transform: scale(0.97);
-            background: #ff0000;
-        }
-
-        .shop-btn {
-            flex: 1;
-            background: linear-gradient(180deg, #d4af37, #5a480c);
-            color: #000;
-            border: 2px solid #ffd700;
-            padding: 8px 12px;
-            font-size: 1.1rem;
-            font-family: 'Creepster', cursive;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow: 0 0 10px #ffd700;
-        }
-        .shop-btn:active {
-            transform: scale(0.97);
-        }
-
-        /* Анимированный Рычаг (Справа от автомата) */
+        /* Анимированный Рычаг */
         .lever-container {
             position: absolute;
-            right: -60px;
-            top: 40px;
+            right: -55px;
+            top: 50%;
+            transform: translateY(-50%);
             width: 50px;
-            height: 160px;
+            height: 150px;
             cursor: pointer;
         }
         .lever-base {
             position: absolute;
             bottom: 0;
             left: 10px;
-            width: 30px;
+            width: 28px;
             height: 35px;
             background: linear-gradient(90deg, #333, #666, #222);
             border: 2px solid #111;
@@ -253,9 +243,9 @@
         .lever-arm {
             position: absolute;
             bottom: 20px;
-            left: 20px;
+            left: 19px;
             width: 10px;
-            height: 110px;
+            height: 100px;
             background: linear-gradient(90deg, #888, #fff, #444);
             border-radius: 5px;
             transform-origin: bottom center;
@@ -293,7 +283,7 @@
         .shop-container {
             position: relative;
             width: 480px;
-            height: 360px;
+            height: 340px;
             max-width: 90vw;
             max-height: 70vh;
         }
@@ -301,7 +291,7 @@
             color: #ffd700;
             font-size: 1.8rem;
             text-shadow: 0 0 10px #ff0000;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         /* SVG Сетка сот */
@@ -358,7 +348,7 @@
             stroke-dasharray: none;
         }
 
-        /* Прочие Модальные Окна */
+        /* Модальные Окна */
         .modal {
             display: none;
             position: fixed;
@@ -443,6 +433,8 @@
 </head>
 <body>
 
+    <!-- Верхние управляющие кнопки -->
+    <button id="shopBtnTop" class="shop-btn-top hidden" onclick="openShop()">МАГАЗИН</button>
     <div id="gearBtn" class="gear-btn hidden" onclick="openGameSettings()">⚙</div>
 
     <div id="fadeOverlay"></div>
@@ -464,12 +456,13 @@
     <div id="gameScreen" class="screen hidden">
         <div class="game-wrapper">
             
-            <div class="hud-panel">
-                <div class="balance-box"><span id="balanceText">100</span> Φ</div>
-                <div>МНОЖИТЕЛЬ: <span id="multText" style="color: #00ff66;">x1</span></div>
-            </div>
-
             <div class="casino-cabinet">
+                <!-- Встроенная панель информации -->
+                <div class="hud-panel-inside">
+                    <div class="balance-box"><span id="balanceText">100</span> Φ</div>
+                    <div>МНОЖИТЕЛЬ: <span id="multText" style="color: #00ff66;">x1</span></div>
+                </div>
+
                 <div id="winBanner" class="win-banner">+0 Φ</div>
                 
                 <div class="reels-frame">
@@ -484,10 +477,7 @@
                     <div class="reel" id="r8">💀</div>
                 </div>
 
-                <div class="controls-row">
-                    <button class="spin-btn" onclick="pullLeverAndSpin()">КРУТИТЬ (10 Φ)</button>
-                    <button class="shop-btn" onclick="openShop()">МАГАЗИН</button>
-                </div>
+                <div class="lever-hint">ПОТЯНИ РЫЧАГ (10 Φ)</div>
             </div>
 
             <!-- Анимированный Рычаг -->
@@ -501,18 +491,18 @@
         </div>
     </div>
 
-    <!-- Магазин со свойствами сот -->
+    <!-- Магазин (Соты) -->
     <div class="shop-modal" id="shopModal">
         <h2 class="shop-title">ДРЕВО УЛУЧШЕНИЙ</h2>
         <div class="shop-container">
-            <svg class="hex-svg" viewBox="0 0 500 360" id="hexSvg">
-                <!-- Линии связи сот генерируются через JS -->
+            <svg class="hex-svg" viewBox="0 0 500 340" id="hexSvg">
+                <!-- Соты генерируются JS -->
             </svg>
         </div>
         <button class="close-btn" style="margin-top: 10px; background: #ff0000; color: #000;" onclick="closeShop()">ЗАКРЫТЬ</button>
     </div>
 
-    <!-- Внутриигровые Настройки -->
+    <!-- Настройки во время игры -->
     <div class="modal" id="gameGearModal">
         <div class="modal-content">
             <h2>ПАУЗА И НАСТРОЙКИ</h2>
@@ -567,7 +557,7 @@
         </div>
     </div>
 
-    <!-- Окно Выхода -->
+    <!-- Выход -->
     <div class="modal" id="exitModal">
         <div class="modal-content">
             <h2>ВЫХОД</h2>
@@ -577,22 +567,20 @@
     </div>
 
     <script>
-        // Игровое Состояние
         let balance = 100;
         let multiplier = 1;
         let luckPercent = 0;
         let infiniteLuckLevel = 0;
         let isSpinning = false;
 
-        // Данные Древа Сот (Магазин)
         const shopNodes = [
-            { id: 0, x: 250, y: 180, title: "СТАРТ", cost: 0, type: "start", req: [], purchased: true },
-            { id: 1, x: 250, y: 90,  title: "МНОЖИТЕЛЬ X2", cost: 150, type: "mult", value: 2, req: [0], purchased: false },
-            { id: 2, x: 335, y: 135, title: "УДАЧА +5%", cost: 200, type: "luck", value: 5, req: [0], purchased: false },
-            { id: 3, x: 335, y: 225, title: "МНОЖИТЕЛЬ X3", cost: 500, type: "mult", value: 3, req: [2], purchased: false },
-            { id: 4, x: 250, y: 270, title: "МНОЖИТЕЛЬ X4", cost: 1200, type: "mult", value: 4, req: [3], purchased: false },
-            { id: 5, x: 165, y: 225, title: "МНОЖИТЕЛЬ X5", cost: 3000, type: "mult", value: 5, req: [4], purchased: false },
-            { id: 6, x: 165, y: 135, title: "БЕСК. УДАЧА (+1%)", cost: 250, type: "inf_luck", value: 1, req: [0], purchased: false }
+            { id: 0, x: 250, y: 170, title: "СТАРТ", cost: 0, type: "start", req: [], purchased: true },
+            { id: 1, x: 250, y: 80,  title: "МНОЖИТЕЛЬ X2", cost: 150, type: "mult", value: 2, req: [0], purchased: false },
+            { id: 2, x: 335, y: 125, title: "УДАЧА +5%", cost: 200, type: "luck", value: 5, req: [0], purchased: false },
+            { id: 3, x: 335, y: 215, title: "МНОЖИТЕЛЬ X3", cost: 500, type: "mult", value: 3, req: [2], purchased: false },
+            { id: 4, x: 250, y: 260, title: "МНОЖИТЕЛЬ X4", cost: 1200, type: "mult", value: 4, req: [3], purchased: false },
+            { id: 5, x: 165, y: 215, title: "МНОЖИТЕЛЬ X5", cost: 3000, type: "mult", value: 5, req: [4], purchased: false },
+            { id: 6, x: 165, y: 125, title: "БЕСК. УДАЧА (+1%)", cost: 250, type: "inf_luck", value: 1, req: [0], purchased: false }
         ];
 
         const winningLines = [
@@ -627,6 +615,7 @@
                 document.getElementById('menuScreen').classList.add('hidden');
                 document.getElementById('gameScreen').classList.remove('hidden');
                 document.getElementById('gearBtn').classList.remove('hidden');
+                document.getElementById('shopBtnTop').classList.remove('hidden');
                 fade.classList.remove('active');
                 updateUI();
             }, 500);
@@ -639,6 +628,7 @@
             setTimeout(() => {
                 document.getElementById('gameScreen').classList.add('hidden');
                 document.getElementById('gearBtn').classList.add('hidden');
+                document.getElementById('shopBtnTop').classList.add('hidden');
                 document.getElementById('menuScreen').classList.remove('hidden');
                 fade.classList.remove('active');
             }, 500);
@@ -646,7 +636,7 @@
 
         function exitGame() { openModal('exitModal'); }
 
-        /* Логика Рычага и Вращения */
+        /* Вращение только с помощью Рычага */
         function pullLeverAndSpin() {
             if (isSpinning) return;
             if (balance < 10) {
@@ -658,7 +648,6 @@
             updateUI();
             isSpinning = true;
 
-            // Анимация дергания рычага
             let lever = document.getElementById('leverContainer');
             lever.classList.add('pulled');
             setTimeout(() => {
@@ -722,7 +711,7 @@
             }, 600);
         }
 
-        /* Логика Магазина и Сот */
+        /* Логика Магазина */
         function openShop() {
             renderShop();
             document.getElementById('shopModal').style.display = 'flex';
@@ -746,7 +735,6 @@
             let svg = document.getElementById('hexSvg');
             svg.innerHTML = '';
 
-            // Отрисовка линий
             shopNodes.forEach(node => {
                 node.req.forEach(reqId => {
                     let parent = shopNodes.find(n => n.id === reqId);
@@ -762,7 +750,6 @@
                 });
             });
 
-            // Отрисовка сот
             shopNodes.forEach(node => {
                 let isUnlocked = node.req.length === 0 || node.req.some(reqId => shopNodes.find(n => n.id === reqId).purchased);
                 let stateClass = node.purchased ? "purchased" : (isUnlocked ? "unlocked" : "locked");
@@ -772,7 +759,7 @@
                 g.onclick = () => buyUpgrade(node.id);
 
                 let poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-                poly.setAttribute("points", createHexPolygonPoints(node.x, node.y, 40));
+                poly.setAttribute("points", createHexPolygonPoints(node.x, node.y, 38));
                 g.appendChild(poly);
 
                 let title = document.createElementNS("http://www.w3.org/2000/svg", "text");
