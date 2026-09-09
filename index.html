@@ -2,7 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#000000">
     <title>ОБИТАТЕЛЬ 5_0_5</title>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
     <style>
@@ -12,7 +15,7 @@
             box-sizing: border-box;
             user-select: none;
         }
-        body {
+        html, body {
             background-color: #000000;
             background-image: radial-gradient(circle, #1a0000 0%, #000000 85%);
             color: #fff;
@@ -23,6 +26,9 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
 
         /* Кнопка Шестерёнки (Справа вверху) */
@@ -47,6 +53,31 @@
         }
         .gear-btn:active {
             transform: rotate(90deg) scale(0.9);
+        }
+
+        /* Кнопка Подсказки (Справа рядом с шестерёнкой) */
+        .hint-btn {
+            position: fixed;
+            top: 12px;
+            right: 68px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff0000;
+            background: #080000;
+            border: 2px solid #ff0000;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 500;
+            box-shadow: 0 0 12px #ff0000, inset 0 0 8px #550000;
+            transition: transform 0.2s ease;
+        }
+        .hint-btn:active {
+            transform: scale(0.9);
         }
 
         /* Кнопка Магазина (Слева вверху) */
@@ -76,8 +107,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             position: absolute;
             top: 0; left: 0;
             transition: opacity 0.3s ease;
@@ -130,7 +161,7 @@
             box-shadow: 0 0 20px #ff0000;
         }
 
-        /* Общий контейнер игрового автомата */
+        /* Контейнер игрового автомата */
         .game-wrapper {
             display: flex;
             align-items: center;
@@ -367,7 +398,6 @@
             stroke-dasharray: none;
         }
 
-        /* Кнопка закрытия магазина */
         .shop-close-btn {
             margin-top: 10px;
             background: #ff0000;
@@ -469,6 +499,7 @@
 
     <!-- Верхние кнопки -->
     <button id="shopBtnTop" class="shop-btn-top hidden" onclick="openShop()">МАГАЗИН</button>
+    <div id="hintBtn" class="hint-btn hidden" onclick="openModal('hintModal')">?</div>
     <div id="gearBtn" class="gear-btn hidden" onclick="openGameSettings()">⚙</div>
 
     <div id="fadeOverlay"></div>
@@ -492,7 +523,6 @@
             
             <div class="machine-wrapper">
                 <div class="casino-cabinet">
-                    <!-- HUD с балансом, гарантией и множителем -->
                     <div class="hud-panel-inside">
                         <div class="balance-box"><span id="balanceText">50</span> Φ</div>
                         <div class="pity-box">ГАРАНТ: <span id="pityText">0/6</span></div>
@@ -513,7 +543,7 @@
                         <div class="reel" id="r8">💀</div>
                     </div>
 
-                    <div class="lever-hint">ПОТЯНИ РЫЧАГ (10 Φ)</div>
+                    <div class="lever-hint">ПОТЯНИ РЫЧАГ (5 Φ)</div>
                 </div>
 
                 <!-- Механический Рычаг -->
@@ -535,6 +565,15 @@
             <svg class="hex-svg" viewBox="0 0 500 340" id="hexSvg"></svg>
         </div>
         <button class="shop-close-btn" onclick="closeShop()">ЗАКРЫТЬ</button>
+    </div>
+
+    <!-- Модальное окно Подсказки -->
+    <div class="modal" id="hintModal">
+        <div class="modal-content">
+            <h2>ПОДСКАЗКА</h2>
+            <p style="color: #ff0000; font-size: 1.4rem; margin: 16px 0;">не подскажу :)</p>
+            <button class="close-btn" style="width: 100%;" onclick="closeModal('hintModal')">ЗАКРЫТЬ</button>
+        </div>
     </div>
 
     <!-- Внутриигровые Настройки -->
@@ -602,17 +641,16 @@
     </div>
 
     <script>
-        let balance = 50; // Баланс в начале игры равен 50
-        let multiplier = 1; // Текущий множитель
-        let multiplierLevel = 0; // Уровень бесконечного множителя
+        let balance = 50;
+        let multiplier = 1;
+        let multiplierLevel = 0;
         let luckPercent = 0;
-        let infiniteLuckLevel = 0; // Уровень бесконечной удачи
+        let infiniteLuckLevel = 0;
         let isSpinning = false;
         
-        let pityCounter = 0; // Счётчик гарантированного выигрыша
-        let slotSpeedSetting = 1; // 1 = Медленно, 2 = Средне, 3 = Быстро
+        let pityCounter = 0;
+        let slotSpeedSetting = 1;
 
-        /* Узлы магазина (Соты) */
         const shopNodes = [
             { id: 0, x: 250, y: 170, title: "СТАРТ", cost: 0, type: "start", req: [], purchased: true },
             { id: 1, x: 250, y: 70,  title: "БЕСК. МНОЖИТЕЛЬ", baseCost: 100, type: "inf_mult", req: [0], purchased: false },
@@ -643,11 +681,24 @@
             document.getElementById('slotSpeedMenu').value = val;
         }
 
+        function requestFullScreen() {
+            let elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(() => {});
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+
         function forceLandscape() {
             if (screen.orientation && screen.orientation.lock) {
                 screen.orientation.lock('landscape').catch(() => {});
             }
+            requestFullScreen();
         }
+
         window.addEventListener('click', forceLandscape, { once: true });
         window.addEventListener('touchstart', forceLandscape, { once: true });
 
@@ -662,6 +713,7 @@
                 document.getElementById('menuScreen').classList.add('hidden');
                 document.getElementById('gameScreen').classList.remove('hidden');
                 document.getElementById('gearBtn').classList.remove('hidden');
+                document.getElementById('hintBtn').classList.remove('hidden');
                 document.getElementById('shopBtnTop').classList.remove('hidden');
                 fade.classList.remove('active');
                 updateUI();
@@ -675,6 +727,7 @@
             setTimeout(() => {
                 document.getElementById('gameScreen').classList.add('hidden');
                 document.getElementById('gearBtn').classList.add('hidden');
+                document.getElementById('hintBtn').classList.add('hidden');
                 document.getElementById('shopBtnTop').classList.add('hidden');
                 document.getElementById('menuScreen').classList.remove('hidden');
                 fade.classList.remove('active');
@@ -683,20 +736,18 @@
 
         function exitGame() { openModal('exitModal'); }
 
-        /* Вращение слотов и алгоритм выигрыша */
         function pullLeverAndSpin() {
             if (isSpinning) return;
-            if (balance < 10) {
+            if (balance < 5) {
                 alert("НЕДОСТАТОЧНО МОНЕТ! :(");
                 return;
             }
 
-            balance -= 10;
+            balance -= 5;
             pityCounter++;
             updateUI();
             isSpinning = true;
 
-            // Анимация дергания рычага
             let lever = document.getElementById('leverContainer');
             lever.classList.add('pulled');
             setTimeout(() => lever.classList.remove('pulled'), 300);
@@ -704,7 +755,6 @@
             let banner = document.getElementById('winBanner');
             banner.classList.remove('active');
 
-            // Параметры скорости из настроек
             let spinInterval = 130;
             let spinsCount = 16;
             let reelStagger = 180;
@@ -719,7 +769,6 @@
             let totalLuck = luckPercent + (infiniteLuckLevel * 1);
             let forceWin = (Math.random() * 100) < totalLuck;
 
-            // Гарант на 6-ю прокрутку
             if (pityCounter >= 6) {
                 forceWin = true;
             }
@@ -739,7 +788,6 @@
                 }
             }
 
-            // Анимация каждого барабана
             for (let i = 0; i < 9; i++) {
                 let reelElem = document.getElementById('r' + i);
                 
@@ -769,7 +817,7 @@
                     let baseWin = winLinesCount * 30;
                     let totalWin = baseWin * multiplier;
                     balance += totalWin;
-                    pityCounter = 0; // Сброс гарантированного счетчика
+                    pityCounter = 0;
                     banner.innerText = `+${totalWin} Φ  :)`;
                     banner.classList.add('active');
                 } else {
@@ -782,7 +830,6 @@
             }, totalSpinTime);
         }
 
-        /* Отрисовка древа улучшений (Соты) */
         function openShop() {
             renderShop();
             document.getElementById('shopModal').style.display = 'flex';
@@ -806,7 +853,6 @@
             let svg = document.getElementById('hexSvg');
             svg.innerHTML = '';
 
-            // Соединительные линии
             shopNodes.forEach(node => {
                 node.req.forEach(reqId => {
                     let parent = shopNodes.find(n => n.id === reqId);
@@ -822,7 +868,6 @@
                 });
             });
 
-            // Отрисовка сот
             shopNodes.forEach(node => {
                 let isUnlocked = node.req.length === 0 || node.req.some(reqId => shopNodes.find(n => n.id === reqId).purchased);
                 let stateClass = node.purchased ? "purchased" : (isUnlocked ? "unlocked" : "locked");
@@ -866,7 +911,6 @@
             });
         }
 
-        /* Покупка улучшений */
         function buyUpgrade(id) {
             let node = shopNodes.find(n => n.id === id);
             if (!node) return;
@@ -877,7 +921,6 @@
                 return;
             }
 
-            // Покупка Бесконечного Множителя
             if (node.type === "inf_mult") {
                 let currentCost = node.baseCost + (multiplierLevel * 100);
                 if (balance >= currentCost) {
@@ -893,7 +936,6 @@
                 return;
             }
 
-            // Покупка Бесконечной Удачи
             if (node.type === "inf_luck") {
                 let currentCost = node.baseCost + (infiniteLuckLevel * 100);
                 if (balance >= currentCost) {
@@ -908,7 +950,6 @@
                 return;
             }
 
-            // Покупка обычных улучшений
             if (node.purchased) return;
 
             if (balance >= node.cost) {
