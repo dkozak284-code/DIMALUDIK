@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CLOVER PIT 3D: ROGUELIKE SLOT</title>
+    <title>CLOVER PIT 3D: EXTENDED ARCADE EDITION</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <!-- Three.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
-            --color-bg: #030704;
-            --color-panel: rgba(10, 20, 13, 0.75);
+            --color-bg: #020503;
+            --color-panel: rgba(8, 16, 10, 0.88);
             --color-border: #1a3821;
             --color-neon-green: #00ff66;
             --color-neon-gold: #ffd700;
@@ -37,7 +36,14 @@
             overflow: hidden;
         }
 
-        /* CRT Overlay Effect */
+        #webgl-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+        }
+
+        /* CRT Filter */
         .crt-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -46,17 +52,61 @@
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
                         linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
             background-size: 100% 3px, 6px 100%;
-            opacity: 0.6;
+            opacity: 0.45;
         }
 
-        #webgl-container {
+        /* Crosshair & Interaction Prompt */
+        .crosshair {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 1;
+            top: 50%; left: 50%;
+            width: 8px; height: 8px;
+            border: 1px solid var(--color-neon-green);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 12;
+            pointer-events: none;
+            transition: all 0.1s ease;
         }
 
-        /* UI HUD Overlay */
+        .crosshair.active {
+            width: 16px; height: 16px;
+            background: rgba(0, 255, 102, 0.3);
+            border-color: var(--color-neon-gold);
+            box-shadow: 0 0 10px var(--color-neon-gold);
+        }
+
+        .interaction-prompt {
+            position: absolute;
+            top: 55%; left: 50%;
+            transform: translateX(-50%);
+            z-index: 12;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid var(--color-neon-green);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--color-neon-green);
+            pointer-events: none;
+            display: none;
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.3);
+        }
+
+        .controls-hint {
+            position: absolute;
+            bottom: 70px; left: 50%;
+            transform: translateX(-50%);
+            z-index: 12;
+            background: rgba(0,0,0,0.75);
+            padding: 4px 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #82a88a;
+            pointer-events: none;
+            text-align: center;
+        }
+
+        /* HUD Overlay */
         .ui-hud {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -64,13 +114,11 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 8px 12px;
+            padding: 10px;
             pointer-events: none;
         }
 
-        .interactive {
-            pointer-events: auto;
-        }
+        .interactive { pointer-events: auto; }
 
         header {
             display: flex;
@@ -81,7 +129,6 @@
             padding: 6px 14px;
             border-radius: 6px;
             backdrop-filter: blur(4px);
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.05);
         }
 
         .logo {
@@ -89,13 +136,9 @@
             font-size: clamp(1.2rem, 2.5vw, 1.8rem);
             color: var(--color-neon-green);
             text-shadow: 0 0 8px var(--color-neon-green);
-            letter-spacing: 2px;
         }
 
-        .stats-group {
-            display: flex;
-            gap: 8px;
-        }
+        .stats-group { display: flex; gap: 8px; }
 
         .stat-card {
             background: rgba(0, 0, 0, 0.6);
@@ -106,24 +149,17 @@
             min-width: 65px;
         }
 
-        .stat-card .label {
-            font-size: 0.65rem;
-            color: #6a9c74;
-            text-transform: uppercase;
-        }
-
+        .stat-card .label { font-size: 0.65rem; color: #6a9c74; }
         .stat-card .val {
             font-family: var(--font-hud);
             font-size: clamp(1.1rem, 2vw, 1.5rem);
             color: var(--color-neon-gold);
             line-height: 1;
         }
-
         .stat-card .val.green { color: var(--color-neon-green); }
         .stat-card .val.red { color: var(--color-neon-red); }
         .stat-card .val.purple { color: var(--color-neon-purple); }
 
-        /* Side Panels */
         .hud-middle {
             display: flex;
             justify-content: space-between;
@@ -131,7 +167,6 @@
             pointer-events: none;
             flex: 1;
             margin: 8px 0;
-            overflow: hidden;
         }
 
         .panel-box {
@@ -140,7 +175,6 @@
             border-radius: 6px;
             padding: 8px;
             width: clamp(160px, 20vw, 220px);
-            max-height: 100%;
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -153,7 +187,6 @@
             border-bottom: 1px solid var(--color-border);
             padding-bottom: 2px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .charms-grid {
@@ -172,7 +205,6 @@
             justify-content: center;
             font-size: 1.2rem;
             position: relative;
-            cursor: pointer;
         }
 
         .charm-item.active {
@@ -180,29 +212,10 @@
             box-shadow: 0 0 8px rgba(176, 66, 255, 0.3);
         }
 
-        .charm-item:hover .tooltip {
-            display: block;
-        }
-
-        .tooltip {
-            display: none;
-            position: absolute;
-            left: 105%; top: 0;
-            width: 150px;
-            background: rgba(0, 0, 0, 0.95);
-            border: 1px solid var(--color-neon-purple);
-            padding: 6px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            z-index: 100;
-            color: #fff;
-            pointer-events: none;
-        }
-
         .log-box {
             font-size: 0.75rem;
             color: #6a9c74;
-            max-height: 120px;
+            max-height: 100px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -213,7 +226,6 @@
         .log-entry.info { color: var(--color-neon-green); }
         .log-entry.bad { color: var(--color-neon-red); }
 
-        /* Controls Bottom Bar */
         footer {
             display: flex;
             justify-content: space-between;
@@ -251,7 +263,6 @@
             font-size: clamp(1.4rem, 3vw, 2rem);
             padding: 4px 20px;
             background: #184a22;
-            letter-spacing: 2px;
         }
 
         .btn:disabled {
@@ -281,9 +292,7 @@
             border-radius: 8px;
             padding: 18px;
             width: 90%;
-            max-width: 600px;
-            max-height: 85vh;
-            overflow-y: auto;
+            max-width: 580px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -300,7 +309,7 @@
 
         .shop-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 8px;
         }
 
@@ -316,43 +325,27 @@
             gap: 4px;
         }
 
-        .shop-card-icon { font-size: 1.8rem; }
-        .shop-card-title { font-size: 0.85rem; color: var(--color-neon-green); }
-        .shop-card-desc { font-size: 0.7rem; color: #82a88a; flex: 1; }
-        .shop-card-cost { font-family: var(--font-hud); font-size: 1.2rem; color: var(--color-neon-gold); }
-
-        @media (max-width: 650px) {
-            .hud-middle { flex-direction: column; }
-            .panel-box { width: 100%; max-height: 80px; }
-            .log-box { max-height: 50px; }
-        }
+        .shop-card-icon { font-size: 1.6rem; }
+        .shop-card-title { font-size: 0.8rem; color: var(--color-neon-green); }
+        .shop-card-desc { font-size: 0.65rem; color: #82a88a; flex: 1; }
     </style>
 </head>
 <body>
 
     <div class="crt-overlay"></div>
+    <div class="crosshair" id="uiCrosshair"></div>
+    <div class="interaction-prompt" id="uiPrompt">Нажмите [E] или Кликните</div>
+    <div class="controls-hint">Движение: [W, A, S, D] | Осмотр: Зажмите ЛКМ и двигайте мышью | Действие: [E] :)</div>
     <div id="webgl-container"></div>
 
     <div class="ui-hud">
         <header class="interactive">
             <div class="logo">☘ CLOVER PIT 3D</div>
             <div class="stats-group">
-                <div class="stat-card">
-                    <div class="label">Монеты</div>
-                    <div class="val" id="uiCoins">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="label">Аренда</div>
-                    <div class="val red" id="uiQuota">100</div>
-                </div>
-                <div class="stat-card">
-                    <div class="label">Спины</div>
-                    <div class="val green" id="uiSpins">5</div>
-                </div>
-                <div class="stat-card">
-                    <div class="label">Этап</div>
-                    <div class="val purple" id="uiStage">1</div>
-                </div>
+                <div class="stat-card"><div class="label">Монеты</div><div class="val" id="uiCoins">0</div></div>
+                <div class="stat-card"><div class="label">Аренда</div><div class="val red" id="uiQuota">100</div></div>
+                <div class="stat-card"><div class="label">Спины</div><div class="val green" id="uiSpins">5</div></div>
+                <div class="stat-card"><div class="label">Этап</div><div class="val purple" id="uiStage">1</div></div>
             </div>
         </header>
 
@@ -394,17 +387,34 @@
 
     <div class="modal-overlay interactive" id="gameOverModal">
         <div class="modal-card" style="text-align: center;">
-            <div class="modal-title" id="gameOverTitle" style="color: var(--color-neon-red);">ВЫ БАНКРОТ</div>
-            <p id="gameOverDesc" style="font-size: 0.9rem; margin: 10px 0;"></p>
+            <div class="modal-title" style="color: var(--color-neon-red);">БАНКРОТСТВО</div>
+            <p style="font-size: 0.9rem; margin: 10px 0; color: #82a88a;">Вы не собрали достаточно монет для оплаты аренды.</p>
             <button class="btn btn-spin" onclick="resetFullGame()">НАЧАТЬ ЗАНОВО</button>
         </div>
     </div>
 
     <script>
-        /* Audio Engine */
+        /* Web Audio Engine with Ambient Synth */
         class AudioEngine {
-            constructor() { this.ctx = null; }
-            init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+            constructor() { this.ctx = null; this.ambientOsc = null; }
+            init() { 
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    this.startAmbient();
+                } 
+            }
+            startAmbient() {
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(55, this.ctx.currentTime); // Low A hum
+                    gain.gain.setValueAtTime(0.015, this.ctx.currentTime);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                } catch(e) {}
+            }
             playTone(freq, type = 'sine', duration = 0.1, vol = 0.1) {
                 if (!this.ctx) return;
                 try {
@@ -420,38 +430,40 @@
                     osc.stop(this.ctx.currentTime + duration);
                 } catch(e) {}
             }
-            playSpinTick() { this.init(); this.playTone(120 + Math.random() * 40, 'triangle', 0.03, 0.02); }
-            playReelStop() { this.init(); this.playTone(80, 'square', 0.1, 0.1); }
+            playSpinTick() { this.init(); this.playTone(120 + Math.random() * 50, 'triangle', 0.03, 0.02); }
+            playReelStop() { this.init(); this.playTone(85, 'square', 0.1, 0.12); }
             playCoin() { this.init(); this.playTone(1046.50, 'sine', 0.08, 0.08); }
+            playInteract() { this.init(); this.playTone(600, 'sine', 0.05, 0.05); }
             playWinFanfare() {
                 this.init();
-                [523.25, 659.25, 783.99, 1046.50].forEach((n, i) => {
-                    setTimeout(() => this.playTone(n, 'triangle', 0.2, 0.08), i * 80);
+                [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((n, i) => {
+                    setTimeout(() => this.playTone(n, 'triangle', 0.22, 0.08), i * 75);
                 });
             }
             playError() { this.init(); this.playTone(110, 'sawtooth', 0.25, 0.15); }
         }
         const audio = new AudioEngine();
 
-        /* Game Config */
+        /* Game State & Data */
         const SYMBOL_DATA = {
             '🍒': { name: 'Вишня', val: 3 }, '🍋': { name: 'Лимон', val: 4 },
             '🍇': { name: 'Виноград', val: 6 }, '🔔': { name: 'Колокол', val: 10 },
             '💎': { name: 'Алмаз', val: 25 }, '7️⃣': { name: 'Семерка', val: 50 },
-            '☘': { name: 'Клевер', val: 12 }, '💀': { name: 'Череп', val: 0 },
-            '🪙': { name: 'Монета', val: 8 }
+            '☘': { name: 'Клевер', val: 12 }, '🪙': { name: 'Монета', val: 8 },
+            '🃏': { name: 'Джокер', val: 15 }
         };
 
         const CHARMS_DATA = [
-            { id: 'clover_master', name: 'Золотой Клевер', icon: '🍀', desc: '+30% за Клевер на экране', cost: 40 },
-            { id: 'magnet', name: 'Магнит Монет', icon: '🧲', desc: 'Монеты дают +6 дополнительно', cost: 45 },
-            { id: 'pact', name: 'Темная Сделка', icon: '📜', desc: 'Череп дает +60, но сжигает 1 спин', cost: 70 },
-            { id: 'ring', name: 'Перстень', icon: '💍', desc: 'Алмазы удваивают выигрыш', cost: 85 }
+            { id: 'clover_master', name: 'Золотой Клевер', icon: '🍀', desc: '+30% за Клевер', cost: 40 },
+            { id: 'magnet', name: 'Магнит Монет', icon: '🧲', desc: 'Монеты дают +6', cost: 45 },
+            { id: 'ring', name: 'Перстень', icon: '💍', desc: 'Алмазы удваивают куш', cost: 85 },
+            { id: 'battery', name: 'Батарейка', icon: '🔋', desc: '+1 спин каждый этап', cost: 60 },
+            { id: 'orb', name: 'Хрустальный Шар', icon: '🔮', desc: 'Увеличивает шансы джокера', cost: 75 }
         ];
 
         let gameState = {
             coins: 35, quota: 90, spinsLeft: 5, stage: 1,
-            deck: ['🍒', '🍒', '🍋', '🍋', '🍇', '🔔', '☘', '🪙', '🪙'],
+            deck: ['🍒', '🍒', '🍋', '🍋', '🍇', '🔔', '☘', '🪙', '🪙', '🃏'],
             charms: [], gridResults: []
         };
 
@@ -477,67 +489,129 @@
                 const slot = document.createElement('div');
                 slot.className = 'charm-item';
                 if (gameState.charms[i]) {
-                    const c = gameState.charms[i];
                     slot.classList.add('active');
-                    slot.innerText = c.icon;
-                    slot.innerHTML += `<div class="tooltip"><strong>${c.name}</strong><br>${c.desc}</div>`;
+                    slot.innerText = gameState.charms[i].icon;
                 }
                 grid.appendChild(slot);
             }
         }
 
-        /* Three.JS Setup & Dynamic Camera Adjust */
+        /* Three.JS 3D Environment, Lighting & Objects Setup */
         const container = document.getElementById('webgl-container');
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x030704, 0.03);
+        scene.fog = new THREE.FogExp2(0x020503, 0.07);
 
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-        
-        function updateCameraAspect() {
-            const aspect = window.innerWidth / window.innerHeight;
-            camera.aspect = aspect;
-
-            // Dynamically adjust Z distance based on aspect ratio to fit the machine in view
-            if (aspect < 0.8) {
-                camera.position.set(0, 0.4, 7.8);
-            } else if (aspect < 1.3) {
-                camera.position.set(0, 0.5, 6.2);
-            } else {
-                camera.position.set(0, 0.6, 5.0);
-            }
-            camera.updateProjectionMatrix();
-        }
-        updateCameraAspect();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 50);
+        camera.position.set(0, 1.6, 2.8);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        /* Lights */
-        const ambientLight = new THREE.AmbientLight(0x1a3821, 1.4);
+        /* Lighting */
+        const ambientLight = new THREE.AmbientLight(0x081c10, 1.2);
         scene.add(ambientLight);
 
-        const spotLight = new THREE.SpotLight(0x00ff66, 2.0);
-        spotLight.position.set(0, 4, 3);
-        scene.add(spotLight);
+        const mainRoomLight = new THREE.PointLight(0x00ff66, 1.6, 14);
+        mainRoomLight.position.set(0, 3.5, 0);
+        scene.add(mainRoomLight);
 
-        /* Machine Mesh */
+        const slotSpotlight = new THREE.SpotLight(0xffd700, 2.8, 8, Math.PI / 4, 0.4);
+        slotSpotlight.position.set(0, 3.2, 1);
+        scene.add(slotSpotlight);
+
+        /* Procedural Canvas Textures */
+        function createWallTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256; canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#051409'; ctx.fillRect(0, 0, 256, 256);
+            ctx.strokeStyle = '#0e2b14'; ctx.lineWidth = 2;
+            for (let i = 0; i < 256; i += 32) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 256); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(256, i); ctx.stroke();
+            }
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        /* Room Geometry */
+        function buildArcadeRoom() {
+            const wallTex = createWallTexture();
+            wallTex.wrapS = THREE.RepeatWrapping; wallTex.wrapT = THREE.RepeatWrapping;
+            wallTex.repeat.set(4, 4);
+
+            const floorGeo = new THREE.PlaneGeometry(12, 12);
+            const floorMat = new THREE.MeshStandardMaterial({ color: 0x08120a, roughness: 0.7, metalness: 0.3 });
+            const floor = new THREE.Mesh(floorGeo, floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            scene.add(floor);
+
+            const wallMat = new THREE.MeshStandardMaterial({ map: wallTex, roughness: 0.8 });
+            
+            const backWall = new THREE.Mesh(new THREE.PlaneGeometry(12, 4), wallMat);
+            backWall.position.set(0, 2, -6);
+            scene.add(backWall);
+
+            const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(12, 4), wallMat);
+            leftWall.position.set(-6, 2, 0);
+            leftWall.rotation.y = Math.PI / 2;
+            scene.add(leftWall);
+
+            const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(12, 4), wallMat);
+            rightWall.position.set(6, 2, 0);
+            rightWall.rotation.y = -Math.PI / 2;
+            scene.add(rightWall);
+        }
+        buildArcadeRoom();
+
+        /* Ambient Dust Particles */
+        let particleSystem;
+        function createAmbientParticles() {
+            const count = 150;
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(count * 3);
+            for (let i = 0; i < count * 3; i += 3) {
+                pos[i] = (Math.random() - 0.5) * 10;
+                pos[i+1] = Math.random() * 3.5;
+                pos[i+2] = (Math.random() - 0.5) * 10;
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            const mat = new THREE.PointsMaterial({ color: 0x00ff66, size: 0.03, transparent: true, opacity: 0.4 });
+            particleSystem = new THREE.Points(geo, mat);
+            scene.add(particleSystem);
+        }
+        createAmbientParticles();
+
+        /* Interactive Objects & Terminals */
+        const interactiveObjects = [];
+
+        // 1. Slot Machine Center
         const machineGroup = new THREE.Group();
+        machineGroup.position.set(0, 0, 0);
         scene.add(machineGroup);
 
-        const bodyGeo = new THREE.BoxGeometry(2.0, 2.8, 1.2);
-        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x111c14, roughness: 0.4, metalness: 0.6 });
-        const machineBody = new THREE.Mesh(bodyGeo, bodyMat);
-        machineGroup.add(machineBody);
+        const tableGeo = new THREE.BoxGeometry(2.2, 0.9, 1.4);
+        const tableMat = new THREE.MeshStandardMaterial({ color: 0x0a140d, roughness: 0.5 });
+        const table = new THREE.Mesh(tableGeo, tableMat);
+        table.position.set(0, 0.45, 0);
+        machineGroup.add(table);
 
-        /* Reels */
+        const bodyGeo = new THREE.BoxGeometry(1.6, 2.2, 0.9);
+        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x112416, roughness: 0.3, metalness: 0.7 });
+        const machineBody = new THREE.Mesh(bodyGeo, bodyMat);
+        machineBody.position.set(0, 2.0, 0);
+        machineBody.userData = { type: 'slot_machine', label: 'Нажмите [E] для СПИНА' };
+        machineGroup.add(machineBody);
+        interactiveObjects.push(machineBody);
+
+        // Reels
         const reels = [];
         function createReelTexture() {
             const canvas = document.createElement('canvas');
             canvas.width = 256; canvas.height = 1024;
             const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#050f07'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#030a05'; ctx.fillRect(0, 0, canvas.width, canvas.height);
             const keys = Object.keys(SYMBOL_DATA);
             const step = canvas.height / keys.length;
             ctx.font = '70px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -551,21 +625,142 @@
             return texture;
         }
 
-        const reelGeo = new THREE.CylinderGeometry(0.55, 0.55, 0.45, 32);
+        const reelGeo = new THREE.CylinderGeometry(0.45, 0.45, 0.38, 32);
         for (let i = 0; i < 3; i++) {
-            const reelMat = new THREE.MeshStandardMaterial({ map: createReelTexture(), roughness: 0.3 });
+            const reelMat = new THREE.MeshStandardMaterial({ map: createReelTexture(), roughness: 0.2 });
             const reel = new THREE.Mesh(reelGeo, reelMat);
             reel.rotation.z = Math.PI / 2;
-            reel.position.set((i - 1) * 0.52, 0.15, 0.45);
+            reel.position.set((i - 1) * 0.44, 2.1, 0.3);
             machineGroup.add(reel);
             reels.push({ mesh: reel, isSpinning: false, rotationSpeed: 0 });
         }
 
-        /* Resize Handler */
-        window.addEventListener('resize', () => {
-            updateCameraAspect();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+        // 2. Shop Terminal Left
+        const shopTerminalGroup = new THREE.Group();
+        shopTerminalGroup.position.set(-3.5, 0, -2);
+        shopTerminalGroup.rotation.y = Math.PI / 4;
+        scene.add(shopTerminalGroup);
+
+        const termStand = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.2, 0.8), tableMat);
+        termStand.position.set(0, 0.6, 0);
+        shopTerminalGroup.add(termStand);
+
+        const termScreen = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.7, 0.2), new THREE.MeshStandardMaterial({ color: 0x0a2b14, emissive: 0x00ff66, emissiveIntensity: 0.2 }));
+        termScreen.position.set(0, 1.4, 0);
+        termScreen.userData = { type: 'shop_terminal', label: 'Нажмите [E] — МАГАЗИН' };
+        shopTerminalGroup.add(termScreen);
+        interactiveObjects.push(termScreen);
+
+        // 3. Deck Kiosk Right
+        const deckKioskGroup = new THREE.Group();
+        deckKioskGroup.position.set(3.5, 0, -2);
+        deckKioskGroup.rotation.y = -Math.PI / 4;
+        scene.add(deckKioskGroup);
+
+        const kioskStand = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.2, 0.8), tableMat);
+        kioskStand.position.set(0, 0.6, 0);
+        deckKioskGroup.add(kioskStand);
+
+        const kioskScreen = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.7, 0.2), new THREE.MeshStandardMaterial({ color: 0x2b1e0a, emissive: 0xffd700, emissiveIntensity: 0.2 }));
+        kioskScreen.position.set(0, 1.4, 0);
+        kioskScreen.userData = { type: 'deck_kiosk', label: 'Нажмите [E] — КОЛОДА' };
+        deckKioskGroup.add(kioskScreen);
+        interactiveObjects.push(kioskScreen);
+
+        /* Player Camera Movement & Raycasting Logic */
+        const keys = { w: false, a: false, s: false, d: false };
+        let isMouseDown = false;
+        let mouseX = 0, mouseY = 0;
+        let yaw = 0, pitch = 0;
+        const raycaster = new THREE.Raycaster();
+        let hoveredObject = null;
+
+        window.addEventListener('keydown', (e) => {
+            const k = e.key.toLowerCase();
+            if (k === 'w' || k === 'ц') keys.w = true;
+            if (k === 'a' || k === 'ф') keys.a = true;
+            if (k === 's' || k === 'ы') keys.s = true;
+            if (k === 'd' || k === 'в') keys.d = true;
+            if (k === 'e' || k === 'у') executeInteraction();
         });
+
+        window.addEventListener('keyup', (e) => {
+            const k = e.key.toLowerCase();
+            if (k === 'w' || k === 'ц') keys.w = false;
+            if (k === 'a' || k === 'ф') keys.a = false;
+            if (k === 's' || k === 'ы') keys.s = false;
+            if (k === 'd' || k === 'в') keys.d = false;
+        });
+
+        window.addEventListener('mousedown', (e) => {
+            if (e.target.tagName !== 'BUTTON' && !e.target.closest('.interactive')) {
+                isMouseDown = true;
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            }
+        });
+
+        window.addEventListener('mouseup', () => isMouseDown = false);
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isMouseDown) return;
+            const deltaX = e.clientX - mouseX;
+            const deltaY = e.clientY - mouseY;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            yaw -= deltaX * 0.003;
+            pitch -= deltaY * 0.003;
+            pitch = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, pitch));
+        });
+
+        function updateMovementAndRaycast() {
+            // Apply Rotations
+            const euler = new THREE.Euler(pitch, yaw, 0, 'YXZ');
+            camera.quaternion.setFromEuler(euler);
+
+            // Movement
+            const speed = 0.06;
+            const moveDir = new THREE.Vector3();
+            if (keys.w) moveDir.z -= 1;
+            if (keys.s) moveDir.z += 1;
+            if (keys.a) moveDir.x -= 1;
+            if (keys.d) moveDir.x += 1;
+
+            moveDir.normalize();
+            moveDir.applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+
+            camera.position.x = Math.max(-4.8, Math.min(4.8, camera.position.x + moveDir.x * speed));
+            camera.position.z = Math.max(-4.8, Math.min(4.8, camera.position.z + moveDir.z * speed));
+            camera.position.y = 1.6;
+
+            // Raycasting for interactables
+            raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+            const intersects = raycaster.intersectObjects(interactiveObjects);
+
+            const promptEl = document.getElementById('uiPrompt');
+            const crosshairEl = document.getElementById('uiCrosshair');
+
+            if (intersects.length > 0 && intersects[0].distance < 4.5) {
+                hoveredObject = intersects[0].object;
+                promptEl.innerText = hoveredObject.userData.label;
+                promptEl.style.display = 'block';
+                crosshairEl.classList.add('active');
+            } else {
+                hoveredObject = null;
+                promptEl.style.display = 'none';
+                crosshairEl.classList.remove('active');
+            }
+        }
+
+        function executeInteraction() {
+            if (!hoveredObject) return;
+            audio.playInteract();
+            const type = hoveredObject.userData.type;
+            if (type === 'slot_machine') startSpinSequence();
+            else if (type === 'shop_terminal') openShopModal();
+            else if (type === 'deck_kiosk') openDeckModal();
+        }
 
         /* Game Mechanics */
         let isSpinningSequence = false;
@@ -580,7 +775,7 @@
             gameState.gridResults = [];
             reels.forEach((reelObj, idx) => {
                 reelObj.isSpinning = true;
-                reelObj.rotationSpeed = 0.3 + idx * 0.08;
+                reelObj.rotationSpeed = 0.35 + idx * 0.08;
                 const chosen = gameState.deck[Math.floor(Math.random() * gameState.deck.length)];
                 gameState.gridResults.push(chosen);
 
@@ -617,10 +812,11 @@
             updateUI();
 
             if (gameState.coins >= gameState.quota) {
-                logEvent('Аренда оплачена! Следующий этап.', 'win');
+                logEvent('Аренда оплачена! Новый этап.', 'win');
                 gameState.stage++;
                 gameState.quota = Math.floor(gameState.quota * 1.6);
-                gameState.spinsLeft = 5;
+                let extraSpins = gameState.charms.some(c => c.id === 'battery') ? 6 : 5;
+                gameState.spinsLeft = extraSpins;
                 updateUI();
             } else if (gameState.spinsLeft <= 0) {
                 audio.playError();
@@ -629,7 +825,7 @@
         }
 
         function resetFullGame() {
-            gameState = { coins: 35, quota: 90, spinsLeft: 5, stage: 1, deck: ['🍒','🍒','🍋','🍋','🍇','🔔','☘','🪙','🪙'], charms: [], gridResults: [] };
+            gameState = { coins: 35, quota: 90, spinsLeft: 5, stage: 1, deck: ['🍒','🍒','🍋','🍋','🍇','🔔','☘','🪙','🪙','🃏'], charms: [], gridResults: [] };
             closeModal('gameOverModal');
             updateUI();
         }
@@ -645,7 +841,7 @@
                     <div class="shop-card-icon">${c.icon}</div>
                     <div class="shop-card-title">${c.name}</div>
                     <div class="shop-card-desc">${c.desc}</div>
-                    <button class="btn" ${bought || gameState.coins < c.cost ? 'disabled' : ''}>${bought ? 'Есть' : c.cost + ' 🪙'}</button>
+                    <button class="btn" ${bought || gameState.coins < c.cost ? 'disabled' : ''}>${bought ? 'Куплено' : c.cost + ' 🪙'}</button>
                 `;
                 el.querySelector('button').onclick = () => {
                     if (!bought && gameState.coins >= c.cost) {
@@ -669,7 +865,7 @@
             for (const [sym, count] of Object.entries(counts)) {
                 const el = document.createElement('div');
                 el.className = 'shop-card';
-                el.innerHTML = `<div class="shop-card-icon">${sym}</div><div class="shop-card-desc">Количество: ${count}</div>`;
+                el.innerHTML = `<div class="shop-card-icon">${sym}</div><div class="shop-card-desc">Всего: ${count} шт.</div>`;
                 grid.appendChild(el);
             }
             document.getElementById('deckModal').style.display = 'flex';
@@ -677,9 +873,21 @@
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        /* Animation Loop */
+        /* Window Resize */
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        /* Main Loop */
         function animate() {
             requestAnimationFrame(animate);
+
+            updateMovementAndRaycast();
+
+            if (particleSystem) particleSystem.rotation.y += 0.0005;
+
             reels.forEach(r => {
                 if (r.isSpinning) {
                     r.mesh.rotation.x += r.rotationSpeed;
@@ -688,15 +896,15 @@
                     r.mesh.rotation.x = THREE.MathUtils.lerp(r.mesh.rotation.x, Math.round(r.mesh.rotation.x / (Math.PI / 4)) * (Math.PI / 4), 0.2);
                 }
             });
+
             renderer.render(scene, camera);
         }
 
         window.onload = () => {
             updateUI();
-            logEvent('Запуск системы. Удача на вашей стороне.', 'info');
+            logEvent('Система готова. Подойдите к терминалу и нажмите [E] :)', 'info');
             animate();
         };
     </script>
 </body>
 </html>
-   
