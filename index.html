@@ -10,7 +10,7 @@
     <style>
         :root {
             --color-bg: #030704;
-            --color-panel: #0a140d;
+            --color-panel: rgba(10, 20, 13, 0.75);
             --color-border: #1a3821;
             --color-neon-green: #00ff66;
             --color-neon-gold: #ffd700;
@@ -44,9 +44,9 @@
             pointer-events: none;
             z-index: 10;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
             background-size: 100% 3px, 6px 100%;
-            opacity: 0.8;
+            opacity: 0.6;
         }
 
         #webgl-container {
@@ -61,9 +61,10 @@
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 5;
-            display: grid;
-            grid-template-rows: auto 1fr auto;
-            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 8px 12px;
             pointer-events: none;
         }
 
@@ -75,45 +76,45 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(10, 20, 13, 0.85);
-            border: 2px solid var(--color-border);
-            padding: 12px 20px;
-            border-radius: 8px;
-            backdrop-filter: blur(6px);
-            box-shadow: 0 0 20px rgba(0, 255, 102, 0.1);
+            background: var(--color-panel);
+            border: 1px solid var(--color-border);
+            padding: 6px 14px;
+            border-radius: 6px;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.05);
         }
 
         .logo {
             font-family: var(--font-hud);
-            font-size: 2.2rem;
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
             color: var(--color-neon-green);
-            text-shadow: 0 0 10px var(--color-neon-green);
-            letter-spacing: 3px;
+            text-shadow: 0 0 8px var(--color-neon-green);
+            letter-spacing: 2px;
         }
 
         .stats-group {
             display: flex;
-            gap: 20px;
+            gap: 8px;
         }
 
         .stat-card {
-            background: #00000088;
+            background: rgba(0, 0, 0, 0.6);
             border: 1px solid var(--color-border);
-            padding: 6px 16px;
-            border-radius: 6px;
+            padding: 2px 10px;
+            border-radius: 4px;
             text-align: center;
-            min-width: 100px;
+            min-width: 65px;
         }
 
         .stat-card .label {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             color: #6a9c74;
             text-transform: uppercase;
         }
 
         .stat-card .val {
             font-family: var(--font-hud);
-            font-size: 1.8rem;
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
             color: var(--color-neon-gold);
             line-height: 1;
         }
@@ -126,31 +127,31 @@
         .hud-middle {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            min-height: 0;
+            align-items: flex-start;
+            pointer-events: none;
+            flex: 1;
+            margin: 8px 0;
+            overflow: hidden;
         }
 
         .panel-box {
-            background: rgba(10, 20, 13, 0.85);
-            border: 2px solid var(--color-border);
-            border-radius: 8px;
-            padding: 14px;
-            width: 260px;
+            background: var(--color-panel);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            padding: 8px;
+            width: clamp(160px, 20vw, 220px);
             max-height: 100%;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            backdrop-filter: blur(6px);
-            overflow-y: auto;
+            gap: 6px;
+            backdrop-filter: blur(4px);
         }
 
         .panel-title {
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             color: var(--color-neon-green);
             border-bottom: 1px solid var(--color-border);
-            padding-bottom: 4px;
+            padding-bottom: 2px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -158,25 +159,25 @@
         .charms-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
+            gap: 4px;
         }
 
         .charm-item {
             aspect-ratio: 1;
-            background: #000000aa;
+            background: rgba(0, 0, 0, 0.6);
             border: 1px dashed var(--color-border);
-            border-radius: 6px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 1.2rem;
             position: relative;
             cursor: pointer;
         }
 
         .charm-item.active {
             border: 1px solid var(--color-neon-purple);
-            box-shadow: 0 0 10px rgba(176, 66, 255, 0.3);
+            box-shadow: 0 0 8px rgba(176, 66, 255, 0.3);
         }
 
         .charm-item:hover .tooltip {
@@ -186,60 +187,71 @@
         .tooltip {
             display: none;
             position: absolute;
-            left: 110%; top: 0;
-            width: 180px;
-            background: #000000fa;
+            left: 105%; top: 0;
+            width: 150px;
+            background: rgba(0, 0, 0, 0.95);
             border: 1px solid var(--color-neon-purple);
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 0.75rem;
+            padding: 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
             z-index: 100;
             color: #fff;
             pointer-events: none;
-            box-shadow: 0 0 15px #000;
         }
+
+        .log-box {
+            font-size: 0.75rem;
+            color: #6a9c74;
+            max-height: 120px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .log-entry.win { color: var(--color-neon-gold); }
+        .log-entry.info { color: var(--color-neon-green); }
+        .log-entry.bad { color: var(--color-neon-red); }
 
         /* Controls Bottom Bar */
         footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 20px;
-            background: rgba(10, 20, 13, 0.85);
-            border: 2px solid var(--color-border);
-            padding: 12px 20px;
-            border-radius: 8px;
-            backdrop-filter: blur(6px);
+            gap: 12px;
+            background: var(--color-panel);
+            border: 1px solid var(--color-border);
+            padding: 8px 14px;
+            border-radius: 6px;
+            backdrop-filter: blur(4px);
         }
 
         .btn {
             background: #0e2b14;
             color: var(--color-neon-green);
-            border: 2px solid var(--color-neon-green);
-            padding: 10px 24px;
+            border: 1px solid var(--color-neon-green);
+            padding: 6px 16px;
             font-family: var(--font-main);
-            font-size: 1rem;
-            border-radius: 6px;
+            font-size: 0.85rem;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.15s ease;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 0 10px rgba(0, 255, 102, 0.1);
         }
 
         .btn:hover {
             background: var(--color-neon-green);
             color: #000;
-            box-shadow: 0 0 20px var(--color-neon-green);
+            box-shadow: 0 0 12px var(--color-neon-green);
         }
 
         .btn-spin {
             flex: 1;
             font-family: var(--font-hud);
-            font-size: 2.2rem;
-            padding: 8px 30px;
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            padding: 4px 20px;
             background: #184a22;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
         }
 
         .btn:disabled {
@@ -251,7 +263,7 @@
             box-shadow: none;
         }
 
-        /* Modal Windows */
+        /* Modals */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -260,77 +272,59 @@
             display: none;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(6px);
         }
 
         .modal-card {
-            background: var(--color-panel);
-            border: 2px solid var(--color-neon-green);
-            border-radius: 12px;
-            padding: 24px;
+            background: #0a140d;
+            border: 1px solid var(--color-neon-green);
+            border-radius: 8px;
+            padding: 18px;
             width: 90%;
-            max-width: 700px;
-            max-height: 80vh;
+            max-width: 600px;
+            max-height: 85vh;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            box-shadow: 0 0 30px rgba(0, 255, 102, 0.2);
+            gap: 12px;
         }
 
         .modal-title {
             font-family: var(--font-hud);
-            font-size: 2.4rem;
+            font-size: 1.8rem;
             color: var(--color-neon-gold);
             text-align: center;
             border-bottom: 1px solid var(--color-border);
-            padding-bottom: 8px;
+            padding-bottom: 4px;
         }
 
         .shop-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
         }
 
         .shop-card {
-            background: #000000aa;
+            background: rgba(0, 0, 0, 0.6);
             border: 1px solid var(--color-border);
-            border-radius: 8px;
-            padding: 12px;
+            border-radius: 6px;
+            padding: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 8px;
-        }
-
-        .shop-card:hover {
-            border-color: var(--color-neon-gold);
-        }
-
-        .shop-card-icon { font-size: 2.5rem; }
-        .shop-card-title { font-size: 1rem; color: var(--color-neon-green); }
-        .shop-card-desc { font-size: 0.75rem; color: #82a88a; flex: 1; }
-        .shop-card-cost { font-family: var(--font-hud); font-size: 1.5rem; color: var(--color-neon-gold); }
-
-        .log-box {
-            font-size: 0.8rem;
-            color: #6a9c74;
-            max-height: 180px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
             gap: 4px;
         }
 
-        .log-entry.win { color: var(--color-neon-gold); }
-        .log-entry.info { color: var(--color-neon-green); }
-        .log-entry.bad { color: var(--color-neon-red); }
+        .shop-card-icon { font-size: 1.8rem; }
+        .shop-card-title { font-size: 0.85rem; color: var(--color-neon-green); }
+        .shop-card-desc { font-size: 0.7rem; color: #82a88a; flex: 1; }
+        .shop-card-cost { font-family: var(--font-hud); font-size: 1.2rem; color: var(--color-neon-gold); }
 
-        @media (max-width: 800px) {
-            .hud-middle { flex-direction: column; align-items: stretch; }
-            .panel-box { width: 100%; max-height: 120px; }
+        @media (max-width: 650px) {
+            .hud-middle { flex-direction: column; }
+            .panel-box { width: 100%; max-height: 80px; }
+            .log-box { max-height: 50px; }
         }
     </style>
 </head>
@@ -368,8 +362,8 @@
                 <div class="charms-grid" id="uiCharmsGrid"></div>
             </div>
 
-            <div class="panel-box interactive" style="width: 300px;">
-                <div class="panel-title">ЖУРНАЛ СОБЫТИЙ</div>
+            <div class="panel-box interactive">
+                <div class="panel-title">ЖУРНАЛ</div>
                 <div class="log-box" id="uiLogBox"></div>
             </div>
         </div>
@@ -381,7 +375,7 @@
         </footer>
     </div>
 
-    <!-- Shop Modal -->
+    <!-- Modals -->
     <div class="modal-overlay interactive" id="shopModal">
         <div class="modal-card">
             <div class="modal-title">ТЕРМИНАЛ ПОКУПОК</div>
@@ -390,7 +384,6 @@
         </div>
     </div>
 
-    <!-- Deck Modal -->
     <div class="modal-overlay interactive" id="deckModal">
         <div class="modal-card">
             <div class="modal-title">СИМВОЛЫ В КОЛОДЕ</div>
@@ -399,33 +392,21 @@
         </div>
     </div>
 
-    <!-- Game Over Modal -->
     <div class="modal-overlay interactive" id="gameOverModal">
         <div class="modal-card" style="text-align: center;">
             <div class="modal-title" id="gameOverTitle" style="color: var(--color-neon-red);">ВЫ БАНКРОТ</div>
-            <p id="gameOverDesc" style="font-size: 1.1rem; margin: 10px 0;"></p>
+            <p id="gameOverDesc" style="font-size: 0.9rem; margin: 10px 0;"></p>
             <button class="btn btn-spin" onclick="resetFullGame()">НАЧАТЬ ЗАНОВО</button>
         </div>
     </div>
 
     <script>
-        /* ==========================================================================
-           1. AUDIO SYNTHESIZER ENGINE (Web Audio API)
-           ========================================================================== */
+        /* Audio Engine */
         class AudioEngine {
-            constructor() {
-                this.ctx = null;
-                this.isMuted = false;
-            }
-
-            init() {
-                if (!this.ctx) {
-                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-            }
-
+            constructor() { this.ctx = null; }
+            init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
             playTone(freq, type = 'sine', duration = 0.1, vol = 0.1) {
-                if (!this.ctx || this.isMuted) return;
+                if (!this.ctx) return;
                 try {
                     const osc = this.ctx.createOscillator();
                     const gain = this.ctx.createGain();
@@ -439,76 +420,39 @@
                     osc.stop(this.ctx.currentTime + duration);
                 } catch(e) {}
             }
-
-            playSpinTick() {
-                this.init();
-                this.playTone(120 + Math.random() * 40, 'triangle', 0.03, 0.03);
-            }
-
-            playReelStop() {
-                this.init();
-                this.playTone(80, 'square', 0.1, 0.12);
-                this.playTone(40, 'sawtooth', 0.15, 0.15);
-            }
-
-            playCoin() {
-                this.init();
-                this.playTone(1046.50, 'sine', 0.08, 0.1);
-                setTimeout(() => this.playTone(1318.51, 'sine', 0.12, 0.1), 50);
-            }
-
+            playSpinTick() { this.init(); this.playTone(120 + Math.random() * 40, 'triangle', 0.03, 0.02); }
+            playReelStop() { this.init(); this.playTone(80, 'square', 0.1, 0.1); }
+            playCoin() { this.init(); this.playTone(1046.50, 'sine', 0.08, 0.08); }
             playWinFanfare() {
                 this.init();
-                const notes = [523.25, 659.25, 783.99, 1046.50];
-                notes.forEach((n, i) => {
-                    setTimeout(() => this.playTone(n, 'triangle', 0.25, 0.12), i * 90);
+                [523.25, 659.25, 783.99, 1046.50].forEach((n, i) => {
+                    setTimeout(() => this.playTone(n, 'triangle', 0.2, 0.08), i * 80);
                 });
             }
-
-            playError() {
-                this.init();
-                this.playTone(110, 'sawtooth', 0.3, 0.2);
-            }
+            playError() { this.init(); this.playTone(110, 'sawtooth', 0.25, 0.15); }
         }
-
         const audio = new AudioEngine();
 
-        /* ==========================================================================
-           2. SYMBOLS & CHARMS CONFIGURATION
-           ========================================================================== */
+        /* Game Config */
         const SYMBOL_DATA = {
-            '🍒': { name: 'Вишня', val: 3, rarity: 1 },
-            '🍋': { name: 'Лимон', val: 4, rarity: 1 },
-            '🍇': { name: 'Виноград', val: 6, rarity: 2 },
-            '🔔': { name: 'Колокол', val: 10, rarity: 2 },
-            '💎': { name: 'Алмаз', val: 25, rarity: 3 },
-            '7️⃣': { name: 'Семерка', val: 50, rarity: 3 },
-            '☘': { name: 'Клевер', val: 12, rarity: 2 },
-            '💀': { name: 'Череп', val: 0, rarity: 3 },
-            '🪙': { name: 'Монета', val: 8, rarity: 1 }
+            '🍒': { name: 'Вишня', val: 3 }, '🍋': { name: 'Лимон', val: 4 },
+            '🍇': { name: 'Виноград', val: 6 }, '🔔': { name: 'Колокол', val: 10 },
+            '💎': { name: 'Алмаз', val: 25 }, '7️⃣': { name: 'Семерка', val: 50 },
+            '☘': { name: 'Клевер', val: 12 }, '💀': { name: 'Череп', val: 0 },
+            '🪙': { name: 'Монета', val: 8 }
         };
 
         const CHARMS_DATA = [
-            { id: 'clover_master', name: 'Золотой Клевер', icon: '🍀', desc: '+30% к выигрышу за каждый Клевер на экране', cost: 40 },
-            { id: 'magnet', name: 'Магнит Монет', icon: '🧲', desc: 'Монеты дают дополнительно +6 монет', cost: 45 },
-            { id: 'pact', name: 'Темная Сделка', icon: '📜', desc: 'Череп приносит +60 монет, но сжигает 1 спин', cost: 70 },
-            { id: 'ring', name: 'Алмазное Перстне', icon: '💍', desc: 'Алмазы удваивают свой выигрыш', cost: 85 },
-            { id: 'coffee', name: 'Термос Кофе', icon: '☕', desc: '+1 дополнительный спин на каждом этапе', cost: 90 }
+            { id: 'clover_master', name: 'Золотой Клевер', icon: '🍀', desc: '+30% за Клевер на экране', cost: 40 },
+            { id: 'magnet', name: 'Магнит Монет', icon: '🧲', desc: 'Монеты дают +6 дополнительно', cost: 45 },
+            { id: 'pact', name: 'Темная Сделка', icon: '📜', desc: 'Череп дает +60, но сжигает 1 спин', cost: 70 },
+            { id: 'ring', name: 'Перстень', icon: '💍', desc: 'Алмазы удваивают выигрыш', cost: 85 }
         ];
 
-        /* ==========================================================================
-           3. GAME STATE MANAGEMENT
-           ========================================================================== */
         let gameState = {
-            coins: 35,
-            quota: 90,
-            spinsLeft: 5,
-            maxSpins: 5,
-            stage: 1,
-            multiplier: 1.0,
+            coins: 35, quota: 90, spinsLeft: 5, stage: 1,
             deck: ['🍒', '🍒', '🍋', '🍋', '🍇', '🔔', '☘', '🪙', '🪙'],
-            charms: [],
-            gridResults: []
+            charms: [], gridResults: []
         };
 
         function logEvent(msg, type = 'info') {
@@ -527,10 +471,6 @@
             document.getElementById('uiStage').innerText = gameState.stage;
             document.getElementById('uiCharmCount').innerText = gameState.charms.length;
 
-            renderCharmsUI();
-        }
-
-        function renderCharmsUI() {
             const grid = document.getElementById('uiCharmsGrid');
             grid.innerHTML = '';
             for (let i = 0; i < 6; i++) {
@@ -546,190 +486,91 @@
             }
         }
 
-        /* ==========================================================================
-           4. THREE.JS 3D ENGINE SETUP
-           ========================================================================== */
+        /* Three.JS Setup & Dynamic Camera Adjust */
         const container = document.getElementById('webgl-container');
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x030704, 0.035);
+        scene.fog = new THREE.FogExp2(0x030704, 0.03);
 
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-        camera.position.set(0, 1.2, 5.5);
+        
+        function updateCameraAspect() {
+            const aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = aspect;
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+            // Dynamically adjust Z distance based on aspect ratio to fit the machine in view
+            if (aspect < 0.8) {
+                camera.position.set(0, 0.4, 7.8);
+            } else if (aspect < 1.3) {
+                camera.position.set(0, 0.5, 6.2);
+            } else {
+                camera.position.set(0, 0.6, 5.0);
+            }
+            camera.updateProjectionMatrix();
+        }
+        updateCameraAspect();
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
         container.appendChild(renderer.domElement);
 
-        /* Lighting */
-        const ambientLight = new THREE.AmbientLight(0x1a3821, 1.2);
+        /* Lights */
+        const ambientLight = new THREE.AmbientLight(0x1a3821, 1.4);
         scene.add(ambientLight);
 
-        const spotLight = new THREE.SpotLight(0x00ff66, 2.5);
-        spotLight.position.set(0, 5, 3);
-        spotLight.angle = Math.PI / 4;
-        spotLight.penumbra = 0.8;
-        spotLight.castShadow = true;
+        const spotLight = new THREE.SpotLight(0x00ff66, 2.0);
+        spotLight.position.set(0, 4, 3);
         scene.add(spotLight);
 
-        const pointLightMachine = new THREE.PointLight(0xffd700, 1.5, 4);
-        pointLightMachine.position.set(0, 0.5, 1);
-        scene.add(pointLightMachine);
-
-        /* 3D Environment & Slot Machine Mesh */
-        const roomGroup = new THREE.Group();
-        scene.add(roomGroup);
-
-        // Floor
-        const floorGeo = new THREE.PlaneGeometry(20, 20);
-        const floorMat = new THREE.MeshStandardMaterial({ color: 0x0a140d, roughness: 0.8, metalness: 0.2 });
-        const floor = new THREE.Mesh(floorGeo, floorMat);
-        floor.rotation.x = -Math.PI / 2;
-        floor.position.y = -1.5;
-        floor.receiveShadow = true;
-        roomGroup.add(floor);
-
-        // Slot Machine Body
+        /* Machine Mesh */
         const machineGroup = new THREE.Group();
         scene.add(machineGroup);
 
-        const bodyGeo = new THREE.BoxGeometry(2.4, 3.2, 1.5);
+        const bodyGeo = new THREE.BoxGeometry(2.0, 2.8, 1.2);
         const bodyMat = new THREE.MeshStandardMaterial({ color: 0x111c14, roughness: 0.4, metalness: 0.6 });
         const machineBody = new THREE.Mesh(bodyGeo, bodyMat);
-        machineBody.position.set(0, 0, 0);
-        machineBody.castShadow = true;
-        machineBody.receiveShadow = true;
         machineGroup.add(machineBody);
 
-        // Screen Frame Cutout
-        const frameGeo = new THREE.BoxGeometry(2.0, 1.6, 0.2);
-        const frameMat = new THREE.MeshStandardMaterial({ color: 0x030704, roughness: 0.2, metalness: 0.9 });
-        const frame = new THREE.Mesh(frameGeo, frameMat);
-        frame.position.set(0, 0.2, 0.70);
-        machineGroup.add(frame);
-
-        /* 3D Reels (Cylinders) */
-        const NUM_REELS = 3;
+        /* Reels */
         const reels = [];
-        const reelTextures = [];
-
         function createReelTexture() {
             const canvas = document.createElement('canvas');
-            canvas.width = 256;
-            canvas.height = 1024;
+            canvas.width = 256; canvas.height = 1024;
             const ctx = canvas.getContext('2d');
-
-            ctx.fillStyle = '#050f07';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+            ctx.fillStyle = '#050f07'; ctx.fillRect(0, 0, canvas.width, canvas.height);
             const keys = Object.keys(SYMBOL_DATA);
             const step = canvas.height / keys.length;
-
-            ctx.font = '70px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-
+            ctx.font = '70px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
             keys.forEach((sym, idx) => {
-                ctx.strokeStyle = '#1a3821';
-                ctx.lineWidth = 4;
+                ctx.strokeStyle = '#1a3821'; ctx.lineWidth = 4;
                 ctx.strokeRect(10, idx * step + 10, canvas.width - 20, step - 20);
-
-                ctx.fillStyle = '#0a1d10';
-                ctx.fillRect(12, idx * step + 12, canvas.width - 24, step - 24);
-
                 ctx.fillText(sym, canvas.width / 2, idx * step + step / 2);
             });
-
             const texture = new THREE.CanvasTexture(canvas);
-            texture.wrapS = THREE.RepeatWrapping;
-            texture.wrapT = THREE.RepeatWrapping;
+            texture.wrapS = THREE.RepeatWrapping; texture.wrapT = THREE.RepeatWrapping;
             return texture;
         }
 
-        const reelGeo = new THREE.CylinderGeometry(0.65, 0.65, 0.55, 32);
-
-        for (let i = 0; i < NUM_REELS; i++) {
-            const texture = createReelTexture();
-            reelTextures.push(texture);
-
-            const reelMat = new THREE.MeshStandardMaterial({ 
-                map: texture, 
-                roughness: 0.3, 
-                metalness: 0.1 
-            });
-
+        const reelGeo = new THREE.CylinderGeometry(0.55, 0.55, 0.45, 32);
+        for (let i = 0; i < 3; i++) {
+            const reelMat = new THREE.MeshStandardMaterial({ map: createReelTexture(), roughness: 0.3 });
             const reel = new THREE.Mesh(reelGeo, reelMat);
             reel.rotation.z = Math.PI / 2;
-            reel.position.set((i - 1) * 0.62, 0.2, 0.5);
+            reel.position.set((i - 1) * 0.52, 0.15, 0.45);
             machineGroup.add(reel);
-
-            reels.push({
-                mesh: reel,
-                rotationSpeed: 0,
-                targetRotation: 0,
-                isSpinning: false
-            });
+            reels.push({ mesh: reel, isSpinning: false, rotationSpeed: 0 });
         }
 
-        /* 3D Particle Coins */
-        const coinsGroup = new THREE.Group();
-        scene.add(coinsGroup);
-        const activeCoins = [];
-
-        function spawn3DCoin() {
-            const coinGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.02, 16);
-            const coinMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.9, roughness: 0.1 });
-            const coin = new THREE.Mesh(coinGeo, coinMat);
-
-            coin.position.set((Math.random() - 0.5) * 0.8, -0.6, 0.8);
-            coin.velocity = new THREE.Vector3((Math.random() - 0.5) * 0.08, Math.random() * 0.1 + 0.08, Math.random() * 0.05 + 0.05);
-            coin.rotSpeed = new THREE.Vector3(Math.random() * 0.2, Math.random() * 0.2, Math.random() * 0.2);
-
-            coinsGroup.add(coin);
-            activeCoins.push(coin);
-        }
-
-        function updateCoins() {
-            for (let i = activeCoins.length - 1; i >= 0; i--) {
-                const c = activeCoins[i];
-                c.position.add(c.velocity);
-                c.velocity.y -= 0.005; // Gravity
-                c.rotation.x += c.rotSpeed.x;
-                c.rotation.y += c.rotSpeed.y;
-
-                if (c.position.y < -2) {
-                    coinsGroup.remove(c);
-                    activeCoins.splice(i, 1);
-                }
-            }
-        }
-
-        /* Responsive Window Resize */
+        /* Resize Handler */
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
+            updateCameraAspect();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        /* ==========================================================================
-           5. SPIN MECHANICS & GAME LOGIC
-           ========================================================================== */
+        /* Game Mechanics */
         let isSpinningSequence = false;
-
-        function getRandomDeckSymbol() {
-            return gameState.deck[Math.floor(Math.random() * gameState.deck.length)];
-        }
-
         function startSpinSequence() {
-            if (isSpinningSequence) return;
-            if (gameState.spinsLeft <= 0) {
-                logEvent('Нет доступных спинов! Оплатите аренду.', 'bad');
-                audio.playError();
-                return;
-            }
+            if (isSpinningSequence || gameState.spinsLeft <= 0) return;
 
             isSpinningSequence = true;
             gameState.spinsLeft--;
@@ -737,252 +578,125 @@
             updateUI();
 
             gameState.gridResults = [];
-
             reels.forEach((reelObj, idx) => {
                 reelObj.isSpinning = true;
                 reelObj.rotationSpeed = 0.3 + idx * 0.08;
-
-                // Determine target symbol
-                const chosenSymbol = getRandomDeckSymbol();
-                gameState.gridResults.push(chosenSymbol);
+                const chosen = gameState.deck[Math.floor(Math.random() * gameState.deck.length)];
+                gameState.gridResults.push(chosen);
 
                 setTimeout(() => {
                     reelObj.isSpinning = false;
                     audio.playReelStop();
-
-                    if (idx === NUM_REELS - 1) {
-                        setTimeout(evaluateSpinResults, 400);
-                    }
-                }, 1200 + idx * 600);
+                    if (idx === 2) setTimeout(evaluateSpinResults, 300);
+                }, 1000 + idx * 500);
             });
         }
 
         function evaluateSpinResults() {
             let totalGain = 0;
             const counts = {};
+            gameState.gridResults.forEach(sym => counts[sym] = (counts[sym] || 0) + 1);
 
-            gameState.gridResults.forEach(sym => {
-                counts[sym] = (counts[sym] || 0) + 1;
-            });
+            logEvent(`Выпали: [ ${gameState.gridResults.join(' | ')} ]`, 'info');
 
-            logEvent(`Выпали символы: [ ${gameState.gridResults.join(' | ')} ]`, 'info');
-
-            // Calculate Base Payouts
             for (const [sym, count] of Object.entries(counts)) {
-                const baseVal = SYMBOL_DATA[sym] ? SYMBOL_DATA[sym].val : 2;
-                let payout = baseVal * count;
-
-                // Charm Interactions
-                if (sym === '🪙' && hasCharm('magnet')) payout += count * 6;
-                if (sym === '💎' && hasCharm('ring')) payout *= 2;
-                if (sym === '💀' && hasCharm('pact')) {
-                    payout += 60;
-                    gameState.spinsLeft = Math.max(0, gameState.spinsLeft - 1);
-                    logEvent('Темная Сделка сработала: +60 монет, -1 спин', 'bad');
-                }
-
+                let payout = (SYMBOL_DATA[sym] ? SYMBOL_DATA[sym].val : 2) * count;
+                if (sym === '🪙' && gameState.charms.some(c => c.id === 'magnet')) payout += count * 6;
+                if (sym === '💎' && gameState.charms.some(c => c.id === 'ring')) payout *= 2;
                 totalGain += payout;
             }
 
-            // Clover Master Charm
-            if (hasCharm('clover_master') && counts['☘']) {
-                totalGain = Math.floor(totalGain * (1 + counts['☘'] * 0.3));
-            }
-
-            // Triple Combo Bonus
-            if (gameState.gridResults[0] === gameState.gridResults[1] && gameState.gridResults[1] === gameState.gridResults[2]) {
-                totalGain += 30;
-                logEvent('ДЖЕКПОТ! Тройное совпадение: +30 монет!', 'win');
-            }
-
             gameState.coins += totalGain;
-
             if (totalGain > 0) {
                 audio.playWinFanfare();
-                logEvent(`Выигрыш за спин: +${totalGain} монет!`, 'win');
-                for (let i = 0; i < 25; i++) setTimeout(spawn3DCoin, i * 30);
+                logEvent(`Выигрыш: +${totalGain} монет!`, 'win');
             }
 
             isSpinningSequence = false;
             document.getElementById('btnSpin').disabled = false;
             updateUI();
 
-            checkQuotaProgress();
-        }
-
-        function hasCharm(id) {
-            return gameState.charms.some(c => c.id === id);
-        }
-
-        function checkQuotaProgress() {
             if (gameState.coins >= gameState.quota) {
-                logEvent(`Цель достигнута! Аренда в ${gameState.quota} монет выплачена!`, 'win');
-                audio.playWinFanfare();
-                advanceNextStage();
+                logEvent('Аренда оплачена! Следующий этап.', 'win');
+                gameState.stage++;
+                gameState.quota = Math.floor(gameState.quota * 1.6);
+                gameState.spinsLeft = 5;
+                updateUI();
             } else if (gameState.spinsLeft <= 0) {
                 audio.playError();
-                triggerGameOver(false);
+                document.getElementById('gameOverModal').style.display = 'flex';
             }
         }
 
-        function advanceNextStage() {
-            gameState.stage++;
-            gameState.coins -= gameState.quota;
-            gameState.quota = Math.floor(gameState.quota * 1.65);
-            gameState.spinsLeft = gameState.maxSpins;
-
-            if (hasCharm('coffee')) gameState.spinsLeft += 1;
-
-            logEvent(`Этап ${gameState.stage} начат. Новая цель: ${gameState.quota} монет.`, 'info');
-            saveProgress();
-            updateUI();
-        }
-
-        function triggerGameOver(victory) {
-            const modal = document.getElementById('gameOverModal');
-            const title = document.getElementById('gameOverTitle');
-            const desc = document.getElementById('gameOverDesc');
-
-            title.innerText = victory ? 'ПОБЕДА!' : 'БАНКРОТСТВО';
-            desc.innerText = victory ? 'Вы прошли все уровни ямы!' : `Вам не хватило монет для оплаты аренды в ${gameState.quota} монет.`;
-
-            modal.style.display = 'flex';
-        }
-
         function resetFullGame() {
-            gameState = {
-                coins: 35,
-                quota: 90,
-                spinsLeft: 5,
-                maxSpins: 5,
-                stage: 1,
-                multiplier: 1.0,
-                deck: ['🍒', '🍒', '🍋', '🍋', '🍇', '🔔', '☘', '🪙', '🪙'],
-                charms: [],
-                gridResults: []
-            };
+            gameState = { coins: 35, quota: 90, spinsLeft: 5, stage: 1, deck: ['🍒','🍒','🍋','🍋','🍇','🔔','☘','🪙','🪙'], charms: [], gridResults: [] };
             closeModal('gameOverModal');
             updateUI();
-            logEvent('Новая игра началась.', 'info');
         }
 
-        /* ==========================================================================
-           6. SHOP & MODALS SYSTEM
-           ========================================================================== */
         function openShopModal() {
             const grid = document.getElementById('shopGrid');
             grid.innerHTML = '';
-
-            CHARMS_DATA.forEach(charm => {
-                const bought = hasCharm(charm.id);
+            CHARMS_DATA.forEach(c => {
+                const bought = gameState.charms.some(x => x.id === c.id);
                 const el = document.createElement('div');
                 el.className = 'shop-card';
                 el.innerHTML = `
-                    <div class="shop-card-icon">${charm.icon}</div>
-                    <div class="shop-card-title">${charm.name}</div>
-                    <div class="shop-card-desc">${charm.desc}</div>
-                    <div class="shop-card-cost">${bought ? 'КУПЛЕНО' : charm.cost + ' 🪙'}</div>
-                    <button class="btn" style="padding:4px 12px; font-size:0.8rem;" ${bought || gameState.coins < charm.cost ? 'disabled' : ''}>
-                        ${bought ? 'Есть' : 'Купить'}
-                    </button>
+                    <div class="shop-card-icon">${c.icon}</div>
+                    <div class="shop-card-title">${c.name}</div>
+                    <div class="shop-card-desc">${c.desc}</div>
+                    <button class="btn" ${bought || gameState.coins < c.cost ? 'disabled' : ''}>${bought ? 'Есть' : c.cost + ' 🪙'}</button>
                 `;
-
                 el.querySelector('button').onclick = () => {
-                    if (!bought && gameState.coins >= charm.cost && gameState.charms.length < 6) {
-                        gameState.coins -= charm.cost;
-                        gameState.charms.push(charm);
+                    if (!bought && gameState.coins >= c.cost) {
+                        gameState.coins -= c.cost;
+                        gameState.charms.push(c);
                         audio.playCoin();
-                        logEvent(`Приобретен амулет: ${charm.name}`, 'info');
                         updateUI();
                         openShopModal();
                     }
                 };
-
                 grid.appendChild(el);
             });
-
             document.getElementById('shopModal').style.display = 'flex';
         }
 
         function openDeckModal() {
             const grid = document.getElementById('deckGrid');
             grid.innerHTML = '';
-
             const counts = {};
             gameState.deck.forEach(s => counts[s] = (counts[s] || 0) + 1);
-
             for (const [sym, count] of Object.entries(counts)) {
-                const data = SYMBOL_DATA[sym] || { name: sym, val: 1 };
                 const el = document.createElement('div');
                 el.className = 'shop-card';
-                el.innerHTML = `
-                    <div class="shop-card-icon">${sym}</div>
-                    <div class="shop-card-title">${data.name}</div>
-                    <div class="shop-card-desc">Ценность: ${data.val} монет<br>Количество: ${count}</div>
-                `;
+                el.innerHTML = `<div class="shop-card-icon">${sym}</div><div class="shop-card-desc">Количество: ${count}</div>`;
                 grid.appendChild(el);
             }
-
             document.getElementById('deckModal').style.display = 'flex';
         }
 
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        /* Storage */
-        function saveProgress() {
-            try {
-                localStorage.setItem('clover_pit_3d_save', JSON.stringify(gameState));
-            } catch(e) {}
-        }
-
-        function loadProgress() {
-            try {
-                const data = localStorage.getItem('clover_pit_3d_save');
-                if (data) {
-                    gameState = { ...gameState, ...JSON.parse(data) };
-                }
-            } catch(e) {}
-        }
-
-        /* ==========================================================================
-           7. MAIN ANIMATION LOOP
-           ========================================================================== */
-        let clock = new THREE.Clock();
-
+        /* Animation Loop */
         function animate() {
             requestAnimationFrame(animate);
-
-            const delta = clock.getDelta();
-
-            // Reel Rotation Physics
-            reels.forEach((reelObj) => {
-                if (reelObj.isSpinning) {
-                    reelObj.mesh.rotation.x += reelObj.rotationSpeed;
+            reels.forEach(r => {
+                if (r.isSpinning) {
+                    r.mesh.rotation.x += r.rotationSpeed;
                     audio.playSpinTick();
                 } else {
-                    // Align to nearest symbol segment
-                    reelObj.mesh.rotation.x = THREE.MathUtils.lerp(reelObj.mesh.rotation.x, Math.round(reelObj.mesh.rotation.x / (Math.PI / 4)) * (Math.PI / 4), 0.2);
+                    r.mesh.rotation.x = THREE.MathUtils.lerp(r.mesh.rotation.x, Math.round(r.mesh.rotation.x / (Math.PI / 4)) * (Math.PI / 4), 0.2);
                 }
             });
-
-            // Ambient machine light flicker
-            pointLightMachine.intensity = 1.2 + Math.sin(Date.now() * 0.005) * 0.3;
-
-            updateCoins();
             renderer.render(scene, camera);
         }
 
-        /* ==========================================================================
-           8. INIT
-           ========================================================================== */
         window.onload = () => {
-            loadProgress();
             updateUI();
-            logEvent('Система 3D Clover Pit готова. Сделайте первый спин.', 'info');
+            logEvent('Запуск системы. Удача на вашей стороне.', 'info');
             animate();
         };
     </script>
 </body>
 </html>
+   
