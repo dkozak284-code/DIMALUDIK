@@ -32,7 +32,7 @@
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
-        /* Кнопка Шестерёнки (Справа вверху, сдвинута от шторки и системных кнопок) */
+        /* Кнопки управления */
         .gear-btn {
             position: fixed;
             top: calc(35px + env(safe-area-inset-top));
@@ -56,7 +56,6 @@
             transform: rotate(90deg) scale(0.9);
         }
 
-        /* Кнопка Подсказки (Рядом с шестерёнкой) */
         .hint-btn {
             position: fixed;
             top: calc(35px + env(safe-area-inset-top));
@@ -81,7 +80,6 @@
             transform: scale(0.9);
         }
 
-        /* Кнопка Магазина (Справа отступаем от статуса времени) */
         .shop-btn-top {
             position: fixed;
             top: calc(35px + env(safe-area-inset-top));
@@ -162,14 +160,14 @@
             box-shadow: 0 0 20px #ff0000;
         }
 
-        /* Контейнер игрового автомата */
+        /* Контейнер автомата */
         .game-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
             height: 100%;
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
 
         .machine-wrapper {
@@ -179,7 +177,6 @@
             margin-right: 50px;
         }
 
-        /* Корпус Игрового Автомата */
         .casino-cabinet {
             background: #050000;
             border: 3px solid #ff0000;
@@ -187,27 +184,36 @@
             border-radius: 16px;
             padding: 12px 16px 14px 16px;
             text-align: center;
-            width: 410px;
-            max-width: 75vw;
+            min-width: 380px;
+            max-width: 88vw;
             position: relative;
         }
 
-        /* Верхняя HUD Панель */
+        /* Панель цели и HUD */
+        .goal-banner {
+            font-size: 1rem;
+            color: #00ff66;
+            text-shadow: 0 0 8px #00ff66;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
         .hud-panel-inside {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 4px 6px;
             margin-bottom: 8px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
+            gap: 6px;
         }
         .balance-box {
             background: #000;
             color: #ffd700;
             border: 2px solid #ffd700;
             box-shadow: 0 0 10px #ffd700;
-            padding: 2px 10px;
+            padding: 2px 8px;
             border-radius: 6px;
         }
         .pity-box {
@@ -239,12 +245,12 @@
             opacity: 1;
         }
 
-        /* Игровая Сетка 3х3 */
+        /* Динамическая Сетка Слотов */
         .reels-frame {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            gap: 8px;
+            gap: 6px;
             background: #000;
             border: 3px solid #ff6600;
             border-radius: 10px;
@@ -253,14 +259,14 @@
             box-shadow: 0 0 20px #ff6600, inset 0 0 20px #ff0000;
         }
         .reel {
-            height: 52px;
+            height: 50px;
             background: #080000;
             border: 2px solid #a800ff;
             border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             box-shadow: inset 0 0 8px #000, 0 0 10px #a800ff;
         }
 
@@ -271,7 +277,7 @@
             text-shadow: 0 0 6px #ff0000;
         }
 
-        /* Механический Рычаг */
+        /* Рычаг */
         .lever-container {
             position: absolute;
             right: -55px;
@@ -334,16 +340,16 @@
         }
         .shop-title {
             color: #ffcc00;
-            font-size: 2rem;
+            font-size: 1.8rem;
             text-shadow: 0 0 12px #ff6600, 0 0 25px #ff0000;
             margin-bottom: 6px;
             letter-spacing: 2px;
         }
         .shop-container {
             position: relative;
-            width: 500px;
+            width: 520px;
             height: 340px;
-            max-width: 92vw;
+            max-width: 94vw;
             max-height: 68vh;
         }
 
@@ -376,7 +382,7 @@
             filter: drop-shadow(0 0 10px #00ff66);
         }
         .hex-text-title {
-            font-size: 11px;
+            font-size: 10px;
             fill: #ffffff;
             font-family: sans-serif;
             font-weight: bold;
@@ -384,7 +390,7 @@
             pointer-events: none;
         }
         .hex-text-status {
-            font-size: 10px;
+            font-size: 9px;
             fill: #ffd700;
             font-family: sans-serif;
             text-anchor: middle;
@@ -407,7 +413,7 @@
             border: none;
             padding: 8px 30px;
             font-family: 'Creepster', cursive;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
@@ -499,7 +505,7 @@
 </head>
 <body>
 
-    <!-- Верхние кнопки (Сдвинуты вглубь экрана) -->
+    <!-- Верхние кнопки -->
     <button id="shopBtnTop" class="shop-btn-top hidden" onclick="openShop()">МАГАЗИН</button>
     <div id="hintBtn" class="hint-btn hidden" onclick="openModal('hintModal')">?</div>
     <div id="gearBtn" class="gear-btn hidden" onclick="openGameSettings()">⚙</div>
@@ -525,6 +531,8 @@
             
             <div class="machine-wrapper">
                 <div class="casino-cabinet">
+                    <div class="goal-banner">ЦЕЛЬ: 1 000 000 Φ</div>
+
                     <div class="hud-panel-inside">
                         <div class="balance-box"><span id="balanceText">50</span> Φ</div>
                         <div class="pity-box">ГАРАНТ: <span id="pityText">0/6</span></div>
@@ -533,17 +541,7 @@
 
                     <div id="winBanner" class="win-banner">+0 Φ</div>
                     
-                    <div class="reels-frame">
-                        <div class="reel" id="r0">💀</div>
-                        <div class="reel" id="r1">🩸</div>
-                        <div class="reel" id="r2">👁️</div>
-                        <div class="reel" id="r3">7️⃣</div>
-                        <div class="reel" id="r4">🔪</div>
-                        <div class="reel" id="r5">🔔</div>
-                        <div class="reel" id="r6">🕯️</div>
-                        <div class="reel" id="r7">🍒</div>
-                        <div class="reel" id="r8">💀</div>
-                    </div>
+                    <div class="reels-frame" id="reelsFrame"></div>
 
                     <div class="lever-hint">ПОТЯНИ РЫЧАГ (5 Φ)</div>
                 </div>
@@ -564,7 +562,7 @@
     <div class="shop-modal" id="shopModal">
         <h2 class="shop-title">ДРЕВО УЛУЧШЕНИЙ</h2>
         <div class="shop-container">
-            <svg class="hex-svg" viewBox="0 0 500 340" id="hexSvg"></svg>
+            <svg class="hex-svg" viewBox="0 0 520 340" id="hexSvg"></svg>
         </div>
         <button class="shop-close-btn" onclick="closeShop()">ЗАКРЫТЬ</button>
     </div>
@@ -594,9 +592,12 @@
                 <label>Музыка:</label>
                 <input type="range" min="0" max="100" value="60">
             </div>
-            <div class="modal-actions">
-                <button class="close-btn" style="background: #200000;" onclick="goToMainMenu()">В МЕНЮ</button>
-                <button class="close-btn" onclick="closeModal('gameGearModal')">ПРОДОЛЖИТЬ</button>
+            <div class="modal-actions" style="flex-direction: column;">
+                <button class="close-btn" style="background: #006622; border-color: #00ff66;" onclick="manualSaveGame()">СОХРАНИТЬ ИГРУ</button>
+                <div style="display: flex; gap: 10px; width: 100%;">
+                    <button class="close-btn" style="background: #200000; flex: 1;" onclick="goToMainMenu()">В МЕНЮ</button>
+                    <button class="close-btn" style="flex: 1;" onclick="closeModal('gameGearModal')">ПРОДОЛЖИТЬ</button>
+                </div>
             </div>
         </div>
     </div>
@@ -642,34 +643,107 @@
         </div>
     </div>
 
+    <!-- Победа в Игре -->
+    <div class="modal" id="winGameModal">
+        <div class="modal-content" style="border-color: #00ff66; box-shadow: 0 0 30px #00ff66;">
+            <h2 style="color: #00ff66; border-color: #00ff66;">ПОБЕДА!</h2>
+            <p style="color: #ffffff; font-size: 1.2rem; margin: 14px 0;">Вы заработали 1 000 000 Φ и прошли игру! :)</p>
+            <button class="close-btn" style="background: #006622; border-color: #00ff66; width: 100%;" onclick="closeModal('winGameModal')">ПРОДОЛЖИТЬ ИГРУ</button>
+        </div>
+    </div>
+
     <script>
         let balance = 50;
         let multiplier = 1;
         let multiplierLevel = 0;
-        let luckPercent = 0;
-        let infiniteLuckLevel = 0;
+        let luckLevel = 0; // До 50 ур
+        let infLuckLevel = 0;
+        let extraSlotsLevel = 0; // 0..3 (1 ур = 4 слота, 2 ур = 5, 3 ур = 6 в ширину)
         let isSpinning = false;
-        
         let pityCounter = 0;
         let slotSpeedSetting = 1;
+        let gameCompleted = false;
 
+        // Шансы выпадения символов
+        function getRandomSymbol() {
+            const rand = Math.random() * 100;
+            if (rand < 20) return '🍒'; // 20%
+            if (rand < 40) return '💀'; // 20%
+            if (rand < 58) return '🩸'; // 18%
+            if (rand < 73) return '👁️'; // 15%
+            if (rand < 83) return '🔪'; // 10%
+            if (rand < 93) return '🔔'; // 10%
+            return '7️⃣';               // 7%
+        }
+
+        const symbols = ['🍒', '💀', '🩸', '👁️', '🔪', '🔔', '7️⃣'];
+
+        // Структура магазина
         const shopNodes = [
-            { id: 0, x: 250, y: 170, title: "СТАРТ", cost: 0, type: "start", req: [], purchased: true },
-            { id: 1, x: 250, y: 70,  title: "БЕСК. МНОЖИТЕЛЬ", baseCost: 100, type: "inf_mult", req: [0], purchased: false },
-            { id: 2, x: 340, y: 120, title: "УДАЧА +5%", cost: 80, type: "luck", value: 5, req: [0], purchased: false },
-            { id: 3, x: 340, y: 220, title: "МНОЖИТЕЛЬ +1", cost: 150, type: "mult_add", value: 1, req: [2], purchased: false },
-            { id: 4, x: 250, y: 270, title: "УДАЧА +10%", cost: 250, type: "luck", value: 10, req: [3], purchased: false },
-            { id: 5, x: 160, y: 220, title: "МНОЖИТЕЛЬ +1", cost: 400, type: "mult_add", value: 1, req: [4], purchased: false },
-            { id: 6, x: 160, y: 120, title: "БЕСК. УДАЧА (+1%)", baseCost: 100, type: "inf_luck", req: [0], purchased: false }
+            { id: 0, x: 260, y: 170, title: "СТАРТ", type: "start", req: [], purchased: true },
+            { id: 1, x: 130, y: 100, title: "БЕСК. МНОЖИТЕЛЬ", baseCost: 100, type: "inf_mult", req: [0] },
+            { id: 2, x: 390, y: 100, title: "УДАЧА (макс 50)", baseCost: 60, type: "luck_50", req: [0] },
+            { id: 3, x: 130, y: 240, title: "БЕСК. УДАЧА (+1%)", baseCost: 120, type: "inf_luck", req: [0] },
+            { id: 4, x: 390, y: 240, title: "РАСШИРЕНИЕ СЛОТОВ", baseCost: 500, type: "extra_slots", req: [3] }
         ];
 
-        const winningLines = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8],
-            [0, 3, 6], [1, 4, 7], [2, 5, 8],
-            [0, 4, 8], [2, 4, 6]
-        ];
+        function getColsCount() {
+            return 3 + extraSlotsLevel;
+        }
 
-        const symbols = ['💀', '🩸', '👁️', '7️⃣', '🔪', '🔔', '🍒'];
+        function saveGame() {
+            const data = {
+                balance,
+                multiplier,
+                multiplierLevel,
+                luckLevel,
+                infLuckLevel,
+                extraSlotsLevel,
+                pityCounter,
+                gameCompleted
+            };
+            localStorage.setItem('slot_game_save_v3', JSON.stringify(data));
+        }
+
+        function loadGame() {
+            const saved = localStorage.getItem('slot_game_save_v3');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    balance = data.balance ?? 50;
+                    multiplier = data.multiplier ?? 1;
+                    multiplierLevel = data.multiplierLevel ?? 0;
+                    luckLevel = data.luckLevel ?? 0;
+                    infLuckLevel = data.infLuckLevel ?? 0;
+                    extraSlotsLevel = data.extraSlotsLevel ?? 0;
+                    pityCounter = data.pityCounter ?? 0;
+                    gameCompleted = data.gameCompleted ?? false;
+                } catch(e){}
+            }
+            rebuildGrid();
+            updateUI();
+        }
+
+        function manualSaveGame() {
+            saveGame();
+            alert("ИГРА СОХРАНЕНА! :)");
+        }
+
+        function rebuildGrid() {
+            const cols = getColsCount();
+            const frame = document.getElementById('reelsFrame');
+            frame.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            frame.innerHTML = '';
+            
+            const total = cols * 3;
+            for (let i = 0; i < total; i++) {
+                const reel = document.createElement('div');
+                reel.className = 'reel';
+                reel.id = 'r' + i;
+                reel.innerText = getRandomSymbol();
+                frame.appendChild(reel);
+            }
+        }
 
         function updateUI() {
             document.getElementById('balanceText').innerText = balance;
@@ -732,6 +806,26 @@
 
         function exitGame() { openModal('exitModal'); }
 
+        function generateWinningLines(cols) {
+            let lines = [];
+            // Горизонтали 3 в ряд
+            for (let r = 0; r < 3; r++) {
+                for (let c = 0; c <= cols - 3; c++) {
+                    lines.push([r * cols + c, r * cols + c + 1, r * cols + c + 2]);
+                }
+            }
+            // Вертикали
+            for (let c = 0; c < cols; c++) {
+                lines.push([0 * cols + c, 1 * cols + c, 2 * cols + c]);
+            }
+            // Диагонали 3 в ряд
+            for (let c = 0; c <= cols - 3; c++) {
+                lines.push([0 * cols + c, 1 * cols + c + 1, 2 * cols + c + 2]);
+                lines.push([2 * cols + c, 1 * cols + c + 1, 0 * cols + c + 2]);
+            }
+            return lines;
+        }
+
         function pullLeverAndSpin() {
             if (isSpinning) return;
             if (balance < 5) {
@@ -752,43 +846,45 @@
             banner.classList.remove('active');
 
             let spinInterval = 130;
-            let spinsCount = 16;
-            let reelStagger = 180;
+            let spinsCount = 14;
+            let reelStagger = 120;
 
             if (slotSpeedSetting === 2) {
-                spinInterval = 80; spinsCount = 12; reelStagger = 120;
+                spinInterval = 80; spinsCount = 10; reelStagger = 80;
             } else if (slotSpeedSetting === 3) {
-                spinInterval = 50; spinsCount = 8; reelStagger = 70;
+                spinInterval = 50; spinsCount = 6; reelStagger = 50;
             }
 
+            const cols = getColsCount();
+            const totalSlots = cols * 3;
+            const winningLines = generateWinningLines(cols);
+
             let grid = [];
-            let totalLuck = luckPercent + (infiniteLuckLevel * 1);
+            let totalLuck = (luckLevel * 0.8) + (infLuckLevel * 1);
             let forceWin = (Math.random() * 100) < totalLuck;
 
             if (pityCounter >= 6) {
                 forceWin = true;
             }
 
+            for (let i = 0; i < totalSlots; i++) {
+                grid.push(getRandomSymbol());
+            }
+
             if (forceWin) {
                 let sym = symbols[Math.floor(Math.random() * symbols.length)];
                 let line = winningLines[Math.floor(Math.random() * winningLines.length)];
-                for (let i = 0; i < 9; i++) {
-                    grid.push(symbols[Math.floor(Math.random() * symbols.length)]);
-                }
                 grid[line[0]] = sym;
                 grid[line[1]] = sym;
                 grid[line[2]] = sym;
-            } else {
-                for (let i = 0; i < 9; i++) {
-                    grid.push(symbols[Math.floor(Math.random() * symbols.length)]);
-                }
             }
 
-            for (let i = 0; i < 9; i++) {
+            for (let i = 0; i < totalSlots; i++) {
                 let reelElem = document.getElementById('r' + i);
-                
+                if (!reelElem) continue;
+
                 let interval = setInterval(() => {
-                    reelElem.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                    reelElem.innerText = getRandomSymbol();
                 }, spinInterval);
 
                 let stopDelay = (spinsCount * spinInterval) + (i * reelStagger);
@@ -798,7 +894,7 @@
                 }, stopDelay);
             }
 
-            let totalSpinTime = (spinsCount * spinInterval) + (8 * reelStagger) + 100;
+            let totalSpinTime = (spinsCount * spinInterval) + (totalSlots * reelStagger) + 100;
 
             setTimeout(() => {
                 let winLinesCount = 0;
@@ -821,7 +917,13 @@
                     banner.classList.add('active');
                 }
 
+                if (balance >= 1000000 && !gameCompleted) {
+                    gameCompleted = true;
+                    openModal('winGameModal');
+                }
+
                 updateUI();
+                saveGame();
                 isSpinning = false;
             }, totalSpinTime);
         }
@@ -858,22 +960,28 @@
                         line.setAttribute("y1", parent.y);
                         line.setAttribute("x2", node.x);
                         line.setAttribute("y2", node.y);
-                        line.setAttribute("class", `hex-line ${node.purchased ? 'active' : ''}`);
+                        let isUnlocked = (node.id === 4) ? (infLuckLevel >= 20) : true;
+                        line.setAttribute("class", `hex-line ${isUnlocked ? 'active' : ''}`);
                         svg.appendChild(line);
                     }
                 });
             });
 
             shopNodes.forEach(node => {
-                let isUnlocked = node.req.length === 0 || node.req.some(reqId => shopNodes.find(n => n.id === reqId).purchased);
-                let stateClass = node.purchased ? "purchased" : (isUnlocked ? "unlocked" : "locked");
+                let isUnlocked = true;
+                if (node.id === 4) {
+                    isUnlocked = (infLuckLevel >= 20);
+                }
+
+                let stateClass = "unlocked";
+                if (!isUnlocked) stateClass = "locked";
 
                 let g = document.createElementNS("http://www.w3.org/2000/svg", "g");
                 g.setAttribute("class", `hex-node ${stateClass}`);
                 g.onclick = () => buyUpgrade(node.id);
 
                 let poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-                poly.setAttribute("points", createHexPolygonPoints(node.x, node.y, 40));
+                poly.setAttribute("points", createHexPolygonPoints(node.x, node.y, 42));
                 g.appendChild(poly);
 
                 let title = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -888,21 +996,33 @@
                 status.setAttribute("y", node.y + 14);
                 status.setAttribute("class", "hex-text-status");
 
-                if (node.type === "inf_mult") {
+                if (node.type === "start") {
+                    status.textContent = "ОТКРЫТО";
+                } else if (node.type === "inf_mult") {
                     let cost = node.baseCost + (multiplierLevel * 100);
                     status.textContent = `${cost} Φ (X${multiplier})`;
+                } else if (node.type === "luck_50") {
+                    if (luckLevel >= 50) {
+                        status.textContent = "МАКС (50/50)";
+                    } else {
+                        let cost = node.baseCost + (luckLevel * 40);
+                        status.textContent = `${cost} Φ (${luckLevel}/50 ур)`;
+                    }
                 } else if (node.type === "inf_luck") {
-                    let cost = node.baseCost + (infiniteLuckLevel * 100);
-                    status.textContent = `${cost} Φ (Ур. ${infiniteLuckLevel})`;
-                } else if (node.purchased) {
-                    status.textContent = "КУПЛЕНО";
-                } else if (isUnlocked) {
-                    status.textContent = `${node.cost} Φ`;
-                } else {
-                    status.textContent = "ЗАКРЫТО";
+                    let cost = node.baseCost + (infLuckLevel * 100);
+                    status.textContent = `${cost} Φ (${infLuckLevel} ур)`;
+                } else if (node.type === "extra_slots") {
+                    if (!isUnlocked) {
+                        status.textContent = "НУЖНА БЕСК. УДАЧА 20 УР";
+                    } else if (extraSlotsLevel >= 3) {
+                        status.textContent = "МАКС (6 СЛОТОВ)";
+                    } else {
+                        let cost = node.baseCost * (extraSlotsLevel + 1) * 2;
+                        status.textContent = `${cost} Φ (${3 + extraSlotsLevel + 1} слотов)`;
+                    }
                 }
-                g.appendChild(status);
 
+                g.appendChild(status);
                 svg.appendChild(g);
             });
         }
@@ -911,56 +1031,62 @@
             let node = shopNodes.find(n => n.id === id);
             if (!node) return;
 
-            let isUnlocked = node.req.length === 0 || node.req.some(reqId => shopNodes.find(n => n.id === reqId).purchased);
-            if (!isUnlocked) {
-                alert("СНАЧАЛА ОТКРОЙТЕ ПРЕДЫДУЩИЕ СОТЫ! :(");
-                return;
-            }
-
             if (node.type === "inf_mult") {
-                let currentCost = node.baseCost + (multiplierLevel * 100);
-                if (balance >= currentCost) {
-                    balance -= currentCost;
+                let cost = node.baseCost + (multiplierLevel * 100);
+                if (balance >= cost) {
+                    balance -= cost;
                     multiplierLevel++;
-                    multiplier += 1;
-                    node.purchased = true;
+                    multiplier++;
                     updateUI();
+                    saveGame();
                     renderShop();
-                } else {
-                    alert("НЕДОСТАТОЧНО МОНЕТ! :(");
+                } else alert("НЕДОСТАТОЧНО МОНЕТ! :(");
+            } else if (node.type === "luck_50") {
+                if (luckLevel >= 50) {
+                    alert("ДОСТИГНУТ МАКСИМАЛЬНЫЙ УРОВЕНЬ! :)");
+                    return;
                 }
-                return;
-            }
-
-            if (node.type === "inf_luck") {
-                let currentCost = node.baseCost + (infiniteLuckLevel * 100);
-                if (balance >= currentCost) {
-                    balance -= currentCost;
-                    infiniteLuckLevel++;
-                    node.purchased = true;
+                let cost = node.baseCost + (luckLevel * 40);
+                if (balance >= cost) {
+                    balance -= cost;
+                    luckLevel++;
                     updateUI();
+                    saveGame();
                     renderShop();
-                } else {
-                    alert("НЕДОСТАТОЧНО МОНЕТ! :(");
+                } else alert("НЕДОСТАТОЧНО МОНЕТ! :(");
+            } else if (node.type === "inf_luck") {
+                let cost = node.baseCost + (infLuckLevel * 100);
+                if (balance >= cost) {
+                    balance -= cost;
+                    infLuckLevel++;
+                    updateUI();
+                    saveGame();
+                    renderShop();
+                } else alert("НЕДОСТАТОЧНО МОНЕТ! :(");
+            } else if (node.type === "extra_slots") {
+                if (infLuckLevel < 20) {
+                    alert("ТРЕБУЕТСЯ 20 УРОВЕНЬ БЕСКОНЕЧНОЙ УДАЧИ! :(");
+                    return;
                 }
-                return;
-            }
-
-            if (node.purchased) return;
-
-            if (balance >= node.cost) {
-                balance -= node.cost;
-                node.purchased = true;
-
-                if (node.type === "mult_add") multiplier += node.value;
-                if (node.type === "luck") luckPercent += node.value;
-
-                updateUI();
-                renderShop();
-            } else {
-                alert("НЕДОСТАТОЧНО МОНЕТ! :(");
+                if (extraSlotsLevel >= 3) {
+                    alert("МАКСИМАЛЬНАЯ ШИРИНА УЖЕ КУПЛЕНА! :)");
+                    return;
+                }
+                let cost = node.baseCost * (extraSlotsLevel + 1) * 2;
+                if (balance >= cost) {
+                    balance -= cost;
+                    extraSlotsLevel++;
+                    rebuildGrid();
+                    updateUI();
+                    saveGame();
+                    renderShop();
+                } else alert("НЕДОСТАТОЧНО МОНЕТ! :(");
             }
         }
+
+        window.onload = () => {
+            loadGame();
+        };
     </script>
 </body>
 </html>
