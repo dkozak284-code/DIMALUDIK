@@ -13,8 +13,8 @@
             user-select: none;
         }
         body {
-            background-color: #020000;
-            background-image: radial-gradient(circle, #250000 0%, #020000 90%);
+            background-color: #000000;
+            background-image: radial-gradient(circle, #1a0000 0%, #000000 85%);
             color: #fff;
             font-family: 'Creepster', cursive, sans-serif;
             height: 100vh;
@@ -28,22 +28,22 @@
         /* Кнопка Шестерёнки (Справа вверху) */
         .gear-btn {
             position: fixed;
-            top: 10px;
-            right: 15px;
-            font-size: 1.3rem;
+            top: 12px;
+            right: 18px;
+            font-size: 1.2rem;
             color: #ff0000;
-            background: rgba(15, 0, 0, 0.9);
-            border: 2px solid #800000;
+            background: #080000;
+            border: 2px solid #ff0000;
             border-radius: 50%;
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 500;
-            box-shadow: 0 0 10px #ff0000;
-            transition: transform 0.3s ease;
+            box-shadow: 0 0 12px #ff0000, inset 0 0 8px #550000;
+            transition: transform 0.2s ease;
         }
         .gear-btn:active {
             transform: rotate(90deg) scale(0.9);
@@ -52,19 +52,19 @@
         /* Кнопка Магазина (Слева вверху) */
         .shop-btn-top {
             position: fixed;
-            top: 10px;
-            left: 15px;
-            background: linear-gradient(180deg, #d4af37, #5a480c);
-            color: #000;
+            top: 12px;
+            left: 18px;
+            background: #000;
+            color: #ffd700;
             border: 2px solid #ffd700;
-            padding: 6px 14px;
+            padding: 6px 16px;
             font-size: 1.1rem;
             font-family: 'Creepster', cursive;
-            font-weight: bold;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 0 10px #ffd700;
+            box-shadow: 0 0 12px #ffd700, inset 0 0 6px #554400;
             z-index: 500;
+            letter-spacing: 1px;
             transition: transform 0.2s ease;
         }
         .shop-btn-top:active {
@@ -80,7 +80,7 @@
             height: 100%;
             position: absolute;
             top: 0; left: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.3s ease;
         }
         .hidden {
             display: none !important;
@@ -89,110 +89,118 @@
         /* Главное Меню */
         .menu-container {
             text-align: center;
-            background: rgba(10, 0, 0, 0.95);
-            padding: 16px 25px;
-            border: 2px solid #600000;
-            box-shadow: 0 0 30px #ff0000, inset 0 0 15px #300000;
-            border-radius: 12px;
-            width: 420px;
-            max-width: 80vw;
+            background: #050000;
+            padding: 20px 30px;
+            border: 3px solid #ff0000;
+            box-shadow: 0 0 35px #ff0000, inset 0 0 20px #400000;
+            border-radius: 14px;
+            width: 440px;
+            max-width: 85vw;
         }
         h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             color: #ff0000;
-            text-shadow: 0 0 8px #ff0000, 0 0 18px #800000;
-            margin-bottom: 12px;
-            letter-spacing: 2px;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #800000;
+            margin-bottom: 16px;
+            letter-spacing: 3px;
         }
         .main-btn-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 12px;
         }
 
         .menu-btn {
-            padding: 8px 12px;
-            background: linear-gradient(180deg, #200000, #0a0000);
-            color: #ff3333;
-            border: 1px solid #ff0000;
-            border-radius: 6px;
+            padding: 10px;
+            background: #0a0000;
+            color: #ff4444;
+            border: 2px solid #ff0000;
+            border-radius: 8px;
             font-size: 1.1rem;
             font-family: 'Creepster', cursive;
             cursor: pointer;
             text-transform: uppercase;
-            box-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
             transition: all 0.2s ease;
         }
         .menu-btn:active {
             transform: scale(0.95);
             background: #ff0000;
             color: #000;
-            box-shadow: 0 0 15px #ff0000;
+            box-shadow: 0 0 20px #ff0000;
         }
 
-        /* Общий контейнер для автомата и рычага */
+        /* Общий контейнер игрового автомата */
         .game-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
             height: 100%;
-            padding: 10px;
         }
 
         .machine-wrapper {
             position: relative;
             display: inline-flex;
             align-items: center;
-            margin-right: 45px; /* Запас места для рычага справа */
+            margin-right: 50px;
         }
 
-        /* Корпус Автомата */
+        /* Корпус Игрового Автомата */
         .casino-cabinet {
-            background: linear-gradient(180deg, #1f0000 0%, #050000 100%);
-            border: 4px solid #b30000;
-            box-shadow: 0 0 35px #ff0000, inset 0 0 25px #000;
-            border-radius: 12px;
-            padding: 10px 14px 12px 14px;
+            background: #050000;
+            border: 3px solid #ff0000;
+            box-shadow: 0 0 35px #ff0000, inset 0 0 30px #200000;
+            border-radius: 16px;
+            padding: 12px 16px 14px 16px;
             text-align: center;
-            width: 380px;
-            max-width: 70vw;
+            width: 410px;
+            max-width: 75vw;
             position: relative;
         }
 
-        /* HUD Панель */
+        /* Верхняя HUD Панель */
         .hud-panel-inside {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2px 4px;
-            margin-bottom: 6px;
-            font-size: 1rem;
-            color: #ffd700;
-            text-shadow: 0 0 6px #ff0000;
-            border-bottom: 1px solid rgba(255, 0, 0, 0.3);
+            padding: 4px 6px;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
         }
         .balance-box {
-            background: rgba(0,0,0,0.8);
-            padding: 2px 8px;
-            border: 1px solid #ffd700;
-            border-radius: 4px;
+            background: #000;
+            color: #ffd700;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 10px #ffd700;
+            padding: 2px 10px;
+            border-radius: 6px;
         }
         .pity-box {
-            color: #ff5555;
-            font-weight: bold;
+            color: #ff3333;
+            text-shadow: 0 0 8px #ff0000;
+            letter-spacing: 1px;
+        }
+        .mult-box {
+            color: #ffffff;
+            text-shadow: 0 0 6px #ffffff;
+        }
+        .mult-value {
+            color: #00ff66;
+            text-shadow: 0 0 10px #00ff66;
         }
 
         .win-banner {
             font-size: 1.1rem;
-            height: 20px;
-            line-height: 20px;
+            height: 22px;
+            line-height: 22px;
             color: #00ff66;
             font-weight: bold;
             text-shadow: 0 0 10px #00ff66;
             margin-bottom: 4px;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.2s ease;
         }
         .win-banner.active {
             opacity: 1;
@@ -203,64 +211,65 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            gap: 6px;
+            gap: 8px;
             background: #000;
-            border: 3px solid #ffaa00;
-            border-radius: 8px;
-            padding: 6px;
-            margin: 2px 0 6px 0;
-            box-shadow: 0 0 15px #ff5500, inset 0 0 15px #ff0000;
+            border: 3px solid #ff6600;
+            border-radius: 10px;
+            padding: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 0 20px #ff6600, inset 0 0 20px #ff0000;
         }
         .reel {
-            height: 48px;
-            background: linear-gradient(180deg, #0a0000 0%, #1a0000 50%, #0a0000 100%);
+            height: 52px;
+            background: #080000;
             border: 2px solid #a800ff;
-            border-radius: 5px;
+            border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.7rem;
-            box-shadow: inset 0 0 6px #000, 0 0 8px #a800ff;
+            font-size: 1.8rem;
+            box-shadow: inset 0 0 8px #000, 0 0 10px #a800ff;
         }
 
         .lever-hint {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #ffaaaa;
             letter-spacing: 1px;
+            text-shadow: 0 0 6px #ff0000;
         }
 
-        /* Механический Рычаг (Прикреплен к корпусу) */
+        /* Механический Рычаг */
         .lever-container {
             position: absolute;
-            right: -52px;
+            right: -55px;
             top: 50%;
             transform: translateY(-50%);
-            width: 48px;
-            height: 140px;
+            width: 50px;
+            height: 150px;
             cursor: pointer;
             z-index: 100;
         }
         .lever-base {
             position: absolute;
-            bottom: 0;
-            left: 8px;
-            width: 26px;
-            height: 35px;
-            background: linear-gradient(90deg, #333, #666, #222);
-            border: 2px solid #111;
-            border-radius: 6px;
+            bottom: 10px;
+            left: 10px;
+            width: 24px;
+            height: 38px;
+            background: linear-gradient(90deg, #222, #555, #111);
+            border: 2px solid #000;
+            border-radius: 4px;
             box-shadow: 0 0 8px #000;
         }
         .lever-arm {
             position: absolute;
-            bottom: 20px;
-            left: 16px;
+            bottom: 25px;
+            left: 17px;
             width: 10px;
-            height: 95px;
-            background: linear-gradient(90deg, #888, #fff, #444);
+            height: 100px;
+            background: linear-gradient(90deg, #777, #eee, #333);
             border-radius: 5px;
             transform-origin: bottom center;
-            transform: rotate(20deg);
+            transform: rotate(22deg);
             transition: transform 0.15s ease-in-out;
         }
         .lever-ball {
@@ -269,14 +278,14 @@
             left: -11px;
             width: 32px;
             height: 32px;
-            background: radial-gradient(circle at 30% 30%, #ff5555, #990000);
+            background: radial-gradient(circle at 35% 35%, #ff4444, #990000, #440000);
             border-radius: 50%;
-            border: 2px solid #550000;
-            box-shadow: 0 0 10px #ff0000;
+            border: 2px solid #330000;
+            box-shadow: 0 0 12px #ff0000;
         }
 
         .lever-container.pulled .lever-arm {
-            transform: rotate(140deg) scaleY(0.7);
+            transform: rotate(135deg) scaleY(0.7);
         }
 
         /* Магазин (Соты) */
@@ -284,24 +293,25 @@
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.92);
+            background: rgba(0, 0, 0, 0.94);
             justify-content: center;
             align-items: center;
             flex-direction: column;
             z-index: 1000;
         }
+        .shop-title {
+            color: #ffcc00;
+            font-size: 2rem;
+            text-shadow: 0 0 12px #ff6600, 0 0 25px #ff0000;
+            margin-bottom: 6px;
+            letter-spacing: 2px;
+        }
         .shop-container {
             position: relative;
-            width: 480px;
+            width: 500px;
             height: 340px;
-            max-width: 90vw;
-            max-height: 70vh;
-        }
-        .shop-title {
-            color: #ffd700;
-            font-size: 1.8rem;
-            text-shadow: 0 0 10px #ff0000;
-            margin-bottom: 8px;
+            max-width: 92vw;
+            max-height: 68vh;
         }
 
         .hex-svg {
@@ -313,24 +323,24 @@
             transition: all 0.2s ease;
         }
         .hex-node:hover polygon {
-            filter: brightness(1.2);
+            filter: brightness(1.25);
         }
         .hex-node.locked polygon {
-            fill: #151515;
+            fill: #0d0d0d;
             stroke: #444;
             stroke-width: 2;
         }
         .hex-node.unlocked polygon {
-            fill: #3a2800;
+            fill: #2a1f00;
             stroke: #ffd700;
             stroke-width: 3;
-            filter: drop-shadow(0 0 6px #ffd700);
+            filter: drop-shadow(0 0 8px #ffd700);
         }
         .hex-node.purchased polygon {
-            fill: #003311;
+            fill: #002b0f;
             stroke: #00ff66;
             stroke-width: 3;
-            filter: drop-shadow(0 0 8px #00ff66);
+            filter: drop-shadow(0 0 10px #00ff66);
         }
         .hex-text-title {
             font-size: 11px;
@@ -348,7 +358,7 @@
             pointer-events: none;
         }
         .hex-line {
-            stroke: #444;
+            stroke: #333;
             stroke-width: 3;
             stroke-dasharray: 4;
         }
@@ -357,29 +367,48 @@
             stroke-dasharray: none;
         }
 
+        /* Кнопка закрытия магазина */
+        .shop-close-btn {
+            margin-top: 10px;
+            background: #ff0000;
+            color: #000;
+            border: none;
+            padding: 8px 30px;
+            font-family: 'Creepster', cursive;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #ff0000;
+            transition: transform 0.2s ease;
+        }
+        .shop-close-btn:active {
+            transform: scale(0.95);
+        }
+
         /* Модальные Окна */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.92);
+            background: rgba(0, 0, 0, 0.92);
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
         .modal-content {
-            background: #0a0000;
-            border: 2px solid #800000;
-            padding: 16px 20px;
-            border-radius: 10px;
+            background: #080000;
+            border: 2px solid #ff0000;
+            padding: 18px 22px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 0 20px #ff0000;
+            box-shadow: 0 0 25px #ff0000;
             width: 360px;
-            max-width: 80vw;
+            max-width: 82vw;
         }
         .modal-content h2 {
             color: #ff0000;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-size: 1.6rem;
             border-bottom: 1px solid #400000;
             padding-bottom: 4px;
@@ -388,29 +417,25 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 6px 0;
+            margin: 8px 0;
             font-size: 1rem;
             color: #ffcccc;
         }
         .setting-row input[type="range"] {
             accent-color: #ff0000;
-            width: 110px;
-        }
-        .setting-row input[type="checkbox"] {
-            accent-color: #ff0000;
-            width: 16px; height: 16px;
+            width: 120px;
         }
         .authors-info {
             text-align: left;
-            font-size: 1rem;
+            font-size: 1.05rem;
             color: #ffaaaa;
-            margin: 8px 0;
+            margin: 10px 0;
         }
 
         .modal-actions {
             display: flex;
-            gap: 8px;
-            margin-top: 12px;
+            gap: 10px;
+            margin-top: 14px;
         }
 
         .close-btn {
@@ -421,7 +446,7 @@
             font-family: 'Creepster', cursive;
             font-size: 1.1rem;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 6px;
         }
 
         #fadeOverlay {
@@ -432,7 +457,7 @@
             opacity: 0;
             pointer-events: none;
             z-index: 999;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.4s ease;
         }
         #fadeOverlay.active {
             opacity: 1;
@@ -469,9 +494,9 @@
                 <div class="casino-cabinet">
                     <!-- HUD с балансом, гарантией и множителем -->
                     <div class="hud-panel-inside">
-                        <div class="balance-box"><span id="balanceText">100</span> Φ</div>
+                        <div class="balance-box"><span id="balanceText">50</span> Φ</div>
                         <div class="pity-box">ГАРАНТ: <span id="pityText">0/6</span></div>
-                        <div>МНОЖИТЕЛЬ: <span id="multText" style="color: #00ff66;">x1</span></div>
+                        <div class="mult-box">МНОЖИТЕЛЬ: <span id="multText" class="mult-value">X1</span></div>
                     </div>
 
                     <div id="winBanner" class="win-banner">+0 Φ</div>
@@ -509,7 +534,7 @@
         <div class="shop-container">
             <svg class="hex-svg" viewBox="0 0 500 340" id="hexSvg"></svg>
         </div>
-        <button class="close-btn" style="margin-top: 10px; background: #ff0000; color: #000;" onclick="closeShop()">ЗАКРЫТЬ</button>
+        <button class="shop-close-btn" onclick="closeShop()">ЗАКРЫТЬ</button>
     </div>
 
     <!-- Внутриигровые Настройки -->
@@ -551,7 +576,7 @@
                 <label>Музыка:</label>
                 <input type="range" min="0" max="100" value="60">
             </div>
-            <button class="close-btn" style="margin-top: 12px; width: 100%;" onclick="closeModal('settingsModal')">ЗАКРЫТЬ</button>
+            <button class="close-btn" style="margin-top: 14px; width: 100%;" onclick="closeModal('settingsModal')">ЗАКРЫТЬ</button>
         </div>
     </div>
 
@@ -563,7 +588,7 @@
                 <p>• Разработчик: Noel_Izumi</p>
                 <p>• Тестировщик: Коля</p>
             </div>
-            <button class="close-btn" style="margin-top: 12px; width: 100%;" onclick="closeModal('authorsModal')">ЗАКРЫТЬ</button>
+            <button class="close-btn" style="margin-top: 14px; width: 100%;" onclick="closeModal('authorsModal')">ЗАКРЫТЬ</button>
         </div>
     </div>
 
@@ -571,29 +596,31 @@
     <div class="modal" id="exitModal">
         <div class="modal-content">
             <h2>ВЫХОД</h2>
-            <p style="color: #ff0000; font-size: 1.3rem; margin: 12px 0;">выйди самостоятельно</p>
+            <p style="color: #ff0000; font-size: 1.3rem; margin: 12px 0;">выйди самостоятельно :)</p>
             <button class="close-btn" style="width: 100%;" onclick="closeModal('exitModal')">ОК</button>
         </div>
     </div>
 
     <script>
-        let balance = 100;
-        let multiplier = 1;
+        let balance = 50; // Баланс в начале игры равен 50
+        let multiplier = 1; // Текущий множитель
+        let multiplierLevel = 0; // Уровень бесконечного множителя
         let luckPercent = 0;
-        let infiniteLuckLevel = 0;
+        let infiniteLuckLevel = 0; // Уровень бесконечной удачи
         let isSpinning = false;
         
-        let pityCounter = 0; // Счётчик прокруток
+        let pityCounter = 0; // Счётчик гарантированного выигрыша
         let slotSpeedSetting = 1; // 1 = Медленно, 2 = Средне, 3 = Быстро
 
+        /* Узлы магазина (Соты) */
         const shopNodes = [
             { id: 0, x: 250, y: 170, title: "СТАРТ", cost: 0, type: "start", req: [], purchased: true },
-            { id: 1, x: 250, y: 80,  title: "МНОЖИТЕЛЬ X2", cost: 150, type: "mult", value: 2, req: [0], purchased: false },
-            { id: 2, x: 335, y: 125, title: "УДАЧА +5%", cost: 200, type: "luck", value: 5, req: [0], purchased: false },
-            { id: 3, x: 335, y: 215, title: "МНОЖИТЕЛЬ X3", cost: 500, type: "mult", value: 3, req: [2], purchased: false },
-            { id: 4, x: 250, y: 260, title: "МНОЖИТЕЛЬ X4", cost: 1200, type: "mult", value: 4, req: [3], purchased: false },
-            { id: 5, x: 165, y: 215, title: "МНОЖИТЕЛЬ X5", cost: 3000, type: "mult", value: 5, req: [4], purchased: false },
-            { id: 6, x: 165, y: 125, title: "БЕСК. УДАЧА (+1%)", cost: 250, type: "inf_luck", value: 1, req: [0], purchased: false }
+            { id: 1, x: 250, y: 70,  title: "БЕСК. МНОЖИТЕЛЬ", baseCost: 100, type: "inf_mult", req: [0], purchased: false },
+            { id: 2, x: 340, y: 120, title: "УДАЧА +5%", cost: 80, type: "luck", value: 5, req: [0], purchased: false },
+            { id: 3, x: 340, y: 220, title: "МНОЖИТЕЛЬ +1", cost: 150, type: "mult_add", value: 1, req: [2], purchased: false },
+            { id: 4, x: 250, y: 270, title: "УДАЧА +10%", cost: 250, type: "luck", value: 10, req: [3], purchased: false },
+            { id: 5, x: 160, y: 220, title: "МНОЖИТЕЛЬ +1", cost: 400, type: "mult_add", value: 1, req: [4], purchased: false },
+            { id: 6, x: 160, y: 120, title: "БЕСК. УДАЧА (+1%)", baseCost: 100, type: "inf_luck", req: [0], purchased: false }
         ];
 
         const winningLines = [
@@ -606,7 +633,7 @@
 
         function updateUI() {
             document.getElementById('balanceText').innerText = balance;
-            document.getElementById('multText').innerText = 'x' + multiplier;
+            document.getElementById('multText').innerText = 'X' + multiplier;
             document.getElementById('pityText').innerText = pityCounter + '/6';
         }
 
@@ -638,7 +665,7 @@
                 document.getElementById('shopBtnTop').classList.remove('hidden');
                 fade.classList.remove('active');
                 updateUI();
-            }, 500);
+            }, 400);
         }
 
         function goToMainMenu() {
@@ -651,12 +678,12 @@
                 document.getElementById('shopBtnTop').classList.add('hidden');
                 document.getElementById('menuScreen').classList.remove('hidden');
                 fade.classList.remove('active');
-            }, 500);
+            }, 400);
         }
 
         function exitGame() { openModal('exitModal'); }
 
-        /* Логика прокрутки слотов и гаранта */
+        /* Вращение слотов и алгоритм выигрыша */
         function pullLeverAndSpin() {
             if (isSpinning) return;
             if (balance < 10) {
@@ -665,7 +692,7 @@
             }
 
             balance -= 10;
-            pityCounter++; // Увеличиваем счётчик гаранта
+            pityCounter++;
             updateUI();
             isSpinning = true;
 
@@ -678,21 +705,21 @@
             banner.classList.remove('active');
 
             // Параметры скорости из настроек
-            let spinInterval = 120;
-            let spinsCount = 18;
-            let reelStagger = 200;
+            let spinInterval = 130;
+            let spinsCount = 16;
+            let reelStagger = 180;
 
             if (slotSpeedSetting === 2) {
                 spinInterval = 80; spinsCount = 12; reelStagger = 120;
             } else if (slotSpeedSetting === 3) {
-                spinInterval = 50; spinsCount = 8; reelStagger = 80;
+                spinInterval = 50; spinsCount = 8; reelStagger = 70;
             }
 
             let grid = [];
             let totalLuck = luckPercent + (infiniteLuckLevel * 1);
             let forceWin = (Math.random() * 100) < totalLuck;
 
-            // Проверка гаранта (на 6-й раз выигрыш 100%)
+            // Гарант на 6-ю прокрутку
             if (pityCounter >= 6) {
                 forceWin = true;
             }
@@ -712,17 +739,13 @@
                 }
             }
 
-            // Запуск красивой анимации прокрутки барабанов
-            let activeIntervals = [];
-
+            // Анимация каждого барабана
             for (let i = 0; i < 9; i++) {
                 let reelElem = document.getElementById('r' + i);
                 
                 let interval = setInterval(() => {
                     reelElem.innerText = symbols[Math.floor(Math.random() * symbols.length)];
                 }, spinInterval);
-
-                activeIntervals.push(interval);
 
                 let stopDelay = (spinsCount * spinInterval) + (i * reelStagger);
                 setTimeout(() => {
@@ -743,10 +766,10 @@
                 });
 
                 if (winLinesCount > 0) {
-                    let baseWin = winLinesCount * 40;
+                    let baseWin = winLinesCount * 30;
                     let totalWin = baseWin * multiplier;
                     balance += totalWin;
-                    pityCounter = 0; // Сброс гаранта при выигрыше
+                    pityCounter = 0; // Сброс гарантированного счетчика
                     banner.innerText = `+${totalWin} Φ  :)`;
                     banner.classList.add('active');
                 } else {
@@ -759,7 +782,7 @@
             }, totalSpinTime);
         }
 
-        /* Магазин */
+        /* Отрисовка древа улучшений (Соты) */
         function openShop() {
             renderShop();
             document.getElementById('shopModal').style.display = 'flex';
@@ -783,6 +806,7 @@
             let svg = document.getElementById('hexSvg');
             svg.innerHTML = '';
 
+            // Соединительные линии
             shopNodes.forEach(node => {
                 node.req.forEach(reqId => {
                     let parent = shopNodes.find(n => n.id === reqId);
@@ -798,6 +822,7 @@
                 });
             });
 
+            // Отрисовка сот
             shopNodes.forEach(node => {
                 let isUnlocked = node.req.length === 0 || node.req.some(reqId => shopNodes.find(n => n.id === reqId).purchased);
                 let stateClass = node.purchased ? "purchased" : (isUnlocked ? "unlocked" : "locked");
@@ -807,7 +832,7 @@
                 g.onclick = () => buyUpgrade(node.id);
 
                 let poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-                poly.setAttribute("points", createHexPolygonPoints(node.x, node.y, 38));
+                poly.setAttribute("points", createHexPolygonPoints(node.x, node.y, 40));
                 g.appendChild(poly);
 
                 let title = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -822,11 +847,14 @@
                 status.setAttribute("y", node.y + 14);
                 status.setAttribute("class", "hex-text-status");
 
-                if (node.purchased && node.type !== "inf_luck") {
-                    status.textContent = "КУПЛЕНО";
+                if (node.type === "inf_mult") {
+                    let cost = node.baseCost + (multiplierLevel * 100);
+                    status.textContent = `${cost} Φ (X${multiplier})`;
                 } else if (node.type === "inf_luck") {
-                    let cost = node.cost + (infiniteLuckLevel * 150);
+                    let cost = node.baseCost + (infiniteLuckLevel * 100);
                     status.textContent = `${cost} Φ (Ур. ${infiniteLuckLevel})`;
+                } else if (node.purchased) {
+                    status.textContent = "КУПЛЕНО";
                 } else if (isUnlocked) {
                     status.textContent = `${node.cost} Φ`;
                 } else {
@@ -838,6 +866,7 @@
             });
         }
 
+        /* Покупка улучшений */
         function buyUpgrade(id) {
             let node = shopNodes.find(n => n.id === id);
             if (!node) return;
@@ -848,8 +877,25 @@
                 return;
             }
 
+            // Покупка Бесконечного Множителя
+            if (node.type === "inf_mult") {
+                let currentCost = node.baseCost + (multiplierLevel * 100);
+                if (balance >= currentCost) {
+                    balance -= currentCost;
+                    multiplierLevel++;
+                    multiplier += 1;
+                    node.purchased = true;
+                    updateUI();
+                    renderShop();
+                } else {
+                    alert("НЕДОСТАТОЧНО МОНЕТ! :(");
+                }
+                return;
+            }
+
+            // Покупка Бесконечной Удачи
             if (node.type === "inf_luck") {
-                let currentCost = node.cost + (infiniteLuckLevel * 150);
+                let currentCost = node.baseCost + (infiniteLuckLevel * 100);
                 if (balance >= currentCost) {
                     balance -= currentCost;
                     infiniteLuckLevel++;
@@ -862,13 +908,14 @@
                 return;
             }
 
+            // Покупка обычных улучшений
             if (node.purchased) return;
 
             if (balance >= node.cost) {
                 balance -= node.cost;
                 node.purchased = true;
 
-                if (node.type === "mult") multiplier = Math.max(multiplier, node.value);
+                if (node.type === "mult_add") multiplier += node.value;
                 if (node.type === "luck") luckPercent += node.value;
 
                 updateUI();
