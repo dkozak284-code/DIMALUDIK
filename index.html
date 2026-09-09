@@ -49,7 +49,7 @@
             transform: rotate(90deg) scale(0.9);
         }
 
-        /* Кнопка Магазина (Слева вверху, как на скриншоте) */
+        /* Кнопка Магазина (Слева вверху) */
         .shop-btn-top {
             position: fixed;
             top: 10px;
@@ -130,9 +130,8 @@
             box-shadow: 0 0 15px #ff0000;
         }
 
-        /* Игровое Пространство и Автомат */
+        /* Общий контейнер для автомата и рычага */
         .game-wrapper {
-            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -141,7 +140,14 @@
             padding: 10px;
         }
 
-        /* Автомат */
+        .machine-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            margin-right: 45px; /* Запас места для рычага справа */
+        }
+
+        /* Корпус Автомата */
         .casino-cabinet {
             background: linear-gradient(180deg, #1f0000 0%, #050000 100%);
             border: 4px solid #b30000;
@@ -150,18 +156,18 @@
             padding: 10px 14px 12px 14px;
             text-align: center;
             width: 380px;
-            max-width: 75vw;
+            max-width: 70vw;
             position: relative;
         }
 
-        /* HUD Внутри Автомата (Не вылазит за экран) */
+        /* HUD Панель */
         .hud-panel-inside {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2px 6px;
+            padding: 2px 4px;
             margin-bottom: 6px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #ffd700;
             text-shadow: 0 0 6px #ff0000;
             border-bottom: 1px solid rgba(255, 0, 0, 0.3);
@@ -171,6 +177,10 @@
             padding: 2px 8px;
             border: 1px solid #ffd700;
             border-radius: 4px;
+        }
+        .pity-box {
+            color: #ff5555;
+            font-weight: bold;
         }
 
         .win-banner {
@@ -219,21 +229,22 @@
             letter-spacing: 1px;
         }
 
-        /* Анимированный Рычаг */
+        /* Механический Рычаг (Прикреплен к корпусу) */
         .lever-container {
             position: absolute;
-            right: -55px;
+            right: -52px;
             top: 50%;
             transform: translateY(-50%);
-            width: 50px;
-            height: 150px;
+            width: 48px;
+            height: 140px;
             cursor: pointer;
+            z-index: 100;
         }
         .lever-base {
             position: absolute;
             bottom: 0;
-            left: 10px;
-            width: 28px;
+            left: 8px;
+            width: 26px;
             height: 35px;
             background: linear-gradient(90deg, #333, #666, #222);
             border: 2px solid #111;
@@ -243,9 +254,9 @@
         .lever-arm {
             position: absolute;
             bottom: 20px;
-            left: 19px;
+            left: 16px;
             width: 10px;
-            height: 100px;
+            height: 95px;
             background: linear-gradient(90deg, #888, #fff, #444);
             border-radius: 5px;
             transform-origin: bottom center;
@@ -264,12 +275,11 @@
             box-shadow: 0 0 10px #ff0000;
         }
 
-        /* Анимация нажатия рычага */
         .lever-container.pulled .lever-arm {
             transform: rotate(140deg) scaleY(0.7);
         }
 
-        /* Окно Магазина (Соты) */
+        /* Магазин (Соты) */
         .shop-modal {
             display: none;
             position: fixed;
@@ -294,7 +304,6 @@
             margin-bottom: 8px;
         }
 
-        /* SVG Сетка сот */
         .hex-svg {
             width: 100%;
             height: 100%;
@@ -433,7 +442,7 @@
 </head>
 <body>
 
-    <!-- Верхние управляющие кнопки -->
+    <!-- Верхние кнопки -->
     <button id="shopBtnTop" class="shop-btn-top hidden" onclick="openShop()">МАГАЗИН</button>
     <div id="gearBtn" class="gear-btn hidden" onclick="openGameSettings()">⚙</div>
 
@@ -456,35 +465,38 @@
     <div id="gameScreen" class="screen hidden">
         <div class="game-wrapper">
             
-            <div class="casino-cabinet">
-                <!-- Встроенная панель информации -->
-                <div class="hud-panel-inside">
-                    <div class="balance-box"><span id="balanceText">100</span> Φ</div>
-                    <div>МНОЖИТЕЛЬ: <span id="multText" style="color: #00ff66;">x1</span></div>
+            <div class="machine-wrapper">
+                <div class="casino-cabinet">
+                    <!-- HUD с балансом, гарантией и множителем -->
+                    <div class="hud-panel-inside">
+                        <div class="balance-box"><span id="balanceText">100</span> Φ</div>
+                        <div class="pity-box">ГАРАНТ: <span id="pityText">0/6</span></div>
+                        <div>МНОЖИТЕЛЬ: <span id="multText" style="color: #00ff66;">x1</span></div>
+                    </div>
+
+                    <div id="winBanner" class="win-banner">+0 Φ</div>
+                    
+                    <div class="reels-frame">
+                        <div class="reel" id="r0">💀</div>
+                        <div class="reel" id="r1">🩸</div>
+                        <div class="reel" id="r2">👁️</div>
+                        <div class="reel" id="r3">7️⃣</div>
+                        <div class="reel" id="r4">🔪</div>
+                        <div class="reel" id="r5">🔔</div>
+                        <div class="reel" id="r6">🕯️</div>
+                        <div class="reel" id="r7">🍒</div>
+                        <div class="reel" id="r8">💀</div>
+                    </div>
+
+                    <div class="lever-hint">ПОТЯНИ РЫЧАГ (10 Φ)</div>
                 </div>
 
-                <div id="winBanner" class="win-banner">+0 Φ</div>
-                
-                <div class="reels-frame">
-                    <div class="reel" id="r0">💀</div>
-                    <div class="reel" id="r1">🩸</div>
-                    <div class="reel" id="r2">👁️</div>
-                    <div class="reel" id="r3">7️⃣</div>
-                    <div class="reel" id="r4">🔪</div>
-                    <div class="reel" id="r5">🔔</div>
-                    <div class="reel" id="r6">🕯️</div>
-                    <div class="reel" id="r7">🍒</div>
-                    <div class="reel" id="r8">💀</div>
-                </div>
-
-                <div class="lever-hint">ПОТЯНИ РЫЧАГ (10 Φ)</div>
-            </div>
-
-            <!-- Анимированный Рычаг -->
-            <div class="lever-container" id="leverContainer" onclick="pullLeverAndSpin()">
-                <div class="lever-base"></div>
-                <div class="lever-arm">
-                    <div class="lever-ball"></div>
+                <!-- Механический Рычаг -->
+                <div class="lever-container" id="leverContainer" onclick="pullLeverAndSpin()">
+                    <div class="lever-base"></div>
+                    <div class="lever-arm">
+                        <div class="lever-ball"></div>
+                    </div>
                 </div>
             </div>
 
@@ -495,17 +507,19 @@
     <div class="shop-modal" id="shopModal">
         <h2 class="shop-title">ДРЕВО УЛУЧШЕНИЙ</h2>
         <div class="shop-container">
-            <svg class="hex-svg" viewBox="0 0 500 340" id="hexSvg">
-                <!-- Соты генерируются JS -->
-            </svg>
+            <svg class="hex-svg" viewBox="0 0 500 340" id="hexSvg"></svg>
         </div>
         <button class="close-btn" style="margin-top: 10px; background: #ff0000; color: #000;" onclick="closeShop()">ЗАКРЫТЬ</button>
     </div>
 
-    <!-- Настройки во время игры -->
+    <!-- Внутриигровые Настройки -->
     <div class="modal" id="gameGearModal">
         <div class="modal-content">
             <h2>ПАУЗА И НАСТРОЙКИ</h2>
+            <div class="setting-row">
+                <label>Скорость слотов:</label>
+                <input type="range" id="slotSpeedGame" min="1" max="3" value="1" onchange="syncSpeedSetting(this.value)">
+            </div>
             <div class="setting-row">
                 <label>Звуки:</label>
                 <input type="range" min="0" max="100" value="80">
@@ -513,10 +527,6 @@
             <div class="setting-row">
                 <label>Музыка:</label>
                 <input type="range" min="0" max="100" value="60">
-            </div>
-            <div class="setting-row">
-                <label>Свечение:</label>
-                <input type="checkbox" checked>
             </div>
             <div class="modal-actions">
                 <button class="close-btn" style="background: #200000;" onclick="goToMainMenu()">В МЕНЮ</button>
@@ -530,16 +540,16 @@
         <div class="modal-content">
             <h2>НАСТРОЙКИ</h2>
             <div class="setting-row">
+                <label>Скорость слотов:</label>
+                <input type="range" id="slotSpeedMenu" min="1" max="3" value="1" onchange="syncSpeedSetting(this.value)">
+            </div>
+            <div class="setting-row">
                 <label>Звуки:</label>
                 <input type="range" min="0" max="100" value="80">
             </div>
             <div class="setting-row">
                 <label>Музыка:</label>
                 <input type="range" min="0" max="100" value="60">
-            </div>
-            <div class="setting-row">
-                <label>Свечение:</label>
-                <input type="checkbox" checked>
             </div>
             <button class="close-btn" style="margin-top: 12px; width: 100%;" onclick="closeModal('settingsModal')">ЗАКРЫТЬ</button>
         </div>
@@ -572,6 +582,9 @@
         let luckPercent = 0;
         let infiniteLuckLevel = 0;
         let isSpinning = false;
+        
+        let pityCounter = 0; // Счётчик прокруток
+        let slotSpeedSetting = 1; // 1 = Медленно, 2 = Средне, 3 = Быстро
 
         const shopNodes = [
             { id: 0, x: 250, y: 170, title: "СТАРТ", cost: 0, type: "start", req: [], purchased: true },
@@ -594,6 +607,13 @@
         function updateUI() {
             document.getElementById('balanceText').innerText = balance;
             document.getElementById('multText').innerText = 'x' + multiplier;
+            document.getElementById('pityText').innerText = pityCounter + '/6';
+        }
+
+        function syncSpeedSetting(val) {
+            slotSpeedSetting = parseInt(val);
+            document.getElementById('slotSpeedGame').value = val;
+            document.getElementById('slotSpeedMenu').value = val;
         }
 
         function forceLandscape() {
@@ -636,7 +656,7 @@
 
         function exitGame() { openModal('exitModal'); }
 
-        /* Вращение только с помощью Рычага */
+        /* Логика прокрутки слотов и гаранта */
         function pullLeverAndSpin() {
             if (isSpinning) return;
             if (balance < 10) {
@@ -645,25 +665,37 @@
             }
 
             balance -= 10;
+            pityCounter++; // Увеличиваем счётчик гаранта
             updateUI();
             isSpinning = true;
 
+            // Анимация дергания рычага
             let lever = document.getElementById('leverContainer');
             lever.classList.add('pulled');
-            setTimeout(() => {
-                lever.classList.remove('pulled');
-            }, 300);
+            setTimeout(() => lever.classList.remove('pulled'), 300);
 
             let banner = document.getElementById('winBanner');
             banner.classList.remove('active');
 
-            for (let i = 0; i < 9; i++) {
-                document.getElementById('r' + i).innerText = '❓';
+            // Параметры скорости из настроек
+            let spinInterval = 120;
+            let spinsCount = 18;
+            let reelStagger = 200;
+
+            if (slotSpeedSetting === 2) {
+                spinInterval = 80; spinsCount = 12; reelStagger = 120;
+            } else if (slotSpeedSetting === 3) {
+                spinInterval = 50; spinsCount = 8; reelStagger = 80;
             }
 
             let grid = [];
             let totalLuck = luckPercent + (infiniteLuckLevel * 1);
             let forceWin = (Math.random() * 100) < totalLuck;
+
+            // Проверка гаранта (на 6-й раз выигрыш 100%)
+            if (pityCounter >= 6) {
+                forceWin = true;
+            }
 
             if (forceWin) {
                 let sym = symbols[Math.floor(Math.random() * symbols.length)];
@@ -680,11 +712,26 @@
                 }
             }
 
-            grid.forEach((sym, index) => {
+            // Запуск красивой анимации прокрутки барабанов
+            let activeIntervals = [];
+
+            for (let i = 0; i < 9; i++) {
+                let reelElem = document.getElementById('r' + i);
+                
+                let interval = setInterval(() => {
+                    reelElem.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                }, spinInterval);
+
+                activeIntervals.push(interval);
+
+                let stopDelay = (spinsCount * spinInterval) + (i * reelStagger);
                 setTimeout(() => {
-                    document.getElementById('r' + index).innerText = sym;
-                }, 100 + index * 50);
-            });
+                    clearInterval(interval);
+                    reelElem.innerText = grid[i];
+                }, stopDelay);
+            }
+
+            let totalSpinTime = (spinsCount * spinInterval) + (8 * reelStagger) + 100;
 
             setTimeout(() => {
                 let winLinesCount = 0;
@@ -699,6 +746,7 @@
                     let baseWin = winLinesCount * 40;
                     let totalWin = baseWin * multiplier;
                     balance += totalWin;
+                    pityCounter = 0; // Сброс гаранта при выигрыше
                     banner.innerText = `+${totalWin} Φ  :)`;
                     banner.classList.add('active');
                 } else {
@@ -708,10 +756,10 @@
 
                 updateUI();
                 isSpinning = false;
-            }, 600);
+            }, totalSpinTime);
         }
 
-        /* Логика Магазина */
+        /* Магазин */
         function openShop() {
             renderShop();
             document.getElementById('shopModal').style.display = 'flex';
