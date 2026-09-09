@@ -2,22 +2,22 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#030a05">
-    <title>CLOVER PIT: ROGUELIKE SLOT</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CLOVER PIT 3D: ROGUELIKE SLOT</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
-            --bg-color: #030a05;
-            --panel-bg: #0a170d;
-            --panel-border: #1a3c21;
-            --accent-green: #00ff66;
-            --accent-gold: #ffd700;
-            --accent-red: #ff3333;
-            --accent-purple: #b042ff;
-            --text-color: #e0ffe8;
-            --text-dim: #5c8a67;
+            --color-bg: #030704;
+            --color-panel: #0a140d;
+            --color-border: #1a3821;
+            --color-neon-green: #00ff66;
+            --color-neon-gold: #ffd700;
+            --color-neon-red: #ff3344;
+            --color-neon-purple: #b042ff;
             --font-main: 'Share Tech Mono', monospace;
+            --font-hud: 'VT323', monospace;
         }
 
         * {
@@ -31,239 +31,192 @@
         html, body {
             width: 100%;
             height: 100%;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--color-bg);
+            color: #e0ffe8;
             font-family: var(--font-main);
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
-        #particleCanvas {
+        /* CRT Overlay Effect */
+        .crt-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
+            z-index: 10;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 6px 100%;
+            opacity: 0.8;
+        }
+
+        #webgl-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: 1;
         }
 
-        .app-container {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            max-width: 1100px;
-            height: 100vh;
-            max-height: 850px;
+        /* UI HUD Overlay */
+        .ui-hud {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 5;
             display: grid;
             grid-template-rows: auto 1fr auto;
-            padding: 12px;
-            gap: 10px;
+            padding: 16px;
+            pointer-events: none;
+        }
+
+        .interactive {
+            pointer-events: auto;
         }
 
         header {
-            background: var(--panel-bg);
-            border: 2px solid var(--panel-border);
-            border-radius: 8px;
-            padding: 10px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.1);
+            background: rgba(10, 20, 13, 0.85);
+            border: 2px solid var(--color-border);
+            padding: 12px 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.1);
         }
 
-        .brand-title {
-            font-size: 1.4rem;
-            color: var(--accent-green);
-            text-shadow: 0 0 8px var(--accent-green);
-            letter-spacing: 2px;
+        .logo {
+            font-family: var(--font-hud);
+            font-size: 2.2rem;
+            color: var(--color-neon-green);
+            text-shadow: 0 0 10px var(--color-neon-green);
+            letter-spacing: 3px;
         }
 
-        .stats-bar {
+        .stats-group {
             display: flex;
-            gap: 16px;
-            align-items: center;
+            gap: 20px;
         }
 
-        .stat-box {
-            background: #00000044;
-            border: 1px solid var(--panel-border);
-            padding: 6px 12px;
+        .stat-card {
+            background: #00000088;
+            border: 1px solid var(--color-border);
+            padding: 6px 16px;
             border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 90px;
+            text-align: center;
+            min-width: 100px;
         }
 
-        .stat-label {
-            font-size: 0.7rem;
-            color: var(--text-dim);
+        .stat-card .label {
+            font-size: 0.75rem;
+            color: #6a9c74;
             text-transform: uppercase;
         }
 
-        .stat-value {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--accent-gold);
+        .stat-card .val {
+            font-family: var(--font-hud);
+            font-size: 1.8rem;
+            color: var(--color-neon-gold);
+            line-height: 1;
         }
 
-        .stat-value.green { color: var(--accent-green); }
-        .stat-value.red { color: var(--accent-red); }
-        .stat-value.purple { color: var(--accent-purple); }
+        .stat-card .val.green { color: var(--color-neon-green); }
+        .stat-card .val.red { color: var(--color-neon-red); }
+        .stat-card .val.purple { color: var(--color-neon-purple); }
 
-        .main-layout {
-            display: grid;
-            grid-template-columns: 280px 1fr 280px;
-            gap: 10px;
-            height: 100%;
+        /* Side Panels */
+        .hud-middle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
             min-height: 0;
         }
 
-        .side-panel {
-            background: var(--panel-bg);
-            border: 2px solid var(--panel-border);
+        .panel-box {
+            background: rgba(10, 20, 13, 0.85);
+            border: 2px solid var(--color-border);
             border-radius: 8px;
-            padding: 12px;
+            padding: 14px;
+            width: 260px;
+            max-height: 100%;
             display: flex;
             flex-direction: column;
             gap: 10px;
+            backdrop-filter: blur(6px);
             overflow-y: auto;
         }
 
-        .panel-header {
-            font-size: 1rem;
-            color: var(--accent-green);
-            border-bottom: 1px solid var(--panel-border);
+        .panel-title {
+            font-size: 0.9rem;
+            color: var(--color-neon-green);
+            border-bottom: 1px solid var(--color-border);
             padding-bottom: 4px;
-            text-align: center;
+            text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .charms-container {
+        .charms-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
         }
 
-        .charm-slot {
+        .charm-item {
             aspect-ratio: 1;
-            background: #000;
-            border: 1px dashed var(--panel-border);
+            background: #000000aa;
+            border: 1px dashed var(--color-border);
             border-radius: 6px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            font-size: 1.6rem;
-            cursor: pointer;
+            justify-content: center;
+            font-size: 1.8rem;
             position: relative;
-            transition: all 0.2s;
+            cursor: pointer;
         }
 
-        .charm-slot.active {
-            border: 1px solid var(--accent-purple);
-            box-shadow: 0 0 8px rgba(176, 66, 255, 0.3);
+        .charm-item.active {
+            border: 1px solid var(--color-neon-purple);
+            box-shadow: 0 0 10px rgba(176, 66, 255, 0.3);
         }
 
-        .charm-slot:hover .charm-tooltip {
+        .charm-item:hover .tooltip {
             display: block;
         }
 
-        .charm-tooltip {
+        .tooltip {
             display: none;
             position: absolute;
-            bottom: 110%;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 110%; top: 0;
             width: 180px;
-            background: #000;
-            border: 1px solid var(--accent-purple);
+            background: #000000fa;
+            border: 1px solid var(--color-neon-purple);
             padding: 8px;
             border-radius: 6px;
             font-size: 0.75rem;
-            color: #fff;
             z-index: 100;
+            color: #fff;
             pointer-events: none;
-            box-shadow: 0 0 10px #000;
+            box-shadow: 0 0 15px #000;
         }
 
-        .center-stage {
-            background: var(--panel-bg);
-            border: 2px solid var(--panel-border);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px;
-            position: relative;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-        }
-
-        .slot-machine-frame {
-            background: #000;
-            border: 3px solid var(--panel-border);
-            border-radius: 12px;
-            padding: 12px;
-            box-shadow: 0 0 20px rgba(0, 255, 102, 0.05), inset 0 0 15px rgba(0,0,0,0.9);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin: auto;
-        }
-
-        .reels-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-
-        .slot-cell {
-            width: 80px;
-            height: 80px;
-            background: #050f07;
-            border: 2px solid #132b17;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2.2rem;
-            box-shadow: inset 0 0 10px #000;
-            transition: transform 0.1s;
-        }
-
-        .slot-cell.spinning {
-            filter: blur(2px);
-            transform: scale(0.95);
-        }
-
-        .slot-cell.win-cell {
-            border-color: var(--accent-gold);
-            background: #262000;
-            box-shadow: 0 0 12px var(--accent-gold);
-            animation: pulse 0.4s infinite alternate;
-        }
-
-        @keyframes pulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.05); }
-        }
-
-        .control-panel {
-            width: 100%;
+        /* Controls Bottom Bar */
+        footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
+            gap: 20px;
+            background: rgba(10, 20, 13, 0.85);
+            border: 2px solid var(--color-border);
+            padding: 12px 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(6px);
         }
 
         .btn {
-            background: #0d2112;
-            color: var(--accent-green);
-            border: 2px solid var(--accent-green);
-            padding: 10px 20px;
+            background: #0e2b14;
+            color: var(--color-neon-green);
+            border: 2px solid var(--color-neon-green);
+            padding: 10px 24px;
             font-family: var(--font-main);
             font-size: 1rem;
             border-radius: 6px;
@@ -275,286 +228,194 @@
         }
 
         .btn:hover {
-            background: var(--accent-green);
+            background: var(--color-neon-green);
             color: #000;
-            box-shadow: 0 0 15px var(--accent-green);
-        }
-
-        .btn:active {
-            transform: scale(0.96);
+            box-shadow: 0 0 20px var(--color-neon-green);
         }
 
         .btn-spin {
             flex: 1;
-            padding: 14px;
-            font-size: 1.4rem;
-            background: #143d1c;
-            border-color: var(--accent-green);
-            font-weight: bold;
+            font-family: var(--font-hud);
+            font-size: 2.2rem;
+            padding: 8px 30px;
+            background: #184a22;
+            letter-spacing: 3px;
         }
 
         .btn:disabled {
             opacity: 0.3;
             cursor: not-allowed;
-            border-color: var(--text-dim);
-            color: var(--text-dim);
+            border-color: #4a6350;
+            color: #4a6350;
+            background: #08120a;
             box-shadow: none;
-            background: #050f07;
         }
 
-        .log-container {
-            flex: 1;
-            background: #00000066;
-            border: 1px solid var(--panel-border);
-            border-radius: 6px;
-            padding: 8px;
-            font-size: 0.8rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .log-entry {
-            color: var(--text-dim);
-            line-height: 1.2;
-        }
-        .log-entry.win { color: var(--accent-gold); }
-        .log-entry.info { color: var(--accent-green); }
-        .log-entry.bad { color: var(--accent-red); }
-
+        /* Modal Windows */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85);
-            z-index: 500;
+            z-index: 50;
             display: none;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(8px);
         }
 
         .modal-card {
-            background: var(--panel-bg);
-            border: 2px solid var(--accent-green);
+            background: var(--color-panel);
+            border: 2px solid var(--color-neon-green);
             border-radius: 12px;
-            padding: 20px;
+            padding: 24px;
             width: 90%;
-            max-width: 600px;
+            max-width: 700px;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 0 30px rgba(0, 255, 102, 0.2);
             display: flex;
             flex-direction: column;
             gap: 16px;
+            box-shadow: 0 0 30px rgba(0, 255, 102, 0.2);
         }
 
         .modal-title {
-            font-size: 1.6rem;
-            color: var(--accent-gold);
+            font-family: var(--font-hud);
+            font-size: 2.4rem;
+            color: var(--color-neon-gold);
             text-align: center;
-            border-bottom: 1px solid var(--panel-border);
+            border-bottom: 1px solid var(--color-border);
             padding-bottom: 8px;
         }
 
         .shop-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 12px;
         }
 
-        .shop-item {
-            background: #000;
-            border: 1px solid var(--panel-border);
+        .shop-card {
+            background: #000000aa;
+            border: 1px solid var(--color-border);
             border-radius: 8px;
-            padding: 10px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
             text-align: center;
-            transition: border 0.2s;
+            gap: 8px;
         }
 
-        .shop-item:hover {
-            border-color: var(--accent-gold);
+        .shop-card:hover {
+            border-color: var(--color-neon-gold);
         }
 
-        .shop-item-icon {
-            font-size: 2rem;
-        }
+        .shop-card-icon { font-size: 2.5rem; }
+        .shop-card-title { font-size: 1rem; color: var(--color-neon-green); }
+        .shop-card-desc { font-size: 0.75rem; color: #82a88a; flex: 1; }
+        .shop-card-cost { font-family: var(--font-hud); font-size: 1.5rem; color: var(--color-neon-gold); }
 
-        .shop-item-name {
-            font-size: 0.9rem;
-            color: var(--accent-green);
-        }
-
-        .shop-item-desc {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            flex: 1;
-        }
-
-        .shop-item-cost {
-            font-size: 0.9rem;
-            color: var(--accent-gold);
-        }
-
-        footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 4px 8px;
+        .log-box {
             font-size: 0.8rem;
-            color: var(--text-dim);
-        }
-
-        .deck-list {
+            color: #6a9c74;
+            max-height: 180px;
+            overflow-y: auto;
             display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .deck-chip {
-            background: #000;
-            border: 1px solid var(--panel-border);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 4px;
         }
 
-        /* Mobile adaptation */
-        @media (max-width: 850px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto auto auto;
-                overflow-y: auto;
-            }
-            .app-container {
-                height: auto;
-                max-height: none;
-            }
-            .slot-cell {
-                width: 65px;
-                height: 65px;
-                font-size: 1.8rem;
-            }
+        .log-entry.win { color: var(--color-neon-gold); }
+        .log-entry.info { color: var(--color-neon-green); }
+        .log-entry.bad { color: var(--color-neon-red); }
+
+        @media (max-width: 800px) {
+            .hud-middle { flex-direction: column; align-items: stretch; }
+            .panel-box { width: 100%; max-height: 120px; }
         }
     </style>
 </head>
 <body>
 
-    <canvas id="particleCanvas"></canvas>
+    <div class="crt-overlay"></div>
+    <div id="webgl-container"></div>
 
-    <div class="app-container">
-        <header>
-            <div class="brand-title">☘ CLOVER PIT</div>
-            <div class="stats-bar">
-                <div class="stat-box">
-                    <span class="stat-label">МОНЕТЫ</span>
-                    <span class="stat-value" id="coinsVal">0</span>
+    <div class="ui-hud">
+        <header class="interactive">
+            <div class="logo">☘ CLOVER PIT 3D</div>
+            <div class="stats-group">
+                <div class="stat-card">
+                    <div class="label">Монеты</div>
+                    <div class="val" id="uiCoins">0</div>
                 </div>
-                <div class="stat-box">
-                    <span class="stat-label">ЦЕЛЬ (АРЕНДА)</span>
-                    <span class="stat-value red" id="quotaVal">100</span>
+                <div class="stat-card">
+                    <div class="label">Аренда</div>
+                    <div class="val red" id="uiQuota">100</div>
                 </div>
-                <div class="stat-box">
-                    <span class="stat-label">СПИНЫ</span>
-                    <span class="stat-value green" id="spinsLeftVal">5</span>
+                <div class="stat-card">
+                    <div class="label">Спины</div>
+                    <div class="val green" id="uiSpins">5</div>
                 </div>
-                <div class="stat-box">
-                    <span class="stat-label">ЭТАП</span>
-                    <span class="stat-value purple" id="stageVal">1</span>
+                <div class="stat-card">
+                    <div class="label">Этап</div>
+                    <div class="val purple" id="uiStage">1</div>
                 </div>
             </div>
         </header>
 
-        <main class="main-layout">
-            <!-- Left Side: Deck & Stats -->
-            <section class="side-panel">
-                <div class="panel-header">СИМВОЛЫ В КОЛОДЕ</div>
-                <div class="deck-list" id="deckListDisplay"></div>
-                <div class="panel-header" style="margin-top: auto;">СТАТИСТИКА</div>
-                <div style="font-size: 0.8rem; color: var(--text-dim); display: flex; flex-direction: column; gap: 4px;">
-                    <div>Множитель выплат: <span id="multStatDisplay" style="color:#fff;">x1.0</span></div>
-                    <div>Удача: <span id="luckStatDisplay" style="color:#fff;">0%</span></div>
-                    <div>Всего спинов: <span id="totalSpinsDisplay" style="color:#fff;">0</span></div>
-                </div>
-            </section>
-
-            <!-- Center Stage: Slot Machine -->
-            <section class="center-stage">
-                <div style="font-size: 0.9rem; color: var(--text-dim);" id="statusMessage">Сделайте спин для заработка монет</div>
-                
-                <div class="slot-machine-frame">
-                    <div class="reels-grid" id="reelsGrid"></div>
-                </div>
-
-                <div class="control-panel">
-                    <button class="btn" onclick="openShop()">МАГАЗИН</button>
-                    <button class="btn btn-spin" id="spinBtn" onclick="triggerSpin()">СПИН (5 СМОЛЬ)</button>
-                    <button class="btn" onclick="openUpgrades()">УЛУЧШЕНИЯ</button>
-                </div>
-            </section>
-
-            <!-- Right Side: Inventory Charms & Logs -->
-            <section class="side-panel">
-                <div class="panel-header">АМУЛЕТЫ (<span id="charmsCount">0</span>/6)</div>
-                <div class="charms-container" id="charmsContainer"></div>
-
-                <div class="panel-header" style="margin-top: 10px;">ЖУРНАЛ СОБЫТИЙ</div>
-                <div class="log-container" id="gameLog"></div>
-            </section>
-        </main>
-
-        <footer>
-            <div>CLOVER PIT v1.0.4 | Web Edition</div>
-            <div>
-                <button class="btn" style="padding: 2px 8px; font-size: 0.75rem;" onclick="saveGameProgress()">СОХРАНИТЬ</button>
-                <button class="btn" style="padding: 2px 8px; font-size: 0.75rem;" onclick="resetGameProgress()">СБРОС</button>
+        <div class="hud-middle">
+            <div class="panel-box interactive">
+                <div class="panel-title">АМУЛЕТЫ (<span id="uiCharmCount">0</span>/6)</div>
+                <div class="charms-grid" id="uiCharmsGrid"></div>
             </div>
+
+            <div class="panel-box interactive" style="width: 300px;">
+                <div class="panel-title">ЖУРНАЛ СОБЫТИЙ</div>
+                <div class="log-box" id="uiLogBox"></div>
+            </div>
+        </div>
+
+        <footer class="interactive">
+            <button class="btn" onclick="openShopModal()">МАГАЗИН</button>
+            <button class="btn btn-spin" id="btnSpin" onclick="startSpinSequence()">СПИН</button>
+            <button class="btn" onclick="openDeckModal()">КОЛОДА</button>
         </footer>
     </div>
 
     <!-- Shop Modal -->
-    <div class="modal-overlay" id="shopModal">
+    <div class="modal-overlay interactive" id="shopModal">
         <div class="modal-card">
-            <div class="modal-title">МАГАЗИН АМУЛЕТОВ И СИМВОЛОВ</div>
-            <div style="font-size: 0.85rem; color: var(--text-dim); text-align: center;">Покупайте амулеты для модификации спинов или добавляйте новые символы.</div>
-            <div class="shop-grid" id="shopItemsGrid"></div>
-            <button class="btn" style="margin-top: auto;" onclick="closeModal('shopModal')">ЗАКРЫТЬ</button>
+            <div class="modal-title">ТЕРМИНАЛ ПОКУПОК</div>
+            <div class="shop-grid" id="shopGrid"></div>
+            <button class="btn" onclick="closeModal('shopModal')">ВЫХОД</button>
         </div>
     </div>
 
-    <!-- Upgrades Modal -->
-    <div class="modal-overlay" id="upgradesModal">
+    <!-- Deck Modal -->
+    <div class="modal-overlay interactive" id="deckModal">
         <div class="modal-card">
-            <div class="modal-title">ПОСТОЯННЫЕ УЛУЧШЕНИЯ</div>
-            <div class="shop-grid" id="upgradesGrid"></div>
-            <button class="btn" style="margin-top: auto;" onclick="closeModal('upgradesModal')">ЗАКРЫТЬ</button>
+            <div class="modal-title">СИМВОЛЫ В КОЛОДЕ</div>
+            <div class="shop-grid" id="deckGrid"></div>
+            <button class="btn" onclick="closeModal('deckModal')">ЗАКРЫТЬ</button>
         </div>
     </div>
 
-    <!-- Game Over / Victory Modal -->
-    <div class="modal-overlay" id="endGameModal">
+    <!-- Game Over Modal -->
+    <div class="modal-overlay interactive" id="gameOverModal">
         <div class="modal-card" style="text-align: center;">
-            <div class="modal-title" id="endGameTitle">КОНЕЦ ИГРЫ</div>
-            <p id="endGameDesc" style="color: var(--text-color); font-size: 1rem;"></p>
-            <button class="btn btn-spin" style="margin-top: 16px;" onclick="restartGame()">НАЧАТЬ ЗАНОВО</button>
+            <div class="modal-title" id="gameOverTitle" style="color: var(--color-neon-red);">ВЫ БАНКРОТ</div>
+            <p id="gameOverDesc" style="font-size: 1.1rem; margin: 10px 0;"></p>
+            <button class="btn btn-spin" onclick="resetFullGame()">НАЧАТЬ ЗАНОВО</button>
         </div>
     </div>
 
     <script>
         /* ==========================================================================
-           1. AUDIO SYNTHESIZER (Web Audio API)
+           1. AUDIO SYNTHESIZER ENGINE (Web Audio API)
            ========================================================================== */
-        class SoundEngine {
+        class AudioEngine {
             constructor() {
                 this.ctx = null;
+                this.isMuted = false;
             }
 
             init() {
@@ -564,7 +425,7 @@
             }
 
             playTone(freq, type = 'sine', duration = 0.1, vol = 0.1) {
-                if (!this.ctx) return;
+                if (!this.ctx || this.isMuted) return;
                 try {
                     const osc = this.ctx.createOscillator();
                     const gain = this.ctx.createGain();
@@ -579,584 +440,548 @@
                 } catch(e) {}
             }
 
-            playSpin() {
+            playSpinTick() {
                 this.init();
-                this.playTone(180, 'triangle', 0.05, 0.05);
+                this.playTone(120 + Math.random() * 40, 'triangle', 0.03, 0.03);
             }
 
-            playStop() {
+            playReelStop() {
                 this.init();
-                this.playTone(120, 'square', 0.08, 0.08);
-            }
-
-            playWin() {
-                this.init();
-                const now = this.ctx ? this.ctx.currentTime : 0;
-                [261, 329, 392, 523].forEach((f, i) => {
-                    setTimeout(() => this.playTone(f, 'sine', 0.2, 0.1), i * 80);
-                });
+                this.playTone(80, 'square', 0.1, 0.12);
+                this.playTone(40, 'sawtooth', 0.15, 0.15);
             }
 
             playCoin() {
                 this.init();
-                this.playTone(987, 'sine', 0.08, 0.1);
-                setTimeout(() => this.playTone(1318, 'sine', 0.12, 0.1), 60);
+                this.playTone(1046.50, 'sine', 0.08, 0.1);
+                setTimeout(() => this.playTone(1318.51, 'sine', 0.12, 0.1), 50);
+            }
+
+            playWinFanfare() {
+                this.init();
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((n, i) => {
+                    setTimeout(() => this.playTone(n, 'triangle', 0.25, 0.12), i * 90);
+                });
             }
 
             playError() {
                 this.init();
-                this.playTone(110, 'sawtooth', 0.25, 0.12);
+                this.playTone(110, 'sawtooth', 0.3, 0.2);
             }
         }
 
-        const audio = new SoundEngine();
+        const audio = new AudioEngine();
 
         /* ==========================================================================
-           2. CANVAS PARTICLE SYSTEM
+           2. SYMBOLS & CHARMS CONFIGURATION
            ========================================================================== */
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class Particle {
-            constructor(x, y, color) {
-                this.x = x;
-                this.y = y;
-                this.color = color;
-                this.vx = (Math.random() - 0.5) * 6;
-                this.vy = (Math.random() - 0.5) * 6 - 2;
-                this.size = Math.random() * 5 + 2;
-                this.alpha = 1;
-                this.decay = Math.random() * 0.02 + 0.01;
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.vy += 0.1; // Gravity
-                this.alpha -= this.decay;
-            }
-
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, this.alpha);
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        function spawnParticles(x, y, count = 20, color = '#00ff66') {
-            for (let i = 0; i < count; i++) {
-                particles.push(new Particle(x, y, color));
-            }
-        }
-
-        function renderParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.update();
-                p.draw();
-                if (p.alpha <= 0) particles.splice(i, 1);
-            }
-            requestAnimationFrame(renderParticles);
-        }
-        renderParticles();
-
-        /* ==========================================================================
-           3. GAME DATA DEFINITIONS
-           ========================================================================== */
-        const SYMBOLS_DATA = {
-            '🍒': { name: 'Вишня', value: 3, rarity: 'common' },
-            '🍋': { name: 'Лимон', value: 4, rarity: 'common' },
-            '🍇': { name: 'Виноград', value: 6, rarity: 'uncommon' },
-            '🔔': { name: 'Колокольчик', value: 10, rarity: 'uncommon' },
-            '💎': { name: 'Алмаз', value: 20, rarity: 'rare' },
-            '7️⃣': { name: 'Семёрка', value: 40, rarity: 'rare' },
-            '☘': { name: 'Клевер', value: 15, rarity: 'uncommon' },
-            '💀': { name: 'Череп', value: 0, rarity: 'rare' },
-            '🪙': { name: 'Монета', value: 8, rarity: 'common' }
+        const SYMBOL_DATA = {
+            '🍒': { name: 'Вишня', val: 3, rarity: 1 },
+            '🍋': { name: 'Лимон', val: 4, rarity: 1 },
+            '🍇': { name: 'Виноград', val: 6, rarity: 2 },
+            '🔔': { name: 'Колокол', val: 10, rarity: 2 },
+            '💎': { name: 'Алмаз', val: 25, rarity: 3 },
+            '7️⃣': { name: 'Семерка', val: 50, rarity: 3 },
+            '☘': { name: 'Клевер', val: 12, rarity: 2 },
+            '💀': { name: 'Череп', val: 0, rarity: 3 },
+            '🪙': { name: 'Монета', val: 8, rarity: 1 }
         };
 
-        const CHARMS_CATALOG = [
-            { id: 'clover_leaf', name: 'Четырехлистник', icon: '🍀', desc: '+25% к выигрышу за каждый Клевер на экране', cost: 35 },
-            { id: 'gold_magnet', name: 'Магнит Монет', icon: '🧲', desc: 'Монеты приносят на +5 больше', cost: 40 },
-            { id: 'lucky_dice', name: 'Кость Удачи', icon: '🎲', desc: '+10% к базовому шансу редких символов', cost: 50 },
-            { id: 'skull_pact', name: 'Темный Пакт', icon: '📜', desc: 'Череп дает +50 монет, но отнимает 1 спин', cost: 60 },
-            { id: 'diamond_ring', name: 'Алмазное Кольцо', icon: '💍', desc: 'Алмазы удваивают свой выигрыш', cost: 75 },
-            { id: 'coffee_cup', name: 'Чашка Кофе', icon: '☕', desc: '+1 дополнительный спин каждый этап', cost: 80 }
-        ];
-
-        const UPGRADES_CATALOG = [
-            { id: 'grid_expansion', name: 'Расширение Сетки', icon: '📐', desc: 'Увеличивает сетку до 3x3 (если 2x3)', cost: 150, max: 1 },
-            { id: 'base_mult', name: 'Усилитель Выплат', icon: '⚡', desc: '+0.2x к общему множителю выплат', cost: 50, max: 5 },
-            { id: 'extra_spins', name: 'Запас Энергии', icon: '🔋', desc: '+1 спин на каждый этап', cost: 70, max: 3 }
+        const CHARMS_DATA = [
+            { id: 'clover_master', name: 'Золотой Клевер', icon: '🍀', desc: '+30% к выигрышу за каждый Клевер на экране', cost: 40 },
+            { id: 'magnet', name: 'Магнит Монет', icon: '🧲', desc: 'Монеты дают дополнительно +6 монет', cost: 45 },
+            { id: 'pact', name: 'Темная Сделка', icon: '📜', desc: 'Череп приносит +60 монет, но сжигает 1 спин', cost: 70 },
+            { id: 'ring', name: 'Алмазное Перстне', icon: '💍', desc: 'Алмазы удваивают свой выигрыш', cost: 85 },
+            { id: 'coffee', name: 'Термос Кофе', icon: '☕', desc: '+1 дополнительный спин на каждом этапе', cost: 90 }
         ];
 
         /* ==========================================================================
-           4. GAME STATE
+           3. GAME STATE MANAGEMENT
            ========================================================================== */
-        let state = {
-            coins: 30,
-            quota: 80,
+        let gameState = {
+            coins: 35,
+            quota: 90,
             spinsLeft: 5,
             maxSpins: 5,
             stage: 1,
             multiplier: 1.0,
-            luckBonus: 0,
-            totalSpins: 0,
-            gridRows: 3,
-            gridCols: 3,
             deck: ['🍒', '🍒', '🍋', '🍋', '🍇', '🔔', '☘', '🪙', '🪙'],
             charms: [],
-            upgrades: {
-                grid_expansion: 0,
-                base_mult: 0,
-                extra_spins: 0
-            },
-            gridState: []
+            gridResults: []
         };
 
-        /* ==========================================================================
-           5. SYSTEM LOGIC & ENGINE
-           ========================================================================== */
-        function logMessage(msg, type = 'normal') {
-            const container = document.getElementById('gameLog');
-            const entry = document.createElement('div');
-            entry.className = `log-entry ${type}`;
-            entry.innerText = `> ${msg}`;
-            container.appendChild(entry);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function initGrid() {
-            const gridEl = document.getElementById('reelsGrid');
-            gridEl.style.gridTemplateColumns = `repeat(${state.gridCols}, 1fr)`;
-            gridEl.innerHTML = '';
-            state.gridState = [];
-
-            const totalCells = state.gridRows * state.gridCols;
-            for (let i = 0; i < totalCells; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'slot-cell';
-                cell.id = `cell-${i}`;
-                cell.innerText = '☘';
-                gridEl.appendChild(cell);
-                state.gridState.push('☘');
-            }
+        function logEvent(msg, type = 'info') {
+            const box = document.getElementById('uiLogBox');
+            const el = document.createElement('div');
+            el.className = `log-entry ${type}`;
+            el.innerText = `> ${msg}`;
+            box.appendChild(el);
+            box.scrollTop = box.scrollHeight;
         }
 
         function updateUI() {
-            document.getElementById('coinsVal').innerText = state.coins;
-            document.getElementById('quotaVal').innerText = state.quota;
-            document.getElementById('spinsLeftVal').innerText = state.spinsLeft;
-            document.getElementById('stageVal').innerText = state.stage;
-            document.getElementById('multStatDisplay').innerText = `x${state.multiplier.toFixed(1)}`;
-            document.getElementById('luckStatDisplay').innerText = `${state.luckBonus}%`;
-            document.getElementById('totalSpinsDisplay').innerText = state.totalSpins;
-            document.getElementById('charmsCount').innerText = state.charms.length;
+            document.getElementById('uiCoins').innerText = gameState.coins;
+            document.getElementById('uiQuota').innerText = gameState.quota;
+            document.getElementById('uiSpins').innerText = gameState.spinsLeft;
+            document.getElementById('uiStage').innerText = gameState.stage;
+            document.getElementById('uiCharmCount').innerText = gameState.charms.length;
 
-            renderDeckList();
             renderCharmsUI();
         }
 
-        function renderDeckList() {
-            const container = document.getElementById('deckListDisplay');
-            container.innerHTML = '';
-            
-            const counts = {};
-            state.deck.forEach(s => counts[s] = (counts[s] || 0) + 1);
-
-            for (const [sym, count] of Object.entries(counts)) {
-                const chip = document.createElement('div');
-                chip.className = 'deck-chip';
-                chip.innerHTML = `<span>${sym}</span><span style="color:var(--accent-green)">x${count}</span>`;
-                container.appendChild(chip);
-            }
-        }
-
         function renderCharmsUI() {
-            const container = document.getElementById('charmsContainer');
-            container.innerHTML = '';
-
+            const grid = document.getElementById('uiCharmsGrid');
+            grid.innerHTML = '';
             for (let i = 0; i < 6; i++) {
                 const slot = document.createElement('div');
-                slot.className = 'charm-slot';
-                
-                if (state.charms[i]) {
-                    const charm = state.charms[i];
+                slot.className = 'charm-item';
+                if (gameState.charms[i]) {
+                    const c = gameState.charms[i];
                     slot.classList.add('active');
-                    slot.innerText = charm.icon;
-
-                    const tooltip = document.createElement('div');
-                    tooltip.className = 'charm-tooltip';
-                    tooltip.innerHTML = `<strong>${charm.name}</strong><br>${charm.desc}`;
-                    slot.appendChild(tooltip);
+                    slot.innerText = c.icon;
+                    slot.innerHTML += `<div class="tooltip"><strong>${c.name}</strong><br>${c.desc}</div>`;
                 }
-
-                container.appendChild(slot);
+                grid.appendChild(slot);
             }
         }
 
-        function getRandomSymbolFromDeck() {
-            if (state.deck.length === 0) return '🍒';
-            const index = Math.floor(Math.random() * state.deck.length);
-            return state.deck[index];
+        /* ==========================================================================
+           4. THREE.JS 3D ENGINE SETUP
+           ========================================================================== */
+        const container = document.getElementById('webgl-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x030704, 0.035);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 1.2, 5.5);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        container.appendChild(renderer.domElement);
+
+        /* Lighting */
+        const ambientLight = new THREE.AmbientLight(0x1a3821, 1.2);
+        scene.add(ambientLight);
+
+        const spotLight = new THREE.SpotLight(0x00ff66, 2.5);
+        spotLight.position.set(0, 5, 3);
+        spotLight.angle = Math.PI / 4;
+        spotLight.penumbra = 0.8;
+        spotLight.castShadow = true;
+        scene.add(spotLight);
+
+        const pointLightMachine = new THREE.PointLight(0xffd700, 1.5, 4);
+        pointLightMachine.position.set(0, 0.5, 1);
+        scene.add(pointLightMachine);
+
+        /* 3D Environment & Slot Machine Mesh */
+        const roomGroup = new THREE.Group();
+        scene.add(roomGroup);
+
+        // Floor
+        const floorGeo = new THREE.PlaneGeometry(20, 20);
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x0a140d, roughness: 0.8, metalness: 0.2 });
+        const floor = new THREE.Mesh(floorGeo, floorMat);
+        floor.rotation.x = -Math.PI / 2;
+        floor.position.y = -1.5;
+        floor.receiveShadow = true;
+        roomGroup.add(floor);
+
+        // Slot Machine Body
+        const machineGroup = new THREE.Group();
+        scene.add(machineGroup);
+
+        const bodyGeo = new THREE.BoxGeometry(2.4, 3.2, 1.5);
+        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x111c14, roughness: 0.4, metalness: 0.6 });
+        const machineBody = new THREE.Mesh(bodyGeo, bodyMat);
+        machineBody.position.set(0, 0, 0);
+        machineBody.castShadow = true;
+        machineBody.receiveShadow = true;
+        machineGroup.add(machineBody);
+
+        // Screen Frame Cutout
+        const frameGeo = new THREE.BoxGeometry(2.0, 1.6, 0.2);
+        const frameMat = new THREE.MeshStandardMaterial({ color: 0x030704, roughness: 0.2, metalness: 0.9 });
+        const frame = new THREE.Mesh(frameGeo, frameMat);
+        frame.position.set(0, 0.2, 0.70);
+        machineGroup.add(frame);
+
+        /* 3D Reels (Cylinders) */
+        const NUM_REELS = 3;
+        const reels = [];
+        const reelTextures = [];
+
+        function createReelTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#050f07';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const keys = Object.keys(SYMBOL_DATA);
+            const step = canvas.height / keys.length;
+
+            ctx.font = '70px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            keys.forEach((sym, idx) => {
+                ctx.strokeStyle = '#1a3821';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(10, idx * step + 10, canvas.width - 20, step - 20);
+
+                ctx.fillStyle = '#0a1d10';
+                ctx.fillRect(12, idx * step + 12, canvas.width - 24, step - 24);
+
+                ctx.fillText(sym, canvas.width / 2, idx * step + step / 2);
+            });
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            return texture;
         }
 
-        let isSpinning = false;
+        const reelGeo = new THREE.CylinderGeometry(0.65, 0.65, 0.55, 32);
 
-        function triggerSpin() {
-            if (isSpinning) return;
-            if (state.spinsLeft <= 0) {
-                logMessage('Закончились спины! Проверьте оплату аренды.', 'bad');
+        for (let i = 0; i < NUM_REELS; i++) {
+            const texture = createReelTexture();
+            reelTextures.push(texture);
+
+            const reelMat = new THREE.MeshStandardMaterial({ 
+                map: texture, 
+                roughness: 0.3, 
+                metalness: 0.1 
+            });
+
+            const reel = new THREE.Mesh(reelGeo, reelMat);
+            reel.rotation.z = Math.PI / 2;
+            reel.position.set((i - 1) * 0.62, 0.2, 0.5);
+            machineGroup.add(reel);
+
+            reels.push({
+                mesh: reel,
+                rotationSpeed: 0,
+                targetRotation: 0,
+                isSpinning: false
+            });
+        }
+
+        /* 3D Particle Coins */
+        const coinsGroup = new THREE.Group();
+        scene.add(coinsGroup);
+        const activeCoins = [];
+
+        function spawn3DCoin() {
+            const coinGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.02, 16);
+            const coinMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.9, roughness: 0.1 });
+            const coin = new THREE.Mesh(coinGeo, coinMat);
+
+            coin.position.set((Math.random() - 0.5) * 0.8, -0.6, 0.8);
+            coin.velocity = new THREE.Vector3((Math.random() - 0.5) * 0.08, Math.random() * 0.1 + 0.08, Math.random() * 0.05 + 0.05);
+            coin.rotSpeed = new THREE.Vector3(Math.random() * 0.2, Math.random() * 0.2, Math.random() * 0.2);
+
+            coinsGroup.add(coin);
+            activeCoins.push(coin);
+        }
+
+        function updateCoins() {
+            for (let i = activeCoins.length - 1; i >= 0; i--) {
+                const c = activeCoins[i];
+                c.position.add(c.velocity);
+                c.velocity.y -= 0.005; // Gravity
+                c.rotation.x += c.rotSpeed.x;
+                c.rotation.y += c.rotSpeed.y;
+
+                if (c.position.y < -2) {
+                    coinsGroup.remove(c);
+                    activeCoins.splice(i, 1);
+                }
+            }
+        }
+
+        /* Responsive Window Resize */
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        /* ==========================================================================
+           5. SPIN MECHANICS & GAME LOGIC
+           ========================================================================== */
+        let isSpinningSequence = false;
+
+        function getRandomDeckSymbol() {
+            return gameState.deck[Math.floor(Math.random() * gameState.deck.length)];
+        }
+
+        function startSpinSequence() {
+            if (isSpinningSequence) return;
+            if (gameState.spinsLeft <= 0) {
+                logEvent('Нет доступных спинов! Оплатите аренду.', 'bad');
                 audio.playError();
                 return;
             }
 
-            isSpinning = true;
-            state.spinsLeft--;
-            state.totalSpins++;
-            document.getElementById('spinBtn').disabled = true;
-            document.getElementById('statusMessage').innerText = 'Вращение барабанов...';
-
-            audio.playSpin();
-
-            const totalCells = state.gridRows * state.gridCols;
-            let completedReels = 0;
-
-            for (let i = 0; i < totalCells; i++) {
-                const cellEl = document.getElementById(`cell-${i}`);
-                cellEl.classList.add('spinning');
-                cellEl.classList.remove('win-cell');
-
-                let spinsCounter = 0;
-                const maxSpins = 10 + i * 2;
-
-                const interval = setInterval(() => {
-                    cellEl.innerText = getRandomSymbolFromDeck();
-                    audio.playSpin();
-                    spinsCounter++;
-
-                    if (spinsCounter >= maxSpins) {
-                        clearInterval(interval);
-                        cellEl.classList.remove('spinning');
-                        const finalSymbol = getRandomSymbolFromDeck();
-                        cellEl.innerText = finalSymbol;
-                        state.gridState[i] = finalSymbol;
-                        audio.playStop();
-
-                        completedReels++;
-                        if (completedReels >= totalCells) {
-                            evaluateSpinResult();
-                        }
-                    }
-                }, 60);
-            }
-
+            isSpinningSequence = true;
+            gameState.spinsLeft--;
+            document.getElementById('btnSpin').disabled = true;
             updateUI();
+
+            gameState.gridResults = [];
+
+            reels.forEach((reelObj, idx) => {
+                reelObj.isSpinning = true;
+                reelObj.rotationSpeed = 0.3 + idx * 0.08;
+
+                // Determine target symbol
+                const chosenSymbol = getRandomDeckSymbol();
+                gameState.gridResults.push(chosenSymbol);
+
+                setTimeout(() => {
+                    reelObj.isSpinning = false;
+                    audio.playReelStop();
+
+                    if (idx === NUM_REELS - 1) {
+                        setTimeout(evaluateSpinResults, 400);
+                    }
+                }, 1200 + idx * 600);
+            });
         }
 
-        function evaluateSpinResult() {
-            let spinPayout = 0;
-            const symbolCounts = {};
+        function evaluateSpinResults() {
+            let totalGain = 0;
+            const counts = {};
 
-            state.gridState.forEach(sym => {
-                symbolCounts[sym] = (symbolCounts[sym] || 0) + 1;
+            gameState.gridResults.forEach(sym => {
+                counts[sym] = (counts[sym] || 0) + 1;
             });
 
+            logEvent(`Выпали символы: [ ${gameState.gridResults.join(' | ')} ]`, 'info');
+
             // Calculate Base Payouts
-            for (const [sym, count] of Object.entries(symbolCounts)) {
-                const data = SYMBOLS_DATA[sym] || { value: 1 };
-                let itemPayout = data.value * count;
+            for (const [sym, count] of Object.entries(counts)) {
+                const baseVal = SYMBOL_DATA[sym] ? SYMBOL_DATA[sym].val : 2;
+                let payout = baseVal * count;
 
-                // Unique Charm Rules
-                if (sym === '🪙' && hasCharm('gold_magnet')) {
-                    itemPayout += count * 5;
-                }
-                if (sym === '💎' && hasCharm('diamond_ring')) {
-                    itemPayout *= 2;
-                }
-                if (sym === '💀' && hasCharm('skull_pact')) {
-                    itemPayout += 50;
-                    state.spinsLeft = Math.max(0, state.spinsLeft - 1);
-                    logMessage('Череп активировал Темный Пакт: +50 монет, -1 спин', 'bad');
+                // Charm Interactions
+                if (sym === '🪙' && hasCharm('magnet')) payout += count * 6;
+                if (sym === '💎' && hasCharm('ring')) payout *= 2;
+                if (sym === '💀' && hasCharm('pact')) {
+                    payout += 60;
+                    gameState.spinsLeft = Math.max(0, gameState.spinsLeft - 1);
+                    logEvent('Темная Сделка сработала: +60 монет, -1 спин', 'bad');
                 }
 
-                spinPayout += itemPayout;
+                totalGain += payout;
             }
 
-            // Clover charm bonus
-            if (hasCharm('clover_leaf') && symbolCounts['☘']) {
-                const cloverBonus = 1 + (symbolCounts['☘'] * 0.25);
-                spinPayout *= cloverBonus;
+            // Clover Master Charm
+            if (hasCharm('clover_master') && counts['☘']) {
+                totalGain = Math.floor(totalGain * (1 + counts['☘'] * 0.3));
             }
 
-            // Multiply by global multiplier
-            spinPayout = Math.floor(spinPayout * state.multiplier);
-
-            // Lines combo bonus (Horizontal)
-            for (let r = 0; r < state.gridRows; r++) {
-                const firstInRow = state.gridState[r * state.gridCols];
-                let isLine = true;
-                for (let c = 1; c < state.gridCols; c++) {
-                    if (state.gridState[r * state.gridCols + c] !== firstInRow) {
-                        isLine = false;
-                        break;
-                    }
-                }
-                if (isLine) {
-                    spinPayout += 25;
-                    logMessage(`Линия из одинаковых символов! +25 монет`, 'win');
-                    // Highlight cells
-                    for (let c = 0; c < state.gridCols; c++) {
-                        document.getElementById(`cell-${r * state.gridCols + c}`).classList.add('win-cell');
-                    }
-                }
+            // Triple Combo Bonus
+            if (gameState.gridResults[0] === gameState.gridResults[1] && gameState.gridResults[1] === gameState.gridResults[2]) {
+                totalGain += 30;
+                logEvent('ДЖЕКПОТ! Тройное совпадение: +30 монет!', 'win');
             }
 
-            state.coins += spinPayout;
+            gameState.coins += totalGain;
 
-            if (spinPayout > 0) {
-                audio.playWin();
-                logMessage(`Спин принес: +${spinPayout} монет! :)`, 'win');
-                const centerRect = document.getElementById('reelsGrid').getBoundingClientRect();
-                spawnParticles(centerRect.left + centerRect.width / 2, centerRect.top + centerRect.height / 2, 30, '#ffd700');
-            } else {
-                logMessage('Ничего не выпало... :(', 'normal');
+            if (totalGain > 0) {
+                audio.playWinFanfare();
+                logEvent(`Выигрыш за спин: +${totalGain} монет!`, 'win');
+                for (let i = 0; i < 25; i++) setTimeout(spawn3DCoin, i * 30);
             }
 
-            isSpinning = false;
-            document.getElementById('spinBtn').disabled = false;
-            document.getElementById('statusMessage').innerText = 'Сделайте спин для заработка монет';
-
+            isSpinningSequence = false;
+            document.getElementById('btnSpin').disabled = false;
             updateUI();
-            checkQuotaStatus();
+
+            checkQuotaProgress();
         }
 
         function hasCharm(id) {
-            return state.charms.some(c => c.id === id);
+            return gameState.charms.some(c => c.id === id);
         }
 
-        function checkQuotaStatus() {
-            if (state.coins >= state.quota) {
-                logMessage(`Цель достигнута! Аренда в ${state.quota} монет выплачена! :)`, 'info');
-                audio.playWin();
-                advanceStage();
-            } else if (state.spinsLeft <= 0 && state.coins < state.quota) {
+        function checkQuotaProgress() {
+            if (gameState.coins >= gameState.quota) {
+                logEvent(`Цель достигнута! Аренда в ${gameState.quota} монет выплачена!`, 'win');
+                audio.playWinFanfare();
+                advanceNextStage();
+            } else if (gameState.spinsLeft <= 0) {
                 audio.playError();
                 triggerGameOver(false);
             }
         }
 
-        function advanceStage() {
-            state.stage++;
-            state.coins -= state.quota;
-            state.quota = Math.floor(state.quota * 1.6);
-            state.spinsLeft = state.maxSpins;
+        function advanceNextStage() {
+            gameState.stage++;
+            gameState.coins -= gameState.quota;
+            gameState.quota = Math.floor(gameState.quota * 1.65);
+            gameState.spinsLeft = gameState.maxSpins;
 
-            if (hasCharm('coffee_cup')) {
-                state.spinsLeft += 1;
-            }
+            if (hasCharm('coffee')) gameState.spinsLeft += 1;
 
-            logMessage(`Начался этап ${state.stage}! Новая цель: ${state.quota} монет.`, 'info');
-            saveGameProgress();
+            logEvent(`Этап ${gameState.stage} начат. Новая цель: ${gameState.quota} монет.`, 'info');
+            saveProgress();
             updateUI();
         }
 
-        function triggerGameOver(victory = false) {
-            const modal = document.getElementById('endGameModal');
-            const title = document.getElementById('endGameTitle');
-            const desc = document.getElementById('endGameDesc');
+        function triggerGameOver(victory) {
+            const modal = document.getElementById('gameOverModal');
+            const title = document.getElementById('gameOverTitle');
+            const desc = document.getElementById('gameOverDesc');
 
-            if (victory) {
-                title.innerText = 'ВЕЛИКОЛЕПНАЯ ПОБЕДА! :)';
-                desc.innerText = `Вы успешно прошли все испытания и собрали ${state.coins} монет!`;
-            } else {
-                title.innerText = 'БАНКРОТСТВО! :(';
-                desc.innerText = `Вам не удалось собрать ${state.quota} монет за отведенные спины.`;
-            }
+            title.innerText = victory ? 'ПОБЕДА!' : 'БАНКРОТСТВО';
+            desc.innerText = victory ? 'Вы прошли все уровни ямы!' : `Вам не хватило монет для оплаты аренды в ${gameState.quota} монет.`;
 
             modal.style.display = 'flex';
         }
 
-        function restartGame() {
-            state.coins = 30;
-            state.quota = 80;
-            state.spinsLeft = 5;
-            state.maxSpins = 5;
-            state.stage = 1;
-            state.multiplier = 1.0;
-            state.luckBonus = 0;
-            state.totalSpins = 0;
-            state.deck = ['🍒', '🍒', '🍋', '🍋', '🍇', '🔔', '☘', '🪙', '🪙'];
-            state.charms = [];
-            
-            closeModal('endGameModal');
-            initGrid();
+        function resetFullGame() {
+            gameState = {
+                coins: 35,
+                quota: 90,
+                spinsLeft: 5,
+                maxSpins: 5,
+                stage: 1,
+                multiplier: 1.0,
+                deck: ['🍒', '🍒', '🍋', '🍋', '🍇', '🔔', '☘', '🪙', '🪙'],
+                charms: [],
+                gridResults: []
+            };
+            closeModal('gameOverModal');
             updateUI();
-            logMessage('Новая игра началась! Удачи!', 'info');
+            logEvent('Новая игра началась.', 'info');
         }
 
         /* ==========================================================================
-           6. SHOP & UPGRADES MODALS
+           6. SHOP & MODALS SYSTEM
            ========================================================================== */
-        function openShop() {
-            const grid = document.getElementById('shopItemsGrid');
+        function openShopModal() {
+            const grid = document.getElementById('shopGrid');
             grid.innerHTML = '';
 
-            // Render Charms for sale
-            CHARMS_CATALOG.forEach(charm => {
+            CHARMS_DATA.forEach(charm => {
                 const bought = hasCharm(charm.id);
-                const itemEl = document.createElement('div');
-                itemEl.className = 'shop-item';
-                itemEl.innerHTML = `
-                    <div class="shop-item-icon">${charm.icon}</div>
-                    <div class="shop-item-name">${charm.name}</div>
-                    <div class="shop-item-desc">${charm.desc}</div>
-                    <div class="shop-item-cost">${bought ? 'КУПЛЕНО' : charm.cost + ' монет'}</div>
-                    <button class="btn" style="padding:4px 8px; font-size:0.8rem;" ${bought || state.coins < charm.cost ? 'disabled' : ''}>
-                        ${bought ? 'В наличии' : 'Купить'}
+                const el = document.createElement('div');
+                el.className = 'shop-card';
+                el.innerHTML = `
+                    <div class="shop-card-icon">${charm.icon}</div>
+                    <div class="shop-card-title">${charm.name}</div>
+                    <div class="shop-card-desc">${charm.desc}</div>
+                    <div class="shop-card-cost">${bought ? 'КУПЛЕНО' : charm.cost + ' 🪙'}</div>
+                    <button class="btn" style="padding:4px 12px; font-size:0.8rem;" ${bought || gameState.coins < charm.cost ? 'disabled' : ''}>
+                        ${bought ? 'Есть' : 'Купить'}
                     </button>
                 `;
 
-                itemEl.querySelector('button').onclick = () => {
-                    if (!bought && state.coins >= charm.cost && state.charms.length < 6) {
-                        state.coins -= charm.cost;
-                        state.charms.push(charm);
+                el.querySelector('button').onclick = () => {
+                    if (!bought && gameState.coins >= charm.cost && gameState.charms.length < 6) {
+                        gameState.coins -= charm.cost;
+                        gameState.charms.push(charm);
                         audio.playCoin();
-                        logMessage(`Куплен амулет: ${charm.name}`, 'info');
+                        logEvent(`Приобретен амулет: ${charm.name}`, 'info');
                         updateUI();
-                        openShop();
+                        openShopModal();
                     }
                 };
 
-                grid.appendChild(itemEl);
-            });
-
-            // Render Symbols for sale
-            Object.entries(SYMBOLS_DATA).forEach(([sym, data]) => {
-                const cost = data.value * 4 + 10;
-                const itemEl = document.createElement('div');
-                itemEl.className = 'shop-item';
-                itemEl.innerHTML = `
-                    <div class="shop-item-icon">${sym}</div>
-                    <div class="shop-item-name">${data.name}</div>
-                    <div class="shop-item-desc">Базовый выигрыш: ${data.value} монет</div>
-                    <div class="shop-item-cost">${cost} монет</div>
-                    <button class="btn" style="padding:4px 8px; font-size:0.8rem;" ${state.coins < cost ? 'disabled' : ''}>+ В колоду</button>
-                `;
-
-                itemEl.querySelector('button').onclick = () => {
-                    if (state.coins >= cost) {
-                        state.coins -= cost;
-                        state.deck.push(sym);
-                        audio.playCoin();
-                        logMessage(`Символ ${sym} добавлен в колоду`, 'info');
-                        updateUI();
-                        openShop();
-                    }
-                };
-
-                grid.appendChild(itemEl);
+                grid.appendChild(el);
             });
 
             document.getElementById('shopModal').style.display = 'flex';
         }
 
-        function openUpgrades() {
-            const grid = document.getElementById('upgradesGrid');
+        function openDeckModal() {
+            const grid = document.getElementById('deckGrid');
             grid.innerHTML = '';
 
-            UPGRADES_CATALOG.forEach(upg => {
-                const currentLvl = state.upgrades[upg.id] || 0;
-                const maxed = currentLvl >= upg.max;
-                const cost = upg.cost * (currentLvl + 1);
+            const counts = {};
+            gameState.deck.forEach(s => counts[s] = (counts[s] || 0) + 1);
 
-                const itemEl = document.createElement('div');
-                itemEl.className = 'shop-item';
-                itemEl.innerHTML = `
-                    <div class="shop-item-icon">${upg.icon}</div>
-                    <div class="shop-item-name">${upg.name} (${currentLvl}/${upg.max})</div>
-                    <div class="shop-item-desc">${upg.desc}</div>
-                    <div class="shop-item-cost">${maxed ? 'МАКС' : cost + ' монет'}</div>
-                    <button class="btn" style="padding:4px 8px; font-size:0.8rem;" ${maxed || state.coins < cost ? 'disabled' : ''}>Улучшить</button>
+            for (const [sym, count] of Object.entries(counts)) {
+                const data = SYMBOL_DATA[sym] || { name: sym, val: 1 };
+                const el = document.createElement('div');
+                el.className = 'shop-card';
+                el.innerHTML = `
+                    <div class="shop-card-icon">${sym}</div>
+                    <div class="shop-card-title">${data.name}</div>
+                    <div class="shop-card-desc">Ценность: ${data.val} монет<br>Количество: ${count}</div>
                 `;
+                grid.appendChild(el);
+            }
 
-                itemEl.querySelector('button').onclick = () => {
-                    if (!maxed && state.coins >= cost) {
-                        state.coins -= cost;
-                        state.upgrades[upg.id] = currentLvl + 1;
-
-                        if (upg.id === 'base_mult') state.multiplier += 0.2;
-                        if (upg.id === 'extra_spins') {
-                            state.maxSpins += 1;
-                            state.spinsLeft += 1;
-                        }
-
-                        audio.playCoin();
-                        logMessage(`Куплено улучшение: ${upg.name}`, 'info');
-                        updateUI();
-                        openUpgrades();
-                    }
-                };
-
-                grid.appendChild(itemEl);
-            });
-
-            document.getElementById('upgradesModal').style.display = 'flex';
+            document.getElementById('deckModal').style.display = 'flex';
         }
 
         function closeModal(id) {
             document.getElementById(id).style.display = 'none';
         }
 
-        /* ==========================================================================
-           7. SAVE / LOAD SYSTEM
-           ========================================================================== */
-        function saveGameProgress() {
+        /* Storage */
+        function saveProgress() {
             try {
-                localStorage.setItem('clover_pit_save', JSON.stringify(state));
-                logMessage('Прогресс игры сохранен. :)', 'info');
+                localStorage.setItem('clover_pit_3d_save', JSON.stringify(gameState));
             } catch(e) {}
         }
 
-        function loadGameProgress() {
+        function loadProgress() {
             try {
-                const saved = localStorage.getItem('clover_pit_save');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    state = { ...state, ...parsed };
-                    logMessage('Сохраненный прогресс успешно загружен. :)', 'info');
+                const data = localStorage.getItem('clover_pit_3d_save');
+                if (data) {
+                    gameState = { ...gameState, ...JSON.parse(data) };
                 }
             } catch(e) {}
         }
 
-        function resetGameProgress() {
-            if (confirm('Вы уверены, что хотите сбросить весь прогресс?')) {
-                localStorage.removeItem('clover_pit_save');
-                restartGame();
-            }
+        /* ==========================================================================
+           7. MAIN ANIMATION LOOP
+           ========================================================================== */
+        let clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const delta = clock.getDelta();
+
+            // Reel Rotation Physics
+            reels.forEach((reelObj) => {
+                if (reelObj.isSpinning) {
+                    reelObj.mesh.rotation.x += reelObj.rotationSpeed;
+                    audio.playSpinTick();
+                } else {
+                    // Align to nearest symbol segment
+                    reelObj.mesh.rotation.x = THREE.MathUtils.lerp(reelObj.mesh.rotation.x, Math.round(reelObj.mesh.rotation.x / (Math.PI / 4)) * (Math.PI / 4), 0.2);
+                }
+            });
+
+            // Ambient machine light flicker
+            pointLightMachine.intensity = 1.2 + Math.sin(Date.now() * 0.005) * 0.3;
+
+            updateCoins();
+            renderer.render(scene, camera);
         }
 
         /* ==========================================================================
-           8. INIT APPLICATION
+           8. INIT
            ========================================================================== */
         window.onload = () => {
-            loadGameProgress();
-            initGrid();
+            loadProgress();
             updateUI();
-            logMessage('Добро пожаловать в Clover Pit! Нажмите СПИН для начала.', 'info');
+            logEvent('Система 3D Clover Pit готова. Сделайте первый спин.', 'info');
+            animate();
         };
     </script>
 </body>
