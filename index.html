@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CLOVER PIT 3D: EXTENDED ARCADE EDITION</title>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>CLOVER PIT 3D: MOBILE EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
             --color-bg: #020503;
-            --color-panel: rgba(8, 16, 10, 0.88);
+            --color-panel: rgba(6, 15, 8, 0.92);
             --color-border: #1a3821;
             --color-neon-green: #00ff66;
             --color-neon-gold: #ffd700;
@@ -21,15 +21,14 @@
 
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             user-select: none;
             -webkit-user-select: none;
+            touch-action: manipulation;
         }
 
         html, body {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             background-color: var(--color-bg);
             color: #e0ffe8;
             font-family: var(--font-main);
@@ -43,70 +42,7 @@
             z-index: 1;
         }
 
-        /* CRT Filter */
-        .crt-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 10;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
-            background-size: 100% 3px, 6px 100%;
-            opacity: 0.45;
-        }
-
-        /* Crosshair & Interaction Prompt */
-        .crosshair {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 8px; height: 8px;
-            border: 1px solid var(--color-neon-green);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 12;
-            pointer-events: none;
-            transition: all 0.1s ease;
-        }
-
-        .crosshair.active {
-            width: 16px; height: 16px;
-            background: rgba(0, 255, 102, 0.3);
-            border-color: var(--color-neon-gold);
-            box-shadow: 0 0 10px var(--color-neon-gold);
-        }
-
-        .interaction-prompt {
-            position: absolute;
-            top: 55%; left: 50%;
-            transform: translateX(-50%);
-            z-index: 12;
-            background: rgba(0, 0, 0, 0.85);
-            border: 1px solid var(--color-neon-green);
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            color: var(--color-neon-green);
-            pointer-events: none;
-            display: none;
-            box-shadow: 0 0 12px rgba(0, 255, 102, 0.3);
-        }
-
-        .controls-hint {
-            position: absolute;
-            bottom: 70px; left: 50%;
-            transform: translateX(-50%);
-            z-index: 12;
-            background: rgba(0,0,0,0.75);
-            padding: 4px 14px;
-            border: 1px solid var(--color-border);
-            border-radius: 4px;
-            font-size: 0.75rem;
-            color: #82a88a;
-            pointer-events: none;
-            text-align: center;
-        }
-
-        /* HUD Overlay */
+        /* HUD Header */
         .ui-hud {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -114,7 +50,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 10px;
+            padding: 8px;
             pointer-events: none;
         }
 
@@ -126,181 +62,162 @@
             align-items: center;
             background: var(--color-panel);
             border: 1px solid var(--color-border);
-            padding: 6px 14px;
+            padding: 6px 10px;
             border-radius: 6px;
-            backdrop-filter: blur(4px);
         }
 
         .logo {
             font-family: var(--font-hud);
-            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            font-size: 1.3rem;
             color: var(--color-neon-green);
-            text-shadow: 0 0 8px var(--color-neon-green);
         }
 
-        .stats-group { display: flex; gap: 8px; }
+        .stats-group { display: flex; gap: 6px; }
 
         .stat-card {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             border: 1px solid var(--color-border);
-            padding: 2px 10px;
+            padding: 2px 6px;
             border-radius: 4px;
             text-align: center;
-            min-width: 65px;
+            min-width: 55px;
         }
 
-        .stat-card .label { font-size: 0.65rem; color: #6a9c74; }
+        .stat-card .label { font-size: 0.55rem; color: #6a9c74; }
         .stat-card .val {
             font-family: var(--font-hud);
-            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            font-size: 1.1rem;
             color: var(--color-neon-gold);
             line-height: 1;
         }
         .stat-card .val.green { color: var(--color-neon-green); }
         .stat-card .val.red { color: var(--color-neon-red); }
-        .stat-card .val.purple { color: var(--color-neon-purple); }
 
-        .hud-middle {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+        /* Crosshair & Prompts */
+        .crosshair {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 6px; height: 6px;
+            border: 1px solid var(--color-neon-green);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
             pointer-events: none;
-            flex: 1;
-            margin: 8px 0;
         }
 
-        .panel-box {
-            background: var(--color-panel);
-            border: 1px solid var(--color-border);
-            border-radius: 6px;
-            padding: 8px;
-            width: clamp(160px, 20vw, 220px);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            backdrop-filter: blur(4px);
-        }
-
-        .panel-title {
+        .interaction-prompt {
+            position: absolute;
+            top: 42%; left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid var(--color-neon-green);
+            padding: 4px 10px;
+            border-radius: 4px;
             font-size: 0.75rem;
             color: var(--color-neon-green);
-            border-bottom: 1px solid var(--color-border);
-            padding-bottom: 2px;
-            text-transform: uppercase;
+            pointer-events: none;
+            display: none;
+            text-align: center;
         }
 
-        .charms-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 4px;
+        /* Mobile Touch Controls Layer */
+        .touch-controls {
+            position: absolute;
+            bottom: 10px; left: 0; width: 100%;
+            height: 140px;
+            z-index: 15;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 12px;
+            pointer-events: none;
         }
 
-        .charm-item {
-            aspect-ratio: 1;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px dashed var(--color-border);
-            border-radius: 4px;
+        .dpad-container {
+            width: 120px; height: 120px;
+            position: relative;
+            pointer-events: auto;
+        }
+
+        .dpad-btn {
+            position: absolute;
+            width: 38px; height: 38px;
+            background: rgba(0, 255, 102, 0.15);
+            border: 1px solid var(--color-neon-green);
+            color: var(--color-neon-green);
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            position: relative;
+            font-size: 1.1rem;
+            font-weight: bold;
         }
 
-        .charm-item.active {
-            border: 1px solid var(--color-neon-purple);
-            box-shadow: 0 0 8px rgba(176, 66, 255, 0.3);
-        }
+        .dpad-btn:active { background: var(--color-neon-green); color: #000; }
+        .dpad-up { top: 0; left: 41px; }
+        .dpad-down { bottom: 0; left: 41px; }
+        .dpad-left { top: 41px; left: 0; }
+        .dpad-right { top: 41px; right: 0; }
 
-        .log-box {
-            font-size: 0.75rem;
-            color: #6a9c74;
-            max-height: 100px;
-            overflow-y: auto;
+        .action-container {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 8px;
+            pointer-events: auto;
         }
 
-        .log-entry.win { color: var(--color-neon-gold); }
-        .log-entry.info { color: var(--color-neon-green); }
-        .log-entry.bad { color: var(--color-neon-red); }
-
-        footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            background: var(--color-panel);
-            border: 1px solid var(--color-border);
-            padding: 8px 14px;
-            border-radius: 6px;
-            backdrop-filter: blur(4px);
-        }
-
-        .btn {
-            background: #0e2b14;
-            color: var(--color-neon-green);
-            border: 1px solid var(--color-neon-green);
-            padding: 6px 16px;
-            font-family: var(--font-main);
-            font-size: 0.85rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            text-transform: uppercase;
-        }
-
-        .btn:hover {
-            background: var(--color-neon-green);
-            color: #000;
-            box-shadow: 0 0 12px var(--color-neon-green);
-        }
-
-        .btn-spin {
-            flex: 1;
-            font-family: var(--font-hud);
-            font-size: clamp(1.4rem, 3vw, 2rem);
-            padding: 4px 20px;
+        .btn-action {
+            width: 80px; height: 50px;
             background: #184a22;
+            border: 1px solid var(--color-neon-green);
+            color: var(--color-neon-green);
+            font-family: var(--font-hud);
+            font-size: 1.2rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            border-color: #4a6350;
-            color: #4a6350;
-            background: #08120a;
-            box-shadow: none;
+        .btn-action:active { background: var(--color-neon-green); color: #000; }
+
+        /* Touch Look Area */
+        .touch-look-zone {
+            position: absolute;
+            top: 0; right: 0; width: 50%; height: 100%;
+            z-index: 4;
+            touch-action: none;
         }
 
         /* Modals */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.88);
             z-index: 50;
             display: none;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(6px);
+            padding: 10px;
         }
 
         .modal-card {
             background: #0a140d;
             border: 1px solid var(--color-neon-green);
             border-radius: 8px;
-            padding: 18px;
-            width: 90%;
-            max-width: 580px;
+            padding: 14px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 85vh;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .modal-title {
             font-family: var(--font-hud);
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: var(--color-neon-gold);
             text-align: center;
             border-bottom: 1px solid var(--color-border);
@@ -309,113 +226,99 @@
 
         .shop-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 8px;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 6px;
+            overflow-y: auto;
+            max-height: 55vh;
+            padding-right: 4px;
         }
 
         .shop-card {
             background: rgba(0, 0, 0, 0.6);
             border: 1px solid var(--color-border);
             border-radius: 6px;
-            padding: 8px;
+            padding: 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 4px;
+            gap: 2px;
         }
 
-        .shop-card-icon { font-size: 1.6rem; }
-        .shop-card-title { font-size: 0.8rem; color: var(--color-neon-green); }
-        .shop-card-desc { font-size: 0.65rem; color: #82a88a; flex: 1; }
+        .shop-card-icon { font-size: 1.4rem; }
+        .shop-card-title { font-size: 0.75rem; color: var(--color-neon-green); }
+        .shop-card-desc { font-size: 0.6rem; color: #82a88a; flex: 1; }
+
+        .btn {
+            background: #0e2b14;
+            color: var(--color-neon-green);
+            border: 1px solid var(--color-neon-green);
+            padding: 6px 12px;
+            font-family: var(--font-main);
+            font-size: 0.75rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .btn:disabled { opacity: 0.4; border-color: #333; color: #666; }
     </style>
 </head>
 <body>
 
-    <div class="crt-overlay"></div>
-    <div class="crosshair" id="uiCrosshair"></div>
-    <div class="interaction-prompt" id="uiPrompt">Нажмите [E] или Кликните</div>
-    <div class="controls-hint">Движение: [W, A, S, D] | Осмотр: Зажмите ЛКМ и двигайте мышью | Действие: [E] :)</div>
+    <div class="touch-look-zone" id="touchLookZone"></div>
+    <div class="crosshair"></div>
+    <div class="interaction-prompt" id="uiPrompt">Подойдите ближе</div>
     <div id="webgl-container"></div>
 
+    <!-- HUD -->
     <div class="ui-hud">
         <header class="interactive">
-            <div class="logo">☘ CLOVER PIT 3D</div>
+            <div class="logo">☘ CLOVER PIT</div>
             <div class="stats-group">
-                <div class="stat-card"><div class="label">Монеты</div><div class="val" id="uiCoins">0</div></div>
+                <div class="stat-card"><div class="label">Монеты</div><div class="val" id="uiCoins">40</div></div>
                 <div class="stat-card"><div class="label">Аренда</div><div class="val red" id="uiQuota">100</div></div>
                 <div class="stat-card"><div class="label">Спины</div><div class="val green" id="uiSpins">5</div></div>
-                <div class="stat-card"><div class="label">Этап</div><div class="val purple" id="uiStage">1</div></div>
             </div>
         </header>
 
-        <div class="hud-middle">
-            <div class="panel-box interactive">
-                <div class="panel-title">АМУЛЕТЫ (<span id="uiCharmCount">0</span>/6)</div>
-                <div class="charms-grid" id="uiCharmsGrid"></div>
+        <!-- Mobile Touch Controls -->
+        <div class="touch-controls">
+            <div class="dpad-container">
+                <div class="dpad-btn dpad-up" id="btnUp">▲</div>
+                <div class="dpad-btn dpad-down" id="btnDown">▼</div>
+                <div class="dpad-btn dpad-left" id="btnLeft">◀</div>
+                <div class="dpad-btn dpad-right" id="btnRight">▶</div>
             </div>
 
-            <div class="panel-box interactive">
-                <div class="panel-title">ЖУРНАЛ</div>
-                <div class="log-box" id="uiLogBox"></div>
+            <div class="action-container">
+                <button class="btn-action" id="btnInteract" onclick="executeInteraction()">[ Е ]</button>
             </div>
         </div>
-
-        <footer class="interactive">
-            <button class="btn" onclick="openShopModal()">МАГАЗИН</button>
-            <button class="btn btn-spin" id="btnSpin" onclick="startSpinSequence()">СПИН</button>
-            <button class="btn" onclick="openDeckModal()">КОЛОДА</button>
-        </footer>
     </div>
 
     <!-- Modals -->
     <div class="modal-overlay interactive" id="shopModal">
         <div class="modal-card">
-            <div class="modal-title">ТЕРМИНАЛ ПОКУПОК</div>
+            <div class="modal-title">МАГАЗИН АРТЕФАКТОВ</div>
             <div class="shop-grid" id="shopGrid"></div>
-            <button class="btn" onclick="closeModal('shopModal')">ВЫХОД</button>
+            <button class="btn" onclick="closeModal('shopModal')">ЗАКРЫТЬ</button>
         </div>
     </div>
 
     <div class="modal-overlay interactive" id="deckModal">
         <div class="modal-card">
-            <div class="modal-title">СИМВОЛЫ В КОЛОДЕ</div>
+            <div class="modal-title">СОСТАВ КОЛОДЫ</div>
             <div class="shop-grid" id="deckGrid"></div>
             <button class="btn" onclick="closeModal('deckModal')">ЗАКРЫТЬ</button>
         </div>
     </div>
 
-    <div class="modal-overlay interactive" id="gameOverModal">
-        <div class="modal-card" style="text-align: center;">
-            <div class="modal-title" style="color: var(--color-neon-red);">БАНКРОТСТВО</div>
-            <p style="font-size: 0.9rem; margin: 10px 0; color: #82a88a;">Вы не собрали достаточно монет для оплаты аренды.</p>
-            <button class="btn btn-spin" onclick="resetFullGame()">НАЧАТЬ ЗАНОВО</button>
-        </div>
-    </div>
-
     <script>
-        /* Web Audio Engine with Ambient Synth */
+        /* Audio Engine */
         class AudioEngine {
-            constructor() { this.ctx = null; this.ambientOsc = null; }
-            init() { 
-                if (!this.ctx) {
-                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                    this.startAmbient();
-                } 
-            }
-            startAmbient() {
-                try {
-                    const osc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(55, this.ctx.currentTime); // Low A hum
-                    gain.gain.setValueAtTime(0.015, this.ctx.currentTime);
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    osc.start();
-                } catch(e) {}
-            }
-            playTone(freq, type = 'sine', duration = 0.1, vol = 0.1) {
+            constructor() { this.ctx = null; }
+            init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+            playTone(freq, type = 'sine', duration = 0.08, vol = 0.05) {
                 if (!this.ctx) return;
                 try {
                     const osc = this.ctx.createOscillator();
@@ -424,85 +327,53 @@
                     osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
                     gain.gain.setValueAtTime(vol, this.ctx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.00001, this.ctx.currentTime + duration);
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    osc.start();
-                    osc.stop(this.ctx.currentTime + duration);
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.start(); osc.stop(this.ctx.currentTime + duration);
                 } catch(e) {}
             }
-            playSpinTick() { this.init(); this.playTone(120 + Math.random() * 50, 'triangle', 0.03, 0.02); }
-            playReelStop() { this.init(); this.playTone(85, 'square', 0.1, 0.12); }
-            playCoin() { this.init(); this.playTone(1046.50, 'sine', 0.08, 0.08); }
-            playInteract() { this.init(); this.playTone(600, 'sine', 0.05, 0.05); }
-            playWinFanfare() {
-                this.init();
-                [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((n, i) => {
-                    setTimeout(() => this.playTone(n, 'triangle', 0.22, 0.08), i * 75);
-                });
-            }
-            playError() { this.init(); this.playTone(110, 'sawtooth', 0.25, 0.15); }
         }
         const audio = new AudioEngine();
 
-        /* Game State & Data */
-        const SYMBOL_DATA = {
-            '🍒': { name: 'Вишня', val: 3 }, '🍋': { name: 'Лимон', val: 4 },
-            '🍇': { name: 'Виноград', val: 6 }, '🔔': { name: 'Колокол', val: 10 },
-            '💎': { name: 'Алмаз', val: 25 }, '7️⃣': { name: 'Семерка', val: 50 },
-            '☘': { name: 'Клевер', val: 12 }, '🪙': { name: 'Монета', val: 8 },
-            '🃏': { name: 'Джокер', val: 15 }
-        };
-
-        const CHARMS_DATA = [
-            { id: 'clover_master', name: 'Золотой Клевер', icon: '🍀', desc: '+30% за Клевер', cost: 40 },
-            { id: 'magnet', name: 'Магнит Монет', icon: '🧲', desc: 'Монеты дают +6', cost: 45 },
-            { id: 'ring', name: 'Перстень', icon: '💍', desc: 'Алмазы удваивают куш', cost: 85 },
-            { id: 'battery', name: 'Батарейка', icon: '🔋', desc: '+1 спин каждый этап', cost: 60 },
-            { id: 'orb', name: 'Хрустальный Шар', icon: '🔮', desc: 'Увеличивает шансы джокера', cost: 75 }
+        /* Artifacts List (12 unique items) */
+        const ARTIFACTS_DATABASE = [
+            { id: 'clover_master', name: 'Золотой Клевер', icon: '🍀', desc: '+40% к Клеверу', cost: 35 },
+            { id: 'magnet', name: 'Магнит Монет', icon: '🧲', desc: 'Монеты дают +8', cost: 40 },
+            { id: 'ring', name: 'Перстень Удачи', icon: '💍', desc: 'Алмазы x2 к выигрышу', cost: 70 },
+            { id: 'battery', name: 'Батарейка', icon: '🔋', desc: '+2 спина каждый этап', cost: 50 },
+            { id: 'orb', name: 'Хрустальный Шар', icon: '🔮', desc: 'Джокер дает 35 монет', cost: 60 },
+            { id: 'amulet', name: 'Оберег', icon: '🧿', desc: '+5 монет при пустом спине', cost: 30 },
+            { id: 'crown', name: 'Корона Азарта', icon: '👑', desc: 'x3 к кушу если мало монет', cost: 80 },
+            { id: 'dice', name: 'Кости Удачи', icon: '🎲', desc: '+2..20 монет случайный бонус', cost: 45 },
+            { id: 'hourglass', name: 'Песочные Часы', icon: '⏳', desc: '1 спасительный спин', cost: 65 },
+            { id: 'emerald', name: 'Изумруд', icon: '💎', desc: '+15% ко всему выигрышу', cost: 75 },
+            { id: 'scroll', name: 'Древний Свиток', icon: '📜', desc: '-20% к стоимости аренды', cost: 90 },
+            { id: 'key', name: 'Золотой Ключ', icon: '🗝️', desc: 'Расширяет слоты до 8', cost: 100 }
         ];
 
-        let gameState = {
-            coins: 35, quota: 90, spinsLeft: 5, stage: 1,
-            deck: ['🍒', '🍒', '🍋', '🍋', '🍇', '🔔', '☘', '🪙', '🪙', '🃏'],
-            charms: [], gridResults: []
+        const SYMBOLS = {
+            '🍒': 3, '🍋': 4, '🍇': 6, '🔔': 10, '💎': 25, '7️⃣': 50, '☘': 12, '🪙': 8, '🃏': 15
         };
 
-        function logEvent(msg, type = 'info') {
-            const box = document.getElementById('uiLogBox');
-            const el = document.createElement('div');
-            el.className = `log-entry ${type}`;
-            el.innerText = `> ${msg}`;
-            box.appendChild(el);
-            box.scrollTop = box.scrollHeight;
-        }
+        let gameState = {
+            coins: 40, quota: 100, spinsLeft: 5, stage: 1,
+            maxSlots: 6,
+            deck: ['🍒','🍒','🍋','🍋','🍇','🔔','☘','🪙','🪙','🃏'],
+            artifacts: []
+        };
 
         function updateUI() {
             document.getElementById('uiCoins').innerText = gameState.coins;
             document.getElementById('uiQuota').innerText = gameState.quota;
             document.getElementById('uiSpins').innerText = gameState.spinsLeft;
-            document.getElementById('uiStage').innerText = gameState.stage;
-            document.getElementById('uiCharmCount').innerText = gameState.charms.length;
-
-            const grid = document.getElementById('uiCharmsGrid');
-            grid.innerHTML = '';
-            for (let i = 0; i < 6; i++) {
-                const slot = document.createElement('div');
-                slot.className = 'charm-item';
-                if (gameState.charms[i]) {
-                    slot.classList.add('active');
-                    slot.innerText = gameState.charms[i].icon;
-                }
-                grid.appendChild(slot);
-            }
         }
 
-        /* Three.JS 3D Environment, Lighting & Objects Setup */
+        /* Three.js Engine Setup */
         const container = document.getElementById('webgl-container');
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x020503, 0.07);
+        scene.fog = new THREE.FogExp2(0x020503, 0.08);
 
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 50);
-        camera.position.set(0, 1.6, 2.8);
+        const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 40);
+        camera.position.set(0, 1.6, 2.5);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -510,344 +381,233 @@
         container.appendChild(renderer.domElement);
 
         /* Lighting */
-        const ambientLight = new THREE.AmbientLight(0x081c10, 1.2);
-        scene.add(ambientLight);
+        scene.add(new THREE.AmbientLight(0x0a2412, 1.5));
+        const light = new THREE.PointLight(0x00ff66, 2, 12);
+        light.position.set(0, 3, 0);
+        scene.add(light);
 
-        const mainRoomLight = new THREE.PointLight(0x00ff66, 1.6, 14);
-        mainRoomLight.position.set(0, 3.5, 0);
-        scene.add(mainRoomLight);
-
-        const slotSpotlight = new THREE.SpotLight(0xffd700, 2.8, 8, Math.PI / 4, 0.4);
-        slotSpotlight.position.set(0, 3.2, 1);
-        scene.add(slotSpotlight);
-
-        /* Procedural Canvas Textures */
-        function createWallTexture() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 256; canvas.height = 256;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#051409'; ctx.fillRect(0, 0, 256, 256);
-            ctx.strokeStyle = '#0e2b14'; ctx.lineWidth = 2;
-            for (let i = 0; i < 256; i += 32) {
-                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 256); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(256, i); ctx.stroke();
-            }
-            return new THREE.CanvasTexture(canvas);
-        }
-
-        /* Room Geometry */
-        function buildArcadeRoom() {
-            const wallTex = createWallTexture();
-            wallTex.wrapS = THREE.RepeatWrapping; wallTex.wrapT = THREE.RepeatWrapping;
-            wallTex.repeat.set(4, 4);
-
-            const floorGeo = new THREE.PlaneGeometry(12, 12);
-            const floorMat = new THREE.MeshStandardMaterial({ color: 0x08120a, roughness: 0.7, metalness: 0.3 });
+        /* Environment Build */
+        function buildRoom() {
+            const floorGeo = new THREE.PlaneGeometry(10, 10);
+            const floorMat = new THREE.MeshStandardMaterial({ color: 0x061209, roughness: 0.8 });
             const floor = new THREE.Mesh(floorGeo, floorMat);
             floor.rotation.x = -Math.PI / 2;
             scene.add(floor);
 
-            const wallMat = new THREE.MeshStandardMaterial({ map: wallTex, roughness: 0.8 });
-            
-            const backWall = new THREE.Mesh(new THREE.PlaneGeometry(12, 4), wallMat);
-            backWall.position.set(0, 2, -6);
+            const wallMat = new THREE.MeshStandardMaterial({ color: 0x030a05, roughness: 0.9 });
+            const backWall = new THREE.Mesh(new THREE.PlaneGeometry(10, 4), wallMat);
+            backWall.position.set(0, 2, -5);
             scene.add(backWall);
-
-            const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(12, 4), wallMat);
-            leftWall.position.set(-6, 2, 0);
-            leftWall.rotation.y = Math.PI / 2;
-            scene.add(leftWall);
-
-            const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(12, 4), wallMat);
-            rightWall.position.set(6, 2, 0);
-            rightWall.rotation.y = -Math.PI / 2;
-            scene.add(rightWall);
         }
-        buildArcadeRoom();
+        buildRoom();
 
-        /* Ambient Dust Particles */
-        let particleSystem;
-        function createAmbientParticles() {
-            const count = 150;
-            const geo = new THREE.BufferGeometry();
-            const pos = new Float32Array(count * 3);
-            for (let i = 0; i < count * 3; i += 3) {
-                pos[i] = (Math.random() - 0.5) * 10;
-                pos[i+1] = Math.random() * 3.5;
-                pos[i+2] = (Math.random() - 0.5) * 10;
-            }
-            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-            const mat = new THREE.PointsMaterial({ color: 0x00ff66, size: 0.03, transparent: true, opacity: 0.4 });
-            particleSystem = new THREE.Points(geo, mat);
-            scene.add(particleSystem);
-        }
-        createAmbientParticles();
+        /* Interactive Objects */
+        const interactables = [];
 
-        /* Interactive Objects & Terminals */
-        const interactiveObjects = [];
+        // Center Slot Machine
+        const slotMachine = new THREE.Mesh(
+            new THREE.BoxGeometry(1.4, 2.0, 0.8),
+            new THREE.MeshStandardMaterial({ color: 0x112b18 })
+        );
+        slotMachine.position.set(0, 1.0, -1.2);
+        slotMachine.userData = { type: 'slot', label: 'Игровой Автомат\n[ Нажмите E для Спина ]' };
+        scene.add(slotMachine);
+        interactables.push(slotMachine);
 
-        // 1. Slot Machine Center
-        const machineGroup = new THREE.Group();
-        machineGroup.position.set(0, 0, 0);
-        scene.add(machineGroup);
-
-        const tableGeo = new THREE.BoxGeometry(2.2, 0.9, 1.4);
-        const tableMat = new THREE.MeshStandardMaterial({ color: 0x0a140d, roughness: 0.5 });
-        const table = new THREE.Mesh(tableGeo, tableMat);
-        table.position.set(0, 0.45, 0);
-        machineGroup.add(table);
-
-        const bodyGeo = new THREE.BoxGeometry(1.6, 2.2, 0.9);
-        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x112416, roughness: 0.3, metalness: 0.7 });
-        const machineBody = new THREE.Mesh(bodyGeo, bodyMat);
-        machineBody.position.set(0, 2.0, 0);
-        machineBody.userData = { type: 'slot_machine', label: 'Нажмите [E] для СПИНА' };
-        machineGroup.add(machineBody);
-        interactiveObjects.push(machineBody);
-
-        // Reels
-        const reels = [];
-        function createReelTexture() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 256; canvas.height = 1024;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#030a05'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            const keys = Object.keys(SYMBOL_DATA);
-            const step = canvas.height / keys.length;
-            ctx.font = '70px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            keys.forEach((sym, idx) => {
-                ctx.strokeStyle = '#1a3821'; ctx.lineWidth = 4;
-                ctx.strokeRect(10, idx * step + 10, canvas.width - 20, step - 20);
-                ctx.fillText(sym, canvas.width / 2, idx * step + step / 2);
-            });
-            const texture = new THREE.CanvasTexture(canvas);
-            texture.wrapS = THREE.RepeatWrapping; texture.wrapT = THREE.RepeatWrapping;
-            return texture;
-        }
-
-        const reelGeo = new THREE.CylinderGeometry(0.45, 0.45, 0.38, 32);
+        // Reels Visualization
+        const reelsMesh = [];
         for (let i = 0; i < 3; i++) {
-            const reelMat = new THREE.MeshStandardMaterial({ map: createReelTexture(), roughness: 0.2 });
-            const reel = new THREE.Mesh(reelGeo, reelMat);
-            reel.rotation.z = Math.PI / 2;
-            reel.position.set((i - 1) * 0.44, 2.1, 0.3);
-            machineGroup.add(reel);
-            reels.push({ mesh: reel, isSpinning: false, rotationSpeed: 0 });
+            const r = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.3, 0.3, 0.3, 16),
+                new THREE.MeshStandardMaterial({ color: 0x00ff66, wireframe: true })
+            );
+            r.rotation.z = Math.PI / 2;
+            r.position.set((i - 1) * 0.38, 1.1, -0.75);
+            scene.add(r);
+            reelsMesh.push(r);
         }
 
-        // 2. Shop Terminal Left
-        const shopTerminalGroup = new THREE.Group();
-        shopTerminalGroup.position.set(-3.5, 0, -2);
-        shopTerminalGroup.rotation.y = Math.PI / 4;
-        scene.add(shopTerminalGroup);
+        // Left Terminal: Shop
+        const shopTerm = new THREE.Mesh(
+            new THREE.BoxGeometry(0.8, 1.4, 0.6),
+            new THREE.MeshStandardMaterial({ color: 0x1a3821 })
+        );
+        shopTerm.position.set(-2.2, 0.7, -2.0);
+        shopTerm.userData = { type: 'shop', label: 'Терминал Магазина\n[ Нажмите E ]' };
+        scene.add(shopTerm);
+        interactables.push(shopTerm);
 
-        const termStand = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.2, 0.8), tableMat);
-        termStand.position.set(0, 0.6, 0);
-        shopTerminalGroup.add(termStand);
+        // Right Terminal: Deck Info
+        const deckTerm = new THREE.Mesh(
+            new THREE.BoxGeometry(0.8, 1.4, 0.6),
+            new THREE.MeshStandardMaterial({ color: 0x2b211a })
+        );
+        deckTerm.position.set(2.2, 0.7, -2.0);
+        deckTerm.userData = { type: 'deck', label: 'Киоск Колоды\n[ Нажмите E ]' };
+        scene.add(deckTerm);
+        interactables.push(deckTerm);
 
-        const termScreen = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.7, 0.2), new THREE.MeshStandardMaterial({ color: 0x0a2b14, emissive: 0x00ff66, emissiveIntensity: 0.2 }));
-        termScreen.position.set(0, 1.4, 0);
-        termScreen.userData = { type: 'shop_terminal', label: 'Нажмите [E] — МАГАЗИН' };
-        shopTerminalGroup.add(termScreen);
-        interactiveObjects.push(termScreen);
-
-        // 3. Deck Kiosk Right
-        const deckKioskGroup = new THREE.Group();
-        deckKioskGroup.position.set(3.5, 0, -2);
-        deckKioskGroup.rotation.y = -Math.PI / 4;
-        scene.add(deckKioskGroup);
-
-        const kioskStand = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.2, 0.8), tableMat);
-        kioskStand.position.set(0, 0.6, 0);
-        deckKioskGroup.add(kioskStand);
-
-        const kioskScreen = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.7, 0.2), new THREE.MeshStandardMaterial({ color: 0x2b1e0a, emissive: 0xffd700, emissiveIntensity: 0.2 }));
-        kioskScreen.position.set(0, 1.4, 0);
-        kioskScreen.userData = { type: 'deck_kiosk', label: 'Нажмите [E] — КОЛОДА' };
-        deckKioskGroup.add(kioskScreen);
-        interactiveObjects.push(kioskScreen);
-
-        /* Player Camera Movement & Raycasting Logic */
-        const keys = { w: false, a: false, s: false, d: false };
-        let isMouseDown = false;
-        let mouseX = 0, mouseY = 0;
+        /* Touch & Movement Control State */
+        const moveState = { forward: false, backward: false, left: false, right: false };
         let yaw = 0, pitch = 0;
-        const raycaster = new THREE.Raycaster();
-        let hoveredObject = null;
+        let lastTouchX = 0, lastTouchY = 0;
 
-        window.addEventListener('keydown', (e) => {
-            const k = e.key.toLowerCase();
-            if (k === 'w' || k === 'ц') keys.w = true;
-            if (k === 'a' || k === 'ф') keys.a = true;
-            if (k === 's' || k === 'ы') keys.s = true;
-            if (k === 'd' || k === 'в') keys.d = true;
-            if (k === 'e' || k === 'у') executeInteraction();
+        // D-Pad Touch Listeners
+        function bindDPad(id, key) {
+            const el = document.getElementById(id);
+            const start = (e) => { e.preventDefault(); moveState[key] = true; audio.init(); };
+            const end = (e) => { e.preventDefault(); moveState[key] = false; };
+            el.addEventListener('touchstart', start);
+            el.addEventListener('touchend', end);
+            el.addEventListener('mousedown', start);
+            el.addEventListener('mouseup', end);
+        }
+        bindDPad('btnUp', 'forward');
+        bindDPad('btnDown', 'backward');
+        bindDPad('btnLeft', 'left');
+        bindDPad('btnRight', 'right');
+
+        // Touch Look Zone Listeners
+        const touchZone = document.getElementById('touchLookZone');
+        touchZone.addEventListener('touchstart', (e) => {
+            audio.init();
+            const t = e.touches[0];
+            lastTouchX = t.clientX;
+            lastTouchY = t.clientY;
         });
 
-        window.addEventListener('keyup', (e) => {
-            const k = e.key.toLowerCase();
-            if (k === 'w' || k === 'ц') keys.w = false;
-            if (k === 'a' || k === 'ф') keys.a = false;
-            if (k === 's' || k === 'ы') keys.s = false;
-            if (k === 'd' || k === 'в') keys.d = false;
-        });
+        touchZone.addEventListener('touchmove', (e) => {
+            const t = e.touches[0];
+            const dx = t.clientX - lastTouchX;
+            const dy = t.clientY - lastTouchY;
+            lastTouchX = t.clientX;
+            lastTouchY = t.clientY;
 
-        window.addEventListener('mousedown', (e) => {
-            if (e.target.tagName !== 'BUTTON' && !e.target.closest('.interactive')) {
-                isMouseDown = true;
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            }
-        });
-
-        window.addEventListener('mouseup', () => isMouseDown = false);
-
-        window.addEventListener('mousemove', (e) => {
-            if (!isMouseDown) return;
-            const deltaX = e.clientX - mouseX;
-            const deltaY = e.clientY - mouseY;
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-
-            yaw -= deltaX * 0.003;
-            pitch -= deltaY * 0.003;
+            yaw -= dx * 0.005;
+            pitch -= dy * 0.005;
             pitch = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, pitch));
         });
 
-        function updateMovementAndRaycast() {
-            // Apply Rotations
+        /* Raycasting & Interaction */
+        const raycaster = new THREE.Raycaster();
+        let targetObject = null;
+
+        function checkInteractions() {
             const euler = new THREE.Euler(pitch, yaw, 0, 'YXZ');
             camera.quaternion.setFromEuler(euler);
 
-            // Movement
-            const speed = 0.06;
-            const moveDir = new THREE.Vector3();
-            if (keys.w) moveDir.z -= 1;
-            if (keys.s) moveDir.z += 1;
-            if (keys.a) moveDir.x -= 1;
-            if (keys.d) moveDir.x += 1;
+            // Movement Physics
+            const speed = 0.045;
+            const dir = new THREE.Vector3();
+            if (moveState.forward) dir.z -= 1;
+            if (moveState.backward) dir.z += 1;
+            if (moveState.left) dir.x -= 1;
+            if (moveState.right) dir.x += 1;
 
-            moveDir.normalize();
-            moveDir.applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+            dir.normalize();
+            dir.applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
 
-            camera.position.x = Math.max(-4.8, Math.min(4.8, camera.position.x + moveDir.x * speed));
-            camera.position.z = Math.max(-4.8, Math.min(4.8, camera.position.z + moveDir.z * speed));
-            camera.position.y = 1.6;
+            camera.position.x = Math.max(-3.8, Math.min(3.8, camera.position.x + dir.x * speed));
+            camera.position.z = Math.max(-3.8, Math.min(3.8, camera.position.z + dir.z * speed));
 
-            // Raycasting for interactables
+            // Raycast
             raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
-            const intersects = raycaster.intersectObjects(interactiveObjects);
+            const hits = raycaster.intersectObjects(interactables);
 
             const promptEl = document.getElementById('uiPrompt');
-            const crosshairEl = document.getElementById('uiCrosshair');
-
-            if (intersects.length > 0 && intersects[0].distance < 4.5) {
-                hoveredObject = intersects[0].object;
-                promptEl.innerText = hoveredObject.userData.label;
+            if (hits.length > 0 && hits[0].distance < 3.2) {
+                targetObject = hits[0].object;
+                promptEl.innerText = targetObject.userData.label;
                 promptEl.style.display = 'block';
-                crosshairEl.classList.add('active');
             } else {
-                hoveredObject = null;
+                targetObject = null;
                 promptEl.style.display = 'none';
-                crosshairEl.classList.remove('active');
             }
         }
 
         function executeInteraction() {
-            if (!hoveredObject) return;
-            audio.playInteract();
-            const type = hoveredObject.userData.type;
-            if (type === 'slot_machine') startSpinSequence();
-            else if (type === 'shop_terminal') openShopModal();
-            else if (type === 'deck_kiosk') openDeckModal();
+            audio.init();
+            if (!targetObject) return;
+
+            audio.playTone(500, 'sine', 0.05);
+            const type = targetObject.userData.type;
+
+            if (type === 'slot') triggerSpin();
+            if (type === 'shop') openShopModal();
+            if (type === 'deck') openDeckModal();
         }
 
-        /* Game Mechanics */
-        let isSpinningSequence = false;
-        function startSpinSequence() {
-            if (isSpinningSequence || gameState.spinsLeft <= 0) return;
+        /* Gameplay Logic */
+        let isSpinning = false;
+        function triggerSpin() {
+            if (isSpinning || gameState.spinsLeft <= 0) return;
 
-            isSpinningSequence = true;
+            isSpinning = true;
             gameState.spinsLeft--;
-            document.getElementById('btnSpin').disabled = true;
             updateUI();
 
-            gameState.gridResults = [];
-            reels.forEach((reelObj, idx) => {
-                reelObj.isSpinning = true;
-                reelObj.rotationSpeed = 0.35 + idx * 0.08;
-                const chosen = gameState.deck[Math.floor(Math.random() * gameState.deck.length)];
-                gameState.gridResults.push(chosen);
+            // Spin animation
+            let ticks = 0;
+            const interval = setInterval(() => {
+                reelsMesh.forEach(r => r.rotation.x += 0.4);
+                audio.playTone(150 + Math.random() * 80, 'triangle', 0.02, 0.02);
+                ticks++;
 
-                setTimeout(() => {
-                    reelObj.isSpinning = false;
-                    audio.playReelStop();
-                    if (idx === 2) setTimeout(evaluateSpinResults, 300);
-                }, 1000 + idx * 500);
-            });
-        }
+                if (ticks > 15) {
+                    clearInterval(interval);
+                    isSpinning = false;
 
-        function evaluateSpinResults() {
-            let totalGain = 0;
-            const counts = {};
-            gameState.gridResults.forEach(sym => counts[sym] = (counts[sym] || 0) + 1);
+                    // Calculate outcome
+                    let gain = 0;
+                    const res = [
+                        gameState.deck[Math.floor(Math.random() * gameState.deck.length)],
+                        gameState.deck[Math.floor(Math.random() * gameState.deck.length)],
+                        gameState.deck[Math.floor(Math.random() * gameState.deck.length)]
+                    ];
 
-            logEvent(`Выпали: [ ${gameState.gridResults.join(' | ')} ]`, 'info');
+                    res.forEach(s => gain += SYMBOLS[s] || 2);
 
-            for (const [sym, count] of Object.entries(counts)) {
-                let payout = (SYMBOL_DATA[sym] ? SYMBOL_DATA[sym].val : 2) * count;
-                if (sym === '🪙' && gameState.charms.some(c => c.id === 'magnet')) payout += count * 6;
-                if (sym === '💎' && gameState.charms.some(c => c.id === 'ring')) payout *= 2;
-                totalGain += payout;
-            }
+                    // Apply Artifact Effects
+                    if (gameState.artifacts.some(a => a.id === 'emerald')) gain = Math.floor(gain * 1.15);
+                    if (gameState.artifacts.some(a => a.id === 'dice')) gain += Math.floor(Math.random() * 19) + 2;
 
-            gameState.coins += totalGain;
-            if (totalGain > 0) {
-                audio.playWinFanfare();
-                logEvent(`Выигрыш: +${totalGain} монет!`, 'win');
-            }
+                    gameState.coins += gain;
+                    audio.playTone(800, 'sine', 0.15, 0.1);
+                    updateUI();
 
-            isSpinningSequence = false;
-            document.getElementById('btnSpin').disabled = false;
-            updateUI();
-
-            if (gameState.coins >= gameState.quota) {
-                logEvent('Аренда оплачена! Новый этап.', 'win');
-                gameState.stage++;
-                gameState.quota = Math.floor(gameState.quota * 1.6);
-                let extraSpins = gameState.charms.some(c => c.id === 'battery') ? 6 : 5;
-                gameState.spinsLeft = extraSpins;
-                updateUI();
-            } else if (gameState.spinsLeft <= 0) {
-                audio.playError();
-                document.getElementById('gameOverModal').style.display = 'flex';
-            }
-        }
-
-        function resetFullGame() {
-            gameState = { coins: 35, quota: 90, spinsLeft: 5, stage: 1, deck: ['🍒','🍒','🍋','🍋','🍇','🔔','☘','🪙','🪙','🃏'], charms: [], gridResults: [] };
-            closeModal('gameOverModal');
-            updateUI();
+                    if (gameState.coins >= gameState.quota) {
+                        gameState.stage++;
+                        let quotaMult = gameState.artifacts.some(a => a.id === 'scroll') ? 1.3 : 1.5;
+                        gameState.quota = Math.floor(gameState.quota * quotaMult);
+                        let extraSpins = gameState.artifacts.some(a => a.id === 'battery') ? 7 : 5;
+                        gameState.spinsLeft = extraSpins;
+                        updateUI();
+                    }
+                }
+            }, 60);
         }
 
         function openShopModal() {
             const grid = document.getElementById('shopGrid');
             grid.innerHTML = '';
-            CHARMS_DATA.forEach(c => {
-                const bought = gameState.charms.some(x => x.id === c.id);
+
+            ARTIFACTS_DATABASE.forEach(art => {
+                const bought = gameState.artifacts.some(a => a.id === art.id);
                 const el = document.createElement('div');
                 el.className = 'shop-card';
                 el.innerHTML = `
-                    <div class="shop-card-icon">${c.icon}</div>
-                    <div class="shop-card-title">${c.name}</div>
-                    <div class="shop-card-desc">${c.desc}</div>
-                    <button class="btn" ${bought || gameState.coins < c.cost ? 'disabled' : ''}>${bought ? 'Куплено' : c.cost + ' 🪙'}</button>
+                    <div class="shop-card-icon">${art.icon}</div>
+                    <div class="shop-card-title">${art.name}</div>
+                    <div class="shop-card-desc">${art.desc}</div>
+                    <button class="btn" ${bought || gameState.coins < art.cost ? 'disabled' : ''}>
+                        ${bought ? 'КУПЛЕНО' : art.cost + ' 🪙'}
+                    </button>
                 `;
                 el.querySelector('button').onclick = () => {
-                    if (!bought && gameState.coins >= c.cost) {
-                        gameState.coins -= c.cost;
-                        gameState.charms.push(c);
-                        audio.playCoin();
+                    if (!bought && gameState.coins >= art.cost) {
+                        gameState.coins -= art.cost;
+                        gameState.artifacts.push(art);
+                        if (art.id === 'key') gameState.maxSlots = 8;
                         updateUI();
                         openShopModal();
                     }
@@ -862,6 +622,7 @@
             grid.innerHTML = '';
             const counts = {};
             gameState.deck.forEach(s => counts[s] = (counts[s] || 0) + 1);
+
             for (const [sym, count] of Object.entries(counts)) {
                 const el = document.createElement('div');
                 el.className = 'shop-card';
@@ -883,28 +644,15 @@
         /* Main Loop */
         function animate() {
             requestAnimationFrame(animate);
-
-            updateMovementAndRaycast();
-
-            if (particleSystem) particleSystem.rotation.y += 0.0005;
-
-            reels.forEach(r => {
-                if (r.isSpinning) {
-                    r.mesh.rotation.x += r.rotationSpeed;
-                    audio.playSpinTick();
-                } else {
-                    r.mesh.rotation.x = THREE.MathUtils.lerp(r.mesh.rotation.x, Math.round(r.mesh.rotation.x / (Math.PI / 4)) * (Math.PI / 4), 0.2);
-                }
-            });
-
+            checkInteractions();
             renderer.render(scene, camera);
         }
 
         window.onload = () => {
             updateUI();
-            logEvent('Система готова. Подойдите к терминалу и нажмите [E] :)', 'info');
             animate();
         };
     </script>
 </body>
 </html>
+           
